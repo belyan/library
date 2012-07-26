@@ -1,0 +1,39 @@
+#!/usr/bin/make -f
+
+PROJECT = PROJECT
+PACKAGE = $(shell dh_listpackages)
+
+DESTDIR = $(CURDIR)/debian/$(PACKAGE)/usr/local/www/static.yandex.net/$(PROJECT)
+
+build:
+	dh_testdir
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	mkdir -p $(DESTDIR)
+	cp -R $(CURDIR)/../i $(DESTDIR)
+	cp -R $(CURDIR)/../css $(DESTDIR)
+
+clean:
+	dh_testdir
+	dh_testroot
+	dh_clean
+
+binary: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_clearvcs
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: build install clean binary

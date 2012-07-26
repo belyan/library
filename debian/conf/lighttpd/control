@@ -1,0 +1,9 @@
+Source: yandex-PROJECT-lighttpd
+Section: misc
+Priority: optional
+Maintainer: Yuriy Belyakov <belyan@yandex-team.ru>
+
+Package: yandex-PROJECT-lighttpd
+Architecture: all
+Depends: yandex-PROJECT-www
+Description: PROJECT_TITLE_EN: lighttpd configuration files

@@ -1,0 +1,9 @@
+Source: yandex-PROJECT-nginx
+Section: misc
+Priority: optional
+Maintainer: Yuriy Belyakov <belyan@yandex-team.ru>
+
+Package: yandex-PROJECT-nginx
+Architecture: all
+Depends: yandex-PROJECT-www
+Description: PROJECT_TITLE_EN: nginx configuration files

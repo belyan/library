@@ -1,0 +1,36 @@
+/* Text (begin) */ /**/
+    .b-text
+    {
+        margin-bottom: 10px;
+    }
+
+    .b-text h2
+    {
+        font-size: 110%;
+        font-weight: bold;
+
+        margin-top: 10px;
+    }
+
+    .b-text p
+    {
+        margin-top: 7px;
+    }
+
+    .b-text ul
+    {
+        margin: 7px 0 0 20px;
+        
+        list-style: inherit;
+    }
+
+    .b-text li
+    {
+        margin-top: 7px;
+    }
+
+    .b-text li li
+    {
+        list-style-type: circle;
+    }
+/* Text (end) */ /**/

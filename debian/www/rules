@@ -1,0 +1,44 @@
+#!/usr/bin/make -f
+
+PROJECT = PROJECT
+PACKAGE = $(shell dh_listpackages)
+
+DESTDIR = $(CURDIR)/debian/$(PACKAGE)/usr/local/www5/$(PROJECT)
+
+clean:
+	dh_clean
+
+build:
+	true
+
+install: 
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	ycssjs pages
+	mkdir -p $(DESTDIR)
+	cp -r i lego pages xml xsl *.xml robots.txt $(DESTDIR)
+	rm -rf $(DESTDIR)/lego/tools
+	find $(DESTDIR)/lego/blocks-* ! -name '*.xsl' -a ! -type d -delete
+	find $(DESTDIR)/lego/blocks-* -type d -empty -delete
+#	find $(DESTDIR)/pages ! -name '_*' -a ! -type d -delete
+	rm -rf pages/*/_*
+
+binary: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installcron
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_clearvcs
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: install binary

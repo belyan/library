@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+
+PACKAGE = $(shell dh_listpackages)
+DESTDIR = $(CURDIR)/debian/$(PACKAGE)
+
+build:
+	dh_testdir
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	dh_install
+
+clean:
+	dh_testdir
+	dh_testroot
+	dh_clean
+
+binary: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: build install clean binary

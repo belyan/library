@@ -1,0 +1,5 @@
+yandex-PROJECT-nginx (1.0.0) UNRELEASED; urgency=low
+
+  * Переезд на веб-сервер nginx.
+
+ -- Yuriy Belyakov <belyan@yandex-team.ru>  Fri, 21 Oct 2011 19:01:57 +0400
