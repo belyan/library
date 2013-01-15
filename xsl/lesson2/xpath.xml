@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="xpath.xsl"?>
+<page>
+    <div>
+        <div class="bar">
+            <div>
+                <div class="foo">foo1</div>
+                <div class="foo">foo2</div>
+                <div class="foo">foo3</div>
+            </div>
+        </div>
+    </div>
+</page>

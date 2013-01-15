@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<!--
+Конструкция switch
+http://learn.javascript.ru/switch
+-->
+<script>
+    /* Синтаксис */
+    var a = 2 + 2;
+    switch (a) {
+        case 3:
+            alert('Маловато');
+            break;
+        case 4:
+            alert('В точку!');
+            break;
+        case 5:
+            alert('Перебор');
+            break;
+        default:
+            alert('Я таких значений не знаю');
+    }
+
+    /* Задача */
+    if (browser == 'IE') {
+        alert('О, да у вас IE!');
+    } else if (browser == 'Chrome' || browser == 'Firefox' || browser == 'Safari' || browser == 'Opera') {
+        alert('Да, и эти браузеры мы поддерживаем');
+    } else {
+        alert('Мы надеемся, что и в вашем браузере все ок!');
+    }
+
+    /* Задача */
+    var a = +prompt('a?', '');
+    switch (a) {
+        case 0:
+            alert(0);
+            break;
+        case 1:
+            alert(1);
+            break;
+        case 2:
+        case 3:
+            alert('2,3');
+            break;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="functions.xsl"?>
+<page>
+    <number>5.2</number>
+    <string>abcde</string>
+    <boolean>true</boolean>
+    <node-set>
+        <item>i</item>
+        <item>t</item>
+        <item>e</item>
+        <item>m</item>
+    </node-set>
+</page>

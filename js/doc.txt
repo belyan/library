@@ -1,0 +1,80 @@
+===============================================================================
+    JavaScript
+===============================================================================
+
+JavaScript - прототипно-ориентированный, императивный язык программирования,
+интерпретируется в браузере, либо компилируется в JAVA
+
+Расширение: .js
+МИМЕ-тип: text/javascript, application/javascript
+
+ECMAScript - спецификация JavaScript, последняя версия 5.1 (June 2011)
+http://en.wikipedia.org/wiki/ECMAScript
+Перевод спецификации есть на сайте Ильи Кантора - http://es5.javascript.ru/
+
+*** Браузерные движки ***
+
+Gecko - открытый движок Firefox
+Webkit - общий браузерный движок браузеров Safari и Chrome
+Presto - закрытый движок браузера Opera
+Trident - закрытый движок браузера Internet Explorer
+
+*** DOCTYPE ***
+
+Доктайп для HTML5
+<!DOCTYPE HTML>
+
+Режимы рендеринга - http://en.wikipedia.org/wiki/Quirks_mode
+
+===============================================================================
+    Справочники
+===============================================================================
+
+Mozilla Developer Network — информация для Firefox и большинства браузеров
+https://developer.mozilla.org/
+
+MSDN — информация по IE
+http://msdn.microsoft.com/
+
+Safari Developer Library — информация по Safari
+https://developer.apple.com/library/safari/navigation/index.html
+
+Подробная информация по HTML/CSS/JavaScript с учетом браузерной совместимости
+http://help.dottoro.com
+
+Справочник по JavaScript на русском языке
+http://javascript.ru/manual
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*** Комментарии ***
+
+// Однострочный комментарий
+/* Многострочный
+   комментарий */

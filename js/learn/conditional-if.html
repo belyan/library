@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<!--
+Условные операторы
+http://learn.javascript.ru/conditional-if
+-->
+<script>
+    /* Оператор if */
+    var year = prompt('Введите год ECMA-262 5.1', '');
+
+    if (year != 2011) alert('А вот и неправильно!');
+
+    if (year == 2011) {
+      alert('Да вы знаток!');
+    } else {
+      alert('А вот и неправильно!'); // любое значение, кроме 2011
+    }
+
+    if (year < 2011) {
+      alert('Это слишком рано..');
+    } else if (year > 2011) {
+      alert('Это поздновато..');
+    } else {
+      alert('Да, точно в этом году!');
+    }
+
+    /* Оператор вопросительный знак '?' (тернарный оператор) */
+    var access = age > 14 ? true : false;
+    var result = (a + b < 4) ? 'Мало' : 'Много';
+
+    var message = (login == 'Вася') ? 'Привет' :
+        (login == 'Директор') ? 'Здравствуйте' :
+        (login == '') ? 'Нет логина' :
+        '';
+</script>
+
+</body>
+</html>

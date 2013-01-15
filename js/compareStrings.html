@@ -1,0 +1,69 @@
+<script type="text/javascript">
+
+var s1 = 'http://touch.market.belyan.asgard.yandex.ru/category?CAT_ID=108206&hid=90639';
+var s2 = 'http://touch.market.belyan.asgard.yandex.ru/category?hid=90639&CAT_ID=108206';
+var s3 = 'http://touch.market.belyan.asgard.yandex.ru/category?hid=90639&CAT_ID=108206_';
+
+function compareStrings(s1, s2) {
+    var s1Split = s1.split('?');
+    var s2Split = s2.split('?');
+
+    if (s1Split[0] != s2Split[0]) return false;
+
+    var s1Query = s1Split[1].split('&');
+    var s2Query = s2Split[1].split('&');
+
+    if (s1Query.length != s2Query.length) return false;
+
+    return s1Query.sort().join() == s2Query.sort().join();
+}
+
+function compareStrings2(s1, s2) {
+    var s1N = s1.indexOf('?');
+    var s2N = s2.indexOf('?');
+
+    if (s1N != s2N) return false;
+    if (s1.substring(0, s1N) != s2.substring(0, s2N)) return false;
+
+    var s1Query = s1.substring(s1N).split('&');
+    var s2Query = s2.substring(s2N).split('&');
+
+    if (s1Query.length != s2Query.length) return false;
+
+    return s1Query.sort().join() === s2Query.sort().join();
+}
+
+function equal(url1, url2){
+  var qs1 = url1.indexOf('?');
+  if(qs1 == -1 && url1 != url2){
+    return false
+  }
+
+  return url1.substr(qs1).split('&').sort().join() == url2.substr(qs1).split('&').sort().join()
+}
+
+//console.log(compareStrings(s1, s2));
+var counter = 100000;
+
+var start = new Date().getTime();
+for (var j = 0; j < counter; j++) {
+    compareStrings(s1, s2);
+}
+var end = new Date().getTime();
+console.log('compareStrings=' + (end - start));
+
+var start = new Date().getTime();
+for (var j = 0; j < counter; j++) {
+    compareStrings2(s1, s2);
+}
+var end = new Date().getTime();
+console.log('compareStrings2=' + (end - start));
+
+var start = new Date().getTime();
+for (var j = 0; j < counter; j++) {
+    equal(s1, s2);
+}
+var end = new Date().getTime();
+console.log('equal=' + (end - start));
+
+</script>

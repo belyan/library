@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="axes.xsl"?>
+<page>
+    <xml:block>
+        <item id="1"/>
+        <item id="2">
+            <item id="5"/>
+            <item>
+                <text>Текст</text>
+            </item>
+        </item>
+        <item id="3"/>
+        <item id="4"/>
+    </xml:block>
+    <text color="red">Какой-то текст</text>
+</page>

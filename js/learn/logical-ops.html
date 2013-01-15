@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<!--
+Логические операторы
+http://learn.javascript.ru/logical-ops
+-->
+<script>
+    /* || (ИЛИ) */
+    var hour = 12, isWeekend = true;
+    if (hour < 10 || hour > 18 || isWeekend) {
+        alert('Офис до 10 или после 18 или в выходной закрыт');
+    }
+
+    var undef; // переменная не присвоена, т.е. равна undefined
+    var zero = 0; 
+    var emptyStr = "";
+    var msg = "Привет!";
+    var result = undef || zero || emptyStr || msg || 0;
+    alert(result) // выведет "Привет!" - первое значение, которое является true
+
+    /* && (И) */
+    var hour = 12, minute = 30;
+    if (hour == 12 && minute == 30) {
+        alert('Время 12:30');
+    }
+
+    /* ! (НЕ) */
+    alert(!true) // false
+    alert(!0)  // true
+</script>
+
+</body>
+</html>
