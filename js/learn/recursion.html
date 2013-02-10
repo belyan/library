@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<!--
+Рекурсия
+http://learn.javascript.ru/recursion
+-->
+<script>
+    /* Реализация pow(x, n) через рекурсию */
+    function pow(x, n) {
+        return (n > 1) ? x * pow(x, n - 1) : x; // функция pow рекурсивно вызывает сама себя
+    }
+    alert(pow(2, 3)); // 8
+
+    /* Контекст выполнения, стек */
+    // Любая рекурсия может быть переделана в цикл. Как правило, вариант с циклом будет эффективнее.
+
+    /* Задача 1
+       Напишите функцию sumTo(n), которая для данного n вычисляет сумму чисел от 1 до n
+         1. С использованием цикла
+         2. Через рекурсию
+         3. С использованием формулы для суммы арифметической прогрессии */
+    function sumTo(n) {
+        var sum = n;
+        while (n > 1) {
+            n--;
+            sum += n;
+        }
+        return sum;
+    }
+    function sumTo(n) {
+        return n > 1 ? n + sumTo(n - 1) : n;
+    }
+    function sumTo(n) {
+        return (n + 1) * n / 2;
+    }
+    alert(sumTo(100)); // 5050
+
+    /* Задача 2
+       Написать функцию factorial(n), которая возвращает факториал числа n!, используя рекурсивный вызов */
+    function factorial(n) {
+        return n > 1 ? n * factorial(n - 1) : n;
+    }
+    alert(factorial(5)); // 120
+
+    /* Задача 3
+       Напишите функцию fib(n), которая возвращает n-е число Фибоначчи */
+    function fib(n) {
+        return n > 2 ? fib(n - 1) + fib(n - 2) : 1;
+    }
+    function fib(n) {
+        if (n <= 2) return 1;
+        for (var fn, f1 = 1, f2 = 1; n > 2; n--) {
+            fn = f1 + f2;
+            f1 = f2;
+            f2 = fn;
+        }
+        return fn;
+    }
+    alert(fib(3)); // 2
+    alert(fib(7)); // 13
+    alert(fib(77)); // 5527939700884757
+</script>
+
+</body>
+</html>

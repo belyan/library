@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<!--
+Функции
+http://learn.javascript.ru/function-basics
+-->
+<script>
+    /* Объявление */
+    function showMessage() {
+        alert("Привет всем присутствующим!");
+    }
+    showMessage();
+
+    /* Локальные переменные */
+    function showMessage() {
+        var message = "Привет, я - Вася!"; // локальная переменная
+        alert(message);
+    }
+    showMessage(); // Привет, я - Вася!
+    alert(message); // <-- будет ошибка, т.к. переменная видна только внутри
+
+    /* Внешние переменные */
+    var userName = "Вася";
+    function showMessage() {
+        var message = "Привет, я " + userName;
+        alert(message);
+    }
+    showMessage(); // Привет, я Вася
+
+    /* Параметры */
+    function showMessage(from, text) { // параметры from, text
+        from = "** " + from + " **"; // здесь может быть сложный код оформления
+        alert(from + "\n\n" + text);
+    }
+    showMessage("Маша", "Привет!");
+
+    /* Аргументы по умолчанию */
+    function showMessage(from, text) {
+        text = text || "текст не передан";
+        alert(from + ": " + text);
+    }
+    showMessage("Маша"); // Маша: текст не передан
+
+    /* Возврат значения */
+    function calcD(a, b, c) {
+        return b*b - 4*a*c;
+    }
+    var test = calcD(-4, 2, 1);
+    alert(test); // 20
+
+    /* Задача */
+    function checkAge(age) {
+        return (age > 18) ? true : confirm("Родители разрешили?");
+    }
+    function checkAge(age) {
+        return (age > 18) || confirm("Родители разрешили?");
+    }
+
+    /* Выбор имени */
+    showMessage();     // префикс show, "показать" сообщение
+    getAge();          // get, "получает" возраст
+    calcD();           // calc, "вычисляет" дискриминант
+    createForm();      // create, "создает" форму
+    checkPermission(); // check, "проверяет" разрешение, возвращает true/false
+
+    /* Задача */
+    function min(a, b) {
+        return a < b ? a : b;
+    }
+
+    /*
+    Задача
+    Напишите функцию pow(x,n), которая возвращает x в степени n
+    */
+    function pow(x, n) {
+        var result = x;
+        while (n > 1) {
+            result = result * x; // или можно так: result *= x;
+            n--;
+        }
+        return result;
+    }
+</script>
+
+</body>
+</html>

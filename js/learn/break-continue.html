@@ -27,11 +27,11 @@ http://learn.javascript.ru/break-continue
     /* Метки */
     outer: for (var i = 0; i < 3; i++) {
         for (var j = 0; j < 3; j++) {
-            var input = prompt('Значение в координатах ' + i + ',' + j);
+            var input = prompt("Значение в координатах " + i + "," + j);
             if (input == null) break outer; // Обычный вызов break не может прервать два цикла сразу
         }
     }
-    alert('Готово!');
+    alert("Готово!");
 
     /*
     Задача: Создайте код, который выводит все простые числа из интервала от 2 до 10

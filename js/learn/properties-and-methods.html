@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<!--
+Методы и свойства
+http://learn.javascript.ru/properties-and-methods
+-->
+<script>
+    var hello = "Привет, мир!";
+
+    // Вызов метода
+    alert(hello.toUpperCase()); // "ПРИВЕТ, МИР!"
+
+    // Получение свойства
+    alert(hello.length); // 12
+
+    /* Метод — это функция, привязанная к значению.
+       Если обратиться к ней без скобок, то результатом будет сама функция. */
+    var hello = "Привет";
+    alert(hello.toUpperCase); // function...
+</script>
+
+</body>
+</html>
