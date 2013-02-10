@@ -107,7 +107,7 @@ echo -e "\nLoad images...\n$HR"
 for image in ${IMAGES[@]}; do
 	echo "${image}"
 	name=${image:${#image}-6}
-	curl -s $image > "$IMAGES_PATH/$name"
+	curl --referer "${SITE}" -s $image > "$IMAGES_PATH/$name"
 	let COUNTER=COUNTER+1
 done
 echo -e "\nSuccesfully saved $COUNTER images in folder: '$IMAGES_PATH'"
