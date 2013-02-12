@@ -1,0 +1,123 @@
+http://img2.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_1280x960_wallpaper_01.jpg
+
+GET /Mercedes-Benz-Style_Coupe_Concept_2012_1280x960_wallpaper_01.jpg HTTP/1.1
+Host: img2.netcarshow.com
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: ru
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Referer: http://www.netcarshow.com/mercedes-benz/2012-style_coupe_concept/1280x960/wallpaper_01.htm
+
+HTTP/1.1 200 OK
+Content-Type: image/jpeg
+Accept-Ranges: bytes
+Etag: "993721777"
+Last-Modified: Thu, 19 Apr 2012 07:38:35 GMT
+Content-Length: 145951
+Date: Sun, 10 Feb 2013 22:37:15 GMT
+Server: Boa
+----------------------------------------------------------
+
+
+GET /Mercedes-Benz-Style_Coupe_Concept_2012_1280x960_wallpaper_01.jpg HTTP/1.0
+Referer: http://www.netcarshow.com/mercedes-benz/2012-style_coupe_concept/1280x960/wallpaper_01.htm
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Host: img2.netcarshow.com
+Connection: Keep-Alive
+Accept-Language: ru
+Accept-Encoding: gzip, deflate
+
+HTTP/1.0 200 OK
+Content-Type: image/jpeg
+Accept-Ranges: bytes
+ETag: "2075780020"
+Last-Modified: Sat, 26 Jan 2013 19:14:41 GMT
+Content-Length: 149048
+Connection: keep-alive
+Date: Mon, 11 Feb 2013 00:22:57 GMT
+Server: Boa
+
+
+=== photo.netcarshow.com
+
+curl "http://photo.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_photo_01.jpg" > "test/01.jpg"
+curl "http://photo.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_800x600_wallpaper_01.jpg" > "test/03.jpg"
+wget --user-agent "Firefox" -O "test/02.jpg" "http://photo.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_photo_01.jpg"
+wget --user-agent "Firefox" -O "test/04.jpg" "http://photo.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_800x600_wallpaper_01.jpg"
+
+=== img2.netcarshow.com
+
+curl --user-agent "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0" --header "Accept: image/png,image/*;q=0.8,*/*;q=0.5" --header "Accept-Language: ru" --header "Accept-Encoding: gzip, deflate" --header "Connection: keep-alive" --referer "http://www.netcarshow.com/mercedes-benz/2012-style_coupe_concept/800x600/wallpaper_0a.htm" "http://img2.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_1280x960_wallpaper_0a.jpg" > "test/08.jpg"
+curl --user-agent "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0" --referer "http://www.netcarshow.com/mercedes-benz/2012-style_coupe_concept/800x600/wallpaper_0a.htm" "http://img2.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_1280x960_wallpaper_0a.jpg" > "test/02.jpg"
+wget --user-agent "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0" --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" --header "Accept-Language: ru" --header "Accept-Encoding: gzip, deflate" --header "Connection: keep-alive" --referer "http://www.netcarshow.com/mercedes-benz/2012-style_coupe_concept/800x600/wallpaper_0a.htm" -O "test/11.jpg" "http://img2.netcarshow.com/Mercedes-Benz-Style_Coupe_Concept_2012_800x600_wallpaper_0a.jpg"
+
+
+
+
+
+
+bash netcarshow.sh -b Audi -m "SQ5 3.0 TFSI" -y 2014
+
+Load pages...
+==============================================================================
+http://www.netcarshow.com/audi/2014-sq5_3.0_tfsi/
+* About to connect() to www.netcarshow.com port 80 (#0)
+*   Trying 208.100.28.123... connected
+* Connected to www.netcarshow.com (208.100.28.123) port 80 (#0)
+> GET /audi/2014-sq5_3.0_tfsi/ HTTP/1.1
+> User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0
+> Host: www.netcarshow.com
+> Accept: */*
+> Referer: http://www.netcarshow.com/audi/
+>
+< HTTP/1.1 200 OK
+< Date: Tue, 12 Feb 2013 16:00:23 GMT
+< Content-Type: text/html
+< Content-Length: 23847
+< Connection: close
+< Server: Apache
+<
+{ [data not shown]
+* Closing connection #0
+http://www.netcarshow.com/audi/2014-sq5_3.0_tfsi/02.htm
+* About to connect() to www.netcarshow.com port 80 (#0)
+*   Trying 208.100.28.123... connected
+* Connected to www.netcarshow.com (208.100.28.123) port 80 (#0)
+> GET /audi/2014-sq5_3.0_tfsi/02.htm HTTP/1.1
+> User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0
+> Host: www.netcarshow.com
+> Accept: */*
+> Referer: http://www.netcarshow.com/audi/2014-sq5_3.0_tfsi/
+>
+< HTTP/1.1 200 OK
+< Date: Tue, 12 Feb 2013 16:00:24 GMT
+< Content-Type: text/html
+< Content-Length: 22666
+< Connection: close
+< Server: Apache
+<
+{ [data not shown]
+* Closing connection #0
+
+Load images...
+==============================================================================
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_01.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_02.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0c.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_03.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_04.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_05.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_06.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_07.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_08.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_09.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0a.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0b.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0c.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0d.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0e.jpg
+http://img2.netcarshow.com/Audi-SQ5_3.0_TFSI_2014_1280x960_wallpaper_0f.jpg
+
+Succesfully saved 16 images in folder: '/home/belyan/photo/Audi/SQ5 3.0 TFSI/2014'
