@@ -111,7 +111,8 @@ for image in ${IMAGES[@]}; do
 	echo "${image}"
 	name=${image:${#image}-6:2}
 	referer="${SITE}${PAGE_START}${SIZE}/wallpaper_${name}.htm"
-	curl -s --user-agent "$USER_AGENT" --referer $referer "$image" > "$IMAGES_PATH/${name}.jpg"
+	let n=0x${name} # HEX > DEC
+	curl -s --user-agent "$USER_AGENT" --referer $referer "$image" > "$IMAGES_PATH/${n}.jpg"
 	sleep $TIMEOUT
 	let COUNTER=COUNTER+1
 done
