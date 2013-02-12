@@ -1,5 +1,8 @@
 all: Audi Kia Lexus Mazda Mercedes-Benz Opel Tesla Volkswagen Volvo
 
+Test:
+	bash netcarshow.sh -b Audi -m "SQ5 3.0 TFSI" -y 2014
+
 Audi:
 	bash netcarshow.sh -b Audi -m "A3 Sportback S-Line" -y 2014
 	bash netcarshow.sh -b Audi -m A4 -y 2008

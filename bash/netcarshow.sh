@@ -18,7 +18,9 @@
 
 SITE=http://www.netcarshow.com
 SIZE=1280x960
+TIMEOUT=10
 HR="=============================================================================="
+USER_AGENT="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0"
 
 # Вспомогательные функции
 function contains() {
@@ -53,12 +55,13 @@ done
 # Формируем ссылку
 BRAND_NSP=${BRAND// /_}
 MODEL_NSP=${MODEL// /_}
+PAGE_BRAND=$(tolower /$BRAND_NSP/)
 PAGE_START=$(tolower /$BRAND_NSP/$YEAR-$MODEL_NSP/)
 
 # Загружаем первую страницу
 echo -e "\nLoad pages...\n$HR"
 echo "${SITE}${PAGE_START}"
-PAGE_LOAD=$(curl -s ${SITE}${PAGE_START})
+PAGE_LOAD=$(curl -s --user-agent "$USER_AGENT" --referer ${SITE}${PAGE_BRAND} ${SITE}${PAGE_START})
 
 # Находим все страницы
 PAGES=()
@@ -80,7 +83,7 @@ IMAGE_PATTERN=http://[^/]+/${BRAND_NSP}-${MODEL_NSP}_${YEAR}_thumbnail_[0-9a-z]{
 for page in ${PAGES[@]}; do
 	if [[ $page != $PAGE_START ]]; then
 		echo "${SITE}${page}"
-		PAGE_LOAD=$(curl -s ${SITE}${page})
+		PAGE_LOAD=$(curl -s --user-agent "$USER_AGENT" --referer ${SITE}${PAGE_START} ${SITE}${page})
 	fi
 	for word in $PAGE_LOAD; do
 		[[ $word =~ $IMAGE_PATTERN ]]
@@ -106,8 +109,10 @@ COUNTER=0
 echo -e "\nLoad images...\n$HR"
 for image in ${IMAGES[@]}; do
 	echo "${image}"
-	name=${image:${#image}-6}
-	curl --referer "${SITE}" -s $image > "$IMAGES_PATH/$name"
+	name=${image:${#image}-6:2}
+	referer="${SITE}${PAGE_START}${SIZE}/wallpaper_${name}.htm"
+	curl -s --user-agent "$USER_AGENT" --referer $referer "$image" > "$IMAGES_PATH/${name}.jpg"
+	sleep $TIMEOUT
 	let COUNTER=COUNTER+1
 done
 echo -e "\nSuccesfully saved $COUNTER images in folder: '$IMAGES_PATH'"
