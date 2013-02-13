@@ -18,7 +18,7 @@
 
 SITE=http://www.netcarshow.com
 SIZE=1280x960
-TIMEOUT=10
+TIMEOUT=5
 HR="=============================================================================="
 USER_AGENT="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:16.0) Gecko/20100101 Firefox/16.0"
 
