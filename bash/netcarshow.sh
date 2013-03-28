@@ -100,7 +100,7 @@ for page in ${PAGES[@]}; do
 done
 
 # Создаем директорию и удаляем старые картинки
-IMAGES_PATH=$HOME/photo/$BRAND/$MODEL/$YEAR
+IMAGES_PATH="$HOME/photo/$BRAND/$MODEL ($YEAR)"
 mkdir -p "$IMAGES_PATH"
 find "$IMAGES_PATH" -type f -a -name *.jpg -delete
 
