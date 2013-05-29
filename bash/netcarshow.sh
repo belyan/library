@@ -99,8 +99,16 @@ for page in ${PAGES[@]}; do
 	done
 done
 
+# Монтируем облачное хранилище
+if mount | grep $HOME/yadisk > /dev/null; then
+	echo -e "\nYandex.Disk is already mounted"
+else
+	mount $HOME/yadisk
+	echo -e "\nYandex.Disk mount on $HOME/yadisk"
+fi
+
 # Создаем директорию и удаляем старые картинки
-IMAGES_PATH="$HOME/photo/$BRAND/$MODEL ($YEAR)"
+IMAGES_PATH="$HOME/yadisk/netcarshow/$BRAND/$MODEL ($YEAR)"
 mkdir -p "$IMAGES_PATH"
 find "$IMAGES_PATH" -type f -a -name *.jpg -delete
 
