@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Перетаскивание элементов документа</title>
+    <style type="text/css">
+        .dragContent {
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            width: 250px;
+            background-color: white;
+            border: solid black;
+        }
+
+        .dragHandle {
+            background-color: gray;
+            border-bottom: dotted black;
+            padding: 3px;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
+
+        .dragImage {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+    <script src="Drag.js"></script>
+</head>
+<body>
+
+<div class="dragContent">
+    <div class="dragHandle" onmousedown="drag(this.parentNode, event)">
+        Перетащи меня
+    </div>
+    <p>Это тест. Тестирование, тестирование и еще раз тестирование.</p>
+    <p>Это тест.</p>
+</div>
+
+<img src="http://lorempixel.com/40/40/" class="dragImage" onmousedown="if (event.shiftKey) drag(this, event)">
+
+</body>
+</html>
