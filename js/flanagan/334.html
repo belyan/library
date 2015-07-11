@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Обход узлов документа</title>
+
+    <script>
+        function countTags(n) {
+            var numtags = 0;
+            var children = n.childNodes;
+
+            if (n.nodeType == 1) numtags++;
+
+            for (var i = 0; i < children.length; i++) {
+                numtags += countTags(children[i]);
+            }
+
+            return numtags;
+        }
+    </script>
+</head>
+<body onload="console.log('Количество тегов в документе: ' + countTags(document));">
+
+<p>Это <i>пример</i> документа.</p>
+
+</body>
+</html>

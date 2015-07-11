@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение текстового содержимого из всех вложенных DOM-узлов</title>
+
+    <script>
+        function getText(n) {
+            var strings = [];
+            getStrings(n, strings);
+            return strings.join("");
+
+            function getStrings(n, strings) {
+                if (n.nodeType == 3 /* Node.TEXT_NODE */) {
+                    strings.push(n.data);
+                } else if (n.nodeType == 1 /* Node.ELEMENT_NODE */) {
+                    for (var m = n.firstChild; m != null; m = m.nextSibling) {
+                        getStrings(m, strings);
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="console.log(getText(document.getElementById('text')));">
+
+<p id="text">Это <i>пример</i> документа.</p>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Одна функция, много обработчиков событий</title>
+    <script>
+        function confirmLink() {
+            return confirm("Вы действительно хотите посетить " + this.href + "?");
+        }
+
+        function confirmAllLinks() {
+            for (var i = 0; i < document.links.length; i++) {
+                document.links[i].onclick = confirmLink;
+            }
+        }
+    </script>
+</head>
+<body onload="confirmAllLinks()">
+
+<a href="http://www.davidflanagan.com">David Flanagan's blog</a>
+<a href="http://www.google.com">Google</a>
+
+</body>
+</html>

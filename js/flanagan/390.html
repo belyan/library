@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Реализация всплывающих подсказок средствами CSS</title>
+    <style type="text/css">
+        .tooltipShadow {
+            box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .tooltipContent {
+            background-color: #ff0;
+            border: 1px solid black;
+            padding: 5px;
+            font: bold 10pt sans-serif;
+        }
+    </style>
+    <script>
+        /**
+         * Tooltip.js
+         *
+         * Этот модуль определяет класс Tooltip. Объекты класса Tooltip создаются с помощью конструктора Tooltip().
+         * После этого подсказку можно сделать видимой вызовом метода show().
+         * Чтобы скрыть подсказку следует вызвать метод hide().
+         *
+         */
+        function Tooltip() {
+            this.tooltip = document.createElement("div");
+            this.tooltip.style.position = "absolute";
+            this.tooltip.style.visibility = "hidden";
+            this.tooltip.className = "tooltipShadow";
+
+            this.content = document.createElement("div");
+            this.content.style.position = "relative";
+            this.content.className = "tooltipContent";
+
+            this.tooltip.appendChild(this.content);
+        }
+
+        Tooltip.prototype.show = function(text, x, y) {
+            this.content.innerHTML = text;
+            this.tooltip.style.left = x + "px";
+            this.tooltip.style.top = y + "px";
+            this.tooltip.style.visibility = "visible";
+
+            if (this.tooltip.parentNode != document.body) {
+                document.body.appendChild(this.tooltip);
+            }
+        };
+
+        Tooltip.prototype.hide = function() {
+            this.tooltip.style.visibility = "hidden";
+        };
+    </script>
+</head>
+<body>
+
+<script>
+    var myTooltip = new Tooltip();
+
+    myTooltip.show("good Java/JavaScript blog", 10, 10);
+
+    window.setTimeout(function() {
+        myTooltip.hide();
+    }, 1000);
+</script>
+
+</body>
+</html>

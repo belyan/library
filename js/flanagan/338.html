@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Отбор HTML-элементов по имени класса или тега</title>
+
+    <script>
+        function getElements(classname, tagname, root) {
+            if (!root) {
+                root = document;
+            } else if (typeof root == "string") {
+                root = document.getElementById(root);
+            }
+
+            if (!tagname) tagname = "*";
+
+            var all = root.getElementsByTagName(tagname);
+
+            if (!classname) return all;
+
+            var elements = [];
+            for (var i = 0; i < all.length; i++) {
+                var element = all[i];
+                if (isMember(element, classname)) {
+                    elements.push(element);
+                }
+            }
+
+            return elements;
+
+            function isMember(element, classname) {
+                var classes = element.className;
+                if (!classes) return false;
+                if (classes == classname) return true;
+
+                var whitespace = /\s+/;
+                if (!whitespace.test(classes)) return false;
+
+                var c = classes.split(whitespace);
+                for (var i = 0; i < c.length; i++) {
+                    if (c[i] == classname) return true;
+                }
+
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+
+<p id="text">Это <i class="example">пример</i> документа.</p>
+<button onclick="console.log(getElements('example', 'i', 'text'));">Получить элемент с примером</button>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание анимации на базе CSS</title>
+    <script>
+        /**
+         * AnimateCSS.js
+         * @param element - Анимируемый HTML-элемент
+         * @param numFrames - Общее число кадров в анимации
+         * @param timePerFrame - Количество миллисекунд отображения каждого кадра
+         * @param animation - Объект, определяющий анимацию
+         * @param [whendone] - Необязательная функция, вызываемая по завершении анимации
+         */
+        function animateCSS(element, numFrames, timePerFrame, animation, whendone) {
+            var frame = 0;
+            var time = 0;
+
+            var intervalId = setInterval(displayNextFrame, timePerFrame);
+
+            function displayNextFrame() {
+                if (frame >= numFrames) {
+                    clearInterval(intervalId);
+                    if (whendone) whendone(element);
+                    return;
+                }
+
+                for (var cssprop in animation) {
+                    try {
+                        element.style[cssprop] = animation[cssprop](frame, time);
+                    } catch(e) {}
+                }
+
+                frame++;
+                time += timePerFrame;
+            }
+        }
+    </script>
+</head>
+<body>
+
+<h1 id="title" style="position: relative;">Заголовок</h1>
+
+<button onclick="animateCSS(document.getElementById('title'), 40, 50, {
+    top: function(f, t) { return f * 5 + 'px'; },
+    clip: function(f, t) { return 'rect(auto ' + f * 10 + 'px auto auto)'; }
+})">Анимировать заголовок</button>
+
+<h2>Форма с кнопкой</h2>
+<form>
+    <button style="position: relative;">Кнопка</button>
+</form>
+
+<button onclick="animateCSS(document.forms[0].elements[0], 40, 50, {
+    left: function(f, t) { return 200 + 100 * Math.cos(f / 8) + 'px'; },
+    top: function(f, t) { return 200 + 100 * Math.sin(f / 8) + 'px'; }
+}, function(button) {
+    button.innerText = 'Готово';
+})">Анимировать кнопку</button>
+
+</body>
+</html>

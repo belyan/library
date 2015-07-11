@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Использование объекта DocumentFragment</title>
+</head>
+<body>
+
+<script>
+    function reverse(n) {
+        var f = document.createDocumentFragment();
+
+        while(n.lastChild) {
+            f.appendChild(n.lastChild);
+        }
+
+        n.appendChild(f);
+    }
+</script>
+
+<ul id="list">
+    <li>раз</li>
+    <li>два</li>
+    <li>три</li>
+    <li>четыре</li>
+    <li>пять</li>
+</ul>
+
+<button onclick="reverse(document.getElementById('list'));">Сортировать в обратном порядке</button>
+
+</body>
+</html>

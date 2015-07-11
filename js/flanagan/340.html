@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Сортировка элементов в алфавитном порядке</title>
+</head>
+<body>
+
+<script>
+    function sortkids(e) {
+        if (typeof e == "string") e = document.getElementById(e);
+
+        var kids = [];
+        for (var x = e.firstChild; x != null; x = x.nextSibling) {
+            if (x.nodeType == 1 /* Node.ELEMENT_NODE */) kids.push(x);
+        }
+
+        kids.sort(function(n, m) {
+            var s = n.firstChild.data;
+            var t = m.firstChild.data;
+
+            if (s < t) {
+                return -1;
+            } else if (s > t) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        for (var i = 0; i < kids.length; i++) {
+            e.appendChild(kids[i]);
+        }
+    }
+</script>
+
+<ul id="list">
+    <li>раз</li>
+    <li>два</li>
+    <li>три</li>
+    <li>четыре</li>
+    <li>пять</li>
+</ul>
+
+<button onclick="sortkids('list')">Сортировать</button>
+
+</body>
+</html>
