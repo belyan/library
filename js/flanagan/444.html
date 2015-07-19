@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Класс Keymap для реализации быстрых комбинаций клавиш</title>
+    <script src="Keymap.js"></script>
+    <script>
+        var keymap = new Keymap({
+            "A": handler,
+            "7": handler,
+            "F2": handler,
+            "PageUp": handler,
+            "Left": handler,
+            "Delete": handler,
+            "/": handler,
+            "~": handler,
+            "default": defaultHandler
+        });
+
+        window.onload = keymap.install(document);
+
+        keymap.bind("Shift_A", handler);
+        keymap.bind("ALT_F2", handler);
+        keymap.bind("ctrl_delete", handler);
+
+        function handler(target, keyname, event) {
+            var handler = document.getElementById("handler");
+            handler.innerHTML = "Handler for key combination &lt;" + keyname + "&gt;";
+
+            if (keyname == "shift_a") {
+                keymap.unbind("A");
+            }
+        }
+
+        function defaultHandler(target, keyname, event) {
+            var defaultHandler = document.getElementById("defaultHandler");
+            defaultHandler.innerHTML = "Default handler for key combination &lt;" + keyname + "&gt;";
+        }
+    </script>
+</head>
+<body>
+
+<h1>Press any key combination</h1>
+<p id="handler"></p>
+<p id="defaultHandler"></p>
+
+</body>
+</html>
