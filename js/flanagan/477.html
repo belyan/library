@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Пример работы с cookie</title>
+    <script src="Cookie.js"></script>
+    <script>
+        var cookie = new Cookie("visitordata");
+
+        if (!cookie.name || !cookie.color) {
+            cookie.name = prompt("Введите ваше имя:", "");
+            cookie.color = prompt("Какой цвет вы предпочитаете:", "");
+        }
+
+        if (!cookie.visits) {
+            cookie.visits = 1;
+        } else {
+            cookie.visits++;
+        }
+
+        cookie.store(10);
+
+        document.write('<h1 style="color:' + cookie.color + '">' +
+            'Добро пожаловать, ' + cookie.name + '!' + '</h1>' +
+            '<p>Вы посетили нас ' + cookie.visits + ' раз.</p>' +
+            '<button onclick="window.cookie.remove();">Забыть обо мне</button>');
+    </script>
+</head>
+<body>
+
+
+
+</body>
+</html>
