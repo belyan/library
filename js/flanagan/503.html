@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Получение только заголовков</title>
+    <script src="HTTP.js"></script>
+    <script>
+        var request = HTTP.getHeaders("data.xml", function(headers) {
+            for (var header in headers) {
+                if (headers.hasOwnProperty(header)) {
+                    console.log(header + ": " + headers[header]);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,3 +1,7 @@
 {
-  "foo": "bar"
+    "name": "Wendell Berry",
+    "books": [
+        "The Unsettling of America",
+        "What are People For?"
+    ]
 }
