@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ограничение времени ожидания запроса</title>
+    <script src="HTTP.js"></script>
+    <script>
+        var request = HTTP.get("data.xml", function(response) {
+            console.log(response);
+        }, {
+            timeout: 20,
+            timeoutHandler: function(url) {
+                console.log("Time is out for url: " + url);
+            },
+            errorHandler: function(status, statusText) {
+                console.log("Error " + status + ": " + statusText);
+            },
+            progressHandler: function(n) {
+                console.log(n);
+            },
+            parameters: {
+                text: "Hello World"
+            }
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

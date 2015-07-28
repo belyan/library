@@ -111,3 +111,107 @@ HTTP.parseHeaders = function(request) {
 
     return headers;
 };
+
+/**
+ * Отправляет HTTP-запрос POST по указанному URL-адресу,
+ * используя имена и значения свойств объекта в качестве тела запроса.
+ */
+HTTP.post = function(url, values, callback, errorHandler) {
+    var request = HTTP.newRequest();
+
+    request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+            if (request.status == 200) {
+                callback(HTTP._getResponse(request));
+            } else {
+                if (errorHandler) {
+                    errorHandler(request.status, request.statusText);
+                } else {
+                    callback(null);
+                }
+            }
+        }
+    };
+
+    request.open("POST", url);
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    request.send(HTTP.encodeFormData(values));
+};
+
+/**
+ * Интерпретирирует имена и значения свойств объекта, как елси бы они были
+ * значениями элементов формы, использует формат application/x-www-form-urlencoded
+ */
+HTTP.encodeFormData = function(data) {
+    var pairs = [];
+    var regexp = /%20/g;
+
+    for (var name in data) {
+        var value = data[name].toString();
+        var pair = encodeURIComponent(name).replace(regexp, "+") + "=" +
+            encodeURIComponent(value).replace(regexp, "+");
+        pairs.push(pair);
+    }
+
+    return pairs.join("&");
+};
+
+HTTP._getResponse = function(request) {
+    switch (request.getResponseHeader("Content-Type")) {
+        case "text/xml":
+            return request.responseXML;
+        case "text/json":
+        case "text/javascript":
+        case "application/javascript":
+        case "application/x-javascript":
+            return eval(request.responseText);
+        default:
+            return request.responseText;
+    }
+};
+
+/**
+ * Отправляет HTTP-запрос GET с заданным URL. В случае успешного
+ * получения ответа он преобразуется в объект на основе заголовка
+ * Content-Type и передается указанной функции обратного вызова.
+ * Дополнительные аргументы могут быть переданы в виде свойств объекта options.
+ */
+HTTP.get = function(url, callback, options) {
+    var request = HTTP.newRequest();
+    var n = 0;
+    var timer;
+
+    if (options.timeout) {
+        timer = setTimeout(function() {
+            request.abort();
+            if (options.timeoutHandler) {
+                options.timeoutHandler(url);
+            }
+        }, options.timeout);
+    }
+
+    request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+            if (timer) clearTimeout(timer);
+            if (request.status == 200) {
+                callback(HTTP._getResponse(request));
+            } else {
+                if (options.errorHandler) {
+                    options.errorHandler(request.status, request.statusText);
+                } else {
+                    callback(null);
+                }
+            }
+        } else if (options.progressHandler) {
+            options.progressHandler(++n);
+        }
+    };
+
+    var target = url;
+    if (options.parameters) {
+        target += "?" + HTTP.encodeFormData(options.parameters);
+    }
+
+    request.open("GET", target);
+    request.send(null);
+};
