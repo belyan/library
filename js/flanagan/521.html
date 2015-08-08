@@ -5,10 +5,12 @@
     <title>Асинхронная загрузка XML-документа</title>
     <script src="XML.js"></script>
     <script>
-        XML.loadAsync("data.xml", init);
-
-        function init(xmldoc) {
-            console.log(xmldoc);
+        try {
+            XML.loadAsync("data.xml", function(xmldoc) {
+                console.log(xmldoc);
+            });
+        } catch(e) {
+            console.log(e);
         }
     </script>
 </head>
