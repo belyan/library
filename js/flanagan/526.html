@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Создание HTML-таблицы на основе XML-данных</title>
+    <script src="XML.js"></script>
+    <script>
+        /**
+         * Извлекает данные из указанного XML-документа и формирует из них HTML-таблицу.
+         * Добавляет таблицу в конец указанного HTML-элемента.
+         */
+        function makeTable(xmldoc, schema, element) {
+            var table = document.createElement("table");
+            var thead = document.createElement("thead");
+            var tbody = document.createElement("tbody");
+            var header = document.createElement("tr");
+            var cell;
+
+            for (var i = 0; i < schema.columns.length; i++) {
+                var column = schema.columns[i];
+                var label = (typeof column == "string") ? column : column.label;
+
+                cell = document.createElement("th");
+                cell.appendChild(document.createTextNode(label));
+                header.appendChild(cell);
+            }
+
+            thead.appendChild(header);
+            table.appendChild(thead);
+            table.appendChild(tbody);
+
+            var xmlrows = xmldoc.getElementsByTagName(schema.rowtag);
+
+            for (var r = 0; r < xmlrows.length; r++) {
+                var xmlrow = xmlrows[r];
+                var row = document.createElement("tr");
+
+                for (var c = 0; c < schema.columns.length; c++) {
+                    var sc = schema.columns[c];
+                    var tagname = (typeof sc == "string") ? sc : sc.tagname;
+                    var celltext;
+
+                    if (tagname.charAt(0) == "@") {
+                        celltext = xmlrow.getAttribute(tagname.substring(1));
+                    } else {
+                        var xmlcell = xmlrow.getElementsByTagName(tagname)[0];
+                        celltext = xmlcell.firstChild.data;
+                    }
+
+                    cell = document.createElement("td");
+                    cell.appendChild(document.createTextNode(celltext));
+                    row.appendChild(cell);
+                }
+
+                tbody.appendChild(row);
+            }
+
+            table.frame = "border";
+
+            if (typeof element == "string") element = document.getElementById(element);
+            element.appendChild(table);
+        }
+    </script>
+</head>
+<body>
+
+<script>
+    function displayAddressBook() {
+        var schema = {
+            rowtag: "contact",
+            columns: [
+                { tagname: "@name", label: "Name" },
+                { tagname: "email", label: "Address" }
+            ]
+        };
+
+        var xmldoc = XML.load("addresses.xml");
+        makeTable(xmldoc, schema, "addresses");
+    }
+</script>
+
+<button onclick="displayAddressBook()">Показать адресную книгу</button>
+<div id="addresses"></div>
+
+</body>
+</html>
