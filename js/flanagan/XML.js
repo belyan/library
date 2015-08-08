@@ -40,3 +40,36 @@ XML.newDocument = function(rootTagName, namespaceURL) {
         return doc;
     }
 };
+
+/**
+ * Синхронно загружает XML-докмуент с заданного URL-адреса
+ * и возвращает его в виде объекта Document
+ */
+XML.load = function(url) {
+    var xmldoc = XML.newDocument();
+
+    xmldoc.async = false;
+    xmldoc.load(url);
+    return xmldoc;
+};
+
+/**
+ * Асинхронно загружает и анализирует XML-докмуент с заданного URL-адреса.
+ * Как только документ будет готов, он передается указанной функции обратного вызова.
+ * Данная функция сразу же возвращает управление и не умеет возвращаемого значения.
+ */
+XML.loadAsync = function(url, callback) {
+    var xmldoc = XML.newDocument();
+
+    if (document.implementation && document.implementation.createDocument) {
+        xmldoc.onload = function() {
+            callback(xmldoc);
+        };
+    } else {
+        xmldoc.onreadystatechange = function() {
+            if (xmldoc.readyState == 4) callback(xmldoc);
+        };
+    }
+
+    xmldoc.load(url);
+};
