@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Создание HTML-таблицы на основе XML-данных</title>
     <script src="XML.js"></script>
+    <script src="HTTP.js"></script>
     <script>
         /**
          * Извлекает данные из указанного XML-документа и формирует из них HTML-таблицу.
@@ -74,12 +75,19 @@
             ]
         };
 
-        var xmldoc = XML.load("addresses.xml");
-        makeTable(xmldoc, schema, "addresses");
+        try {
+            var xmldoc = XML.load("addresses.xml");
+            makeTable(xmldoc, schema, "addresses");
+        } catch(e) {
+            HTTP.getXML("addresses.xml", function(xmldoc) {
+                makeTable(xmldoc, schema, "addresses");
+            });
+        }
+
     }
 </script>
 
-<button onclick="displayAddressBook()">Показать адресную книгу</button>
+<p><button onclick="displayAddressBook()">Показать адресную книгу</button></p>
 <div id="addresses"></div>
 
 </body>
