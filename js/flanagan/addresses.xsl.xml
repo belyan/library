@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <xsl:output method="html"/>
+
+    <xsl:template match="/">
+        <table frame="border">
+            <tr>
+                <th>Имя</th>
+                <th>Электронная почта</th>
+            </tr>
+            <xsl:apply-templates/>
+        </table>
+    </xsl:template>
+
+    <xsl:template match="contact">
+        <tr>
+            <td><xsl:value-of select="@name"/></td>
+            <xsl:apply-templates select="email"/>
+        </tr>
+    </xsl:template>
+
+    <xsl:template match="email">
+        <td><xsl:value-of select="."/></td>
+    </xsl:template>
+
+</xsl:stylesheet>

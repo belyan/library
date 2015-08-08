@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Преобразование XML-документа с помощью XSLT</title>
+    <script src="HTTP.js"></script>
+    <script src="XML.js"></script>
+</head>
+<body>
+
+<script>
+    function displayAddressBook() {
+        HTTP.getXML("addresses.xml", function(xmldoc) {
+            HTTP.getXML("addresses.xsl.xml", function(stylesheet) {
+                XML.transform(xmldoc, stylesheet, "addresses");
+            });
+        });
+    }
+</script>
+
+<p><button onclick="displayAddressBook()">Показать адресную книгу</button></p>
+<div id="addresses"></div>
+
+</body>
+</html>
