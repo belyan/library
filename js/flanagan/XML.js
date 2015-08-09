@@ -119,3 +119,88 @@ XML.transform = function(xmldoc, stylesheet, element) {
     var transformer = new XML.Transformer(stylesheet);
     transformer.transform(xmldoc, element);
 };
+
+/**
+ * XML.XPathExpression – это класс, инкапсулирующий XPath-запрос
+ * и ассоциированное с ним отображение префикса пространства имен в URL.
+ * После того как объект XML.XPathExpression создан, он может
+ * использоваться для многократного выполнения выражения (в одном
+ * или более контекстах) посредством методов getNode() и getNodes().
+ */
+XML.XPathExpression = function(xpathText, namespaces) {
+    this.xpathText = xpathText;
+
+    if (document.createExpression) {
+        this.xpathExpr = document.createExpression(xpathText, function(prefix) {
+            return namespaces[prefix];
+        });
+    } else {
+        this.namespaceString = "";
+        if (namespaces != null) {
+            for (var prefix in namespaces) {
+                if (this.namespaceString) this.namespaceString += " ";
+                this.namespaceString += "xmlns:" + prefix + "=\"" + namespaces[prefix] + "\"";
+            }
+        }
+    }
+};
+
+/**
+ * Метод getNodes() класса XML.XPathExpression. Он выполняет XPath-выражение
+ * в указанном контексте. Аргумент context должен быть объектом Document
+ * или Element. Возвращаемое значение  массив или объект, похожий на массив,
+ * где содержатся узлы, соответствующие выражению.
+ */
+XML.XPathExpression.prototype.getNodes = function(context) {
+    if (this.xpathExpr) {
+        var result = this.xpathExpr.evaluate(context, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+        var a = new Array(result.snapshotLength);
+        for (var i = 0; i < result.snapshotLength; i++) {
+            a[i] = result.snapshotItem(i);
+        }
+        return a;
+    } else {
+        try {
+            var doc = context.ownerDocument;
+            if (doc == null) doc = context;
+            doc.setProperty("SelectionLanguage", "Xpath");
+            doc.setProperty("SelectionNamespaces", this.namespaceString);
+            if (context == doc) context = doc.documentElement;
+            return context.selectNodes(this.xpathText);
+        } catch(e) {
+            throw "XPath не поддерживается этим браузером.";
+        }
+    }
+};
+
+/**
+ * Метод getNode() класса XML.XPathExpression. Он выполняет XPath-выражение
+ * в заданном контексте и возвращает единственный узел, соответствующий
+ * выражению (или null, если совпадений не найдено). Если обнаружено
+ * более одного совпадения, метод возвращает первое из них.
+ */
+XML.XPathExpression.prototype.getNode = function(context) {
+    if (this.xpathExpr) {
+        var result = this.xpathExpr.evaluate(context, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+        return result.singleNodeValue;
+    } else {
+        try {
+            var doc = context.ownerDocument;
+            if (doc == null) doc = context;
+            doc.setProperty("SelectionLanguage", "Xpath");
+            doc.setProperty("SelectionNamespaces", this.namespaceString);
+            if (context == doc) context = doc.documentElement;
+            return context.selectSingleNode(this.xpathText);
+        } catch(e) {
+            throw "XPath не поддерживается этим браузером.";
+        }
+    }
+};
+
+XML.getNodes = function(context, xpathExpr, namespaces) {
+    return (new XML.XPathExpression(xpathExpr, namespaces)).getNodes(context);
+};
+
+XML.getNode = function(context, xpathExpr, namespaces) {
+    return (new XML.XPathExpression(xpathExpr, namespaces)).getNode(context);
+};

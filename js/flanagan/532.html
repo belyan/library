@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Выполнение XPath-выражений</title>
+    <script src="XML.js"></script>
+    <script src="HTTP.js"></script>
+    <script>
+        HTTP.getXML("addresses.xml", function(xmldoc) {
+            var context = xmldoc.documentElement;
+
+            console.log( XML.getNodes(context, "contact") );
+            console.log( XML.getNode(context, "contact[1]") );
+            console.log( XML.getNode(context, "contact[last()]") );
+            console.log( XML.getNode(context, "contact[last() - 1]") );
+
+            console.log( XML.getNodes(context, "contact/email") );
+            console.log( XML.getNode(context, "/contacts") );
+            console.log( XML.getNode(context, "contact[1]/email") );
+            console.log( XML.getNode(context, "(contact/email)[2]") );
+
+            console.log( XML.getNodes(context, ".//email") );
+            console.log( XML.getNodes(context, "//email") );
+            console.log( XML.getNode(context, "contact/@name") );
+            console.log( XML.getNode(context, "contact[@personal = 'true']") );
+
+            console.log( XML.getNodes(context, "contact/email/text()") );
+            console.log( XML.getNodes(context, "//text()") );
+        });
+
+        HTTP.getXML("addresses.xsl.xml", function(stylesheet) {
+            console.log(XML.getNodes(stylesheet, "//xsl:template", {
+                xsl: "http://www.w3.org/1999/XSL/Transform"
+            }));
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
