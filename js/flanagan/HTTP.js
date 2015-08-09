@@ -1,9 +1,9 @@
 var HTTP = {};
 
 HTTP._factories = [
-    function() { return new XMLHttpRequest(); },
     function() { return new ActiveXObject("Msxml2.XMLHTTP") },
-    function() { return new ActiveXObject("Microsoft.XMLHTTP") }
+    function() { return new ActiveXObject("Microsoft.XMLHTTP") },
+    function() { return new XMLHttpRequest(); }
 ];
 
 HTTP._factory = null;

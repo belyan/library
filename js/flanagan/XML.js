@@ -163,7 +163,7 @@ XML.XPathExpression.prototype.getNodes = function(context) {
         try {
             var doc = context.ownerDocument;
             if (doc == null) doc = context;
-            doc.setProperty("SelectionLanguage", "Xpath");
+            doc.setProperty("SelectionLanguage", "XPath");
             doc.setProperty("SelectionNamespaces", this.namespaceString);
             if (context == doc) context = doc.documentElement;
             return context.selectNodes(this.xpathText);
@@ -187,7 +187,7 @@ XML.XPathExpression.prototype.getNode = function(context) {
         try {
             var doc = context.ownerDocument;
             if (doc == null) doc = context;
-            doc.setProperty("SelectionLanguage", "Xpath");
+            doc.setProperty("SelectionLanguage", "XPath");
             doc.setProperty("SelectionNamespaces", this.namespaceString);
             if (context == doc) context = doc.documentElement;
             return context.selectSingleNode(this.xpathText);
