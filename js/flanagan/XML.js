@@ -10,7 +10,7 @@ XML.newDocument = function(rootTagName, namespaceURL) {
     if (!rootTagName) rootTagName = "";
     if (!namespaceURL) namespaceURL = "";
 
-    if (document.implementation && document.implementation.createDocument) {
+    if (!window.ActiveXObject && document.implementation && document.implementation.createDocument) {
         return document.implementation.createDocument(namespaceURL, rootTagName, null);
     } else {
         var doc = new ActiveXObject("MSXML2.DOMDocument");
@@ -227,8 +227,13 @@ XML.getDataIsland = function(id) {
             docelt = docelt.nextSibling;
         }
 
-        var parser = new DOMParser();
-        doc = parser.parseFromString(doc.innerHTML, "application/xml");
+        if (!window.ActiveXObject) {
+            var parser = new DOMParser();
+            doc = parser.parseFromString(docelt.outerHTML, "application/xml");
+        } else {
+            doc = XML.newDocument();
+            doc.loadXML(docelt.outerHTML);
+        }
     }
 
     XML.getDataIsland.cache[id] = doc;
