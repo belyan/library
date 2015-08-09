@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Разворачивание HTML-шаблонов с использованием XML-данных</title>
+    <script src="XML.js"></script>
+    <style type="text/css">
+        xml { display: none; }
+    </style>
+</head>
+<body onload="XML.expandTemplates()">
+
+<xml id="data">
+    <contacts>
+        <contact name="Able Baker">
+            <email>able@example.com</email>
+        </contact>
+        <contact name="Careful Dodger">
+            <email>dodger@example.com</email>
+        </contact>
+        <contact name="Eager Framer" personal="true">
+            <email>framer@example.com</email>
+        </contact>
+    </contacts>
+</xml>
+
+<table frame="border">
+    <tr>
+        <th>Имя</th>
+        <th>Адрес</th>
+    </tr>
+    <tr datasource="#data" foreach="//contact">
+        <td data="@name"></td>
+        <td data="email"></td>
+    </tr>
+</table>
+
+</body>
+</html>

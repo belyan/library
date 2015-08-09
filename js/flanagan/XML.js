@@ -204,3 +204,136 @@ XML.getNodes = function(context, xpathExpr, namespaces) {
 XML.getNode = function(context, xpathExpr, namespaces) {
     return (new XML.XPathExpression(xpathExpr, namespaces)).getNode(context);
 };
+
+/**
+ * Возвращает объект Document, в котором хранится содержимое тега <xml>
+ * с заданным идентификатором. Если тег <xml> имеет атрибут src, тогда
+ * выполняется загрузка документа с этого URL-адреса.
+ */
+XML.getDataIsland = function(id) {
+    var doc;
+
+    doc = XML.getDataIsland.cache[id];
+    if (doc) return doc;
+    doc = document.getElementById(id);
+
+    var url = doc.getAttribute("src");
+    if (url) {
+        doc = XML.load(url);
+    } else if (!doc.documentElement) {
+        var docelt = doc.firstChild;
+        while (docelt != null) {
+            if (docelt.nodeType == 1) break;
+            docelt = docelt.nextSibling;
+        }
+
+        var parser = new DOMParser();
+        doc = parser.parseFromString(doc.innerHTML, "application/xml");
+    }
+
+    XML.getDataIsland.cache[id] = doc;
+    return doc;
+};
+
+XML.getDataIsland.cache = {};
+
+/**
+ * Разворачивает любые шаблоны, вложенные в элемент e. Если в каком-либо
+ * из шаблонов используются XPath-выражения с пространствами имен, во втором
+ * аргументе необходимо передать отображение префиксов пространств имен
+ * на соответствующие им URL-адреса, как в случае с XML.XPathExpression()
+ */
+XML.expandTemplates = function(e, namespaces) {
+    if (!e) {
+        e = document.body;
+    } else if (typeof e == "string") {
+        e = document.getElementById(e);
+    }
+    if (!namespaces) namespaces = null;
+
+    if (e.getAttribute("datasource")) {
+        XML.expandTemplate(e, namespaces);
+    } else {
+        var kids = [];
+
+        for (var i = 0; i < e.childNodes.length; i++) {
+            var c = e.childNodes[i];
+            if (c.nodeType == 1) kids.push(e.childNodes[i]);
+        }
+
+        for (var j = 0; j < kids.length; j++) {
+            XML.expandTemplates(kids[j], namespaces);
+        }
+    }
+};
+
+/**
+ * Разворачивает один указанный шаблон. Если XPath-выражение в шаблоне использует
+ * имена пространств, вторым аргументом следует передать отображение
+ * префиксов пространств имен на соответствующие им URL-адреса.
+ */
+XML.expandTemplate = function(template, namespaces) {
+    if (typeof template == "string") template = document.getElementById(template);
+    if (!namespaces) namespaces = null;
+
+    var datasource = template.getAttribute("datasource");
+    var datadoc;
+
+    if (datasource.charAt(0) == "#") {
+        datadoc = XML.getDataIsland(datasource.substring(1));
+    } else {
+        datadoc = XML.load(datasource);
+    }
+
+    var datanodes;
+    var foreach = template.getAttribute("foreach");
+    if (foreach) {
+        datanodes = XML.getNodes(datadoc, foreach, namespaces);
+    } else {
+        datanodes = [];
+        for (var c = datadoc.documentElement.firstChild; c != null; c = c.nextSibling) {
+            if (c.nodeType == 1) datanodes.push(c);
+        }
+    }
+
+    var container = template.parentNode;
+    var insertionPoint = template.nextSibling;
+    template = container.removeChild(template);
+
+    for (var i = 0; i < datanodes.length; i++) {
+        var copy = template.cloneNode(true);
+        expand(copy, datanodes[i], namespaces);
+        container.insertBefore(copy, insertionPoint);
+    }
+
+    function expand(e, datanode, namespaces) {
+        for (var c = e.firstChild; c != null; c = c.nextSibling) {
+            if (c.nodeType != 1) continue;
+            var dataexpr = c.getAttribute("data");
+            if (dataexpr) {
+                var n = XML.getNode(datanode, dataexpr, namespaces);
+                c.innerHTML = "";
+                c.appendChild(document.createTextNode(getText(n)));
+            } else {
+                expand(c, datanode, namespaces);
+            }
+        }
+
+        function getText(n) {
+            switch(n.nodeType) {
+                case 1:
+                    var s = "";
+                    for (var c = n.firstChild; c != null; c = c.nextSibling) {
+                        s += getText(c);
+                    }
+                    return s;
+                case 2:
+                case 3:
+                case 4:
+                    return n.nodeValue;
+                default:
+                    return "";
+            }
+        }
+    }
+};
