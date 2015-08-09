@@ -3,18 +3,31 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Преобразование XML-документа с помощью XSLT</title>
-    <script src="HTTP.js"></script>
     <script src="XML.js"></script>
 </head>
 <body>
 
 <script>
+    function loadXML(url) {
+        var request;
+
+        if (window.ActiveXObject) {
+            request = new ActiveXObject("Msxml2.XMLHTTP");
+        } else {
+            request = new XMLHttpRequest();
+        }
+
+        request.open("GET", url, false);
+        request.send(null);
+
+        return request.responseXML;
+    }
+
     function displayAddressBook() {
-        HTTP.getXML("addresses.xml", function(xmldoc) {
-            HTTP.getXML("addresses.xsl.xml", function(stylesheet) {
-                XML.transform(xmldoc, stylesheet, "addresses");
-            });
-        });
+        var xmldoc = loadXML("addresses.xml");
+        var stylesheet = loadXML("addresses.xsl.xml");
+
+        XML.transform(xmldoc, stylesheet, "addresses");
     }
 </script>
 
