@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ненавязчивая смена изображений</title>
+    <script>
+        /**
+         * Добавляет эффект смены изображений к заданному тегу <img>, вставляя обработчики
+         * событий, которые будут изменять URL-адрес изображения при наведении указателя мыши.
+         */
+        function addRollover(img, rolloverURL) {
+            if (typeof img == "string") {
+                var id = img;
+                img = null;
+
+                if (document.getElementById) {
+                    img = document.getElementById(id);
+                } else if (document.all) {
+                    img = document.all[id];
+                }
+
+                if (!img) img = document.images[id];
+                if (!img) return;
+            }
+
+            if (img.tagName.toLowerCase() != "img") return;
+            var baseURL = img.src;
+            (new Image()).src = rolloverURL;
+
+            img.onmouseover = function() { img.src = rolloverURL; };
+            img.onmouseout = function() { img.src = baseURL; };
+        }
+
+        /**
+         * Находит все теги <img> в документе, которые имеют атрибут "rollover".
+         * Значение этого атрибута используется как URL_адрес сменного изображения,
+         * выводимого, когда указатель мыши наводится на изображение.
+         */
+        function initRollovers() {
+            var images = document.getElementsByTagName("img");
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                var rolloverURL = image.getAttribute("rollover");
+                if (rolloverURL) addRollover(image, rolloverURL);
+            }
+        }
+    </script>
+</head>
+<body onload="initRollovers()">
+
+<img src="http://dummyimage.com/300/000/fff.png" rollover="http://dummyimage.com/300/09f/fff.jpg"/>
+
+</body>
+</html>
