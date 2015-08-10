@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Анимация изображений</title>
+    <script src="ImageLoop.js"></script>
+    <script>
+        var animation = new ImageLoop("loop", 5, [
+            "http://dummyimage.com/300/000/fff.png?text=1",
+            "http://dummyimage.com/300/001/fff.png?text=2",
+            "http://dummyimage.com/300/002/fff.png?text=3",
+            "http://dummyimage.com/300/003/fff.png?text=4",
+            "http://dummyimage.com/300/004/fff.png?text=5",
+            "http://dummyimage.com/300/005/fff.png?text=6",
+            "http://dummyimage.com/300/006/fff.png?text=7",
+            "http://dummyimage.com/300/007/fff.png?text=8",
+            "http://dummyimage.com/300/008/fff.png?text=9"
+        ]);
+    </script>
+</head>
+<body>
+
+<p><img id="loop" src="http://dummyimage.com/300/000/fff.png?text=loading"/></p>
+<button onclick="animation.start()">Start</button>
+<button onclick="animation.stop()">Stop</button>
+
+</body>
+</html>
