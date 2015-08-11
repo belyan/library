@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Рисование диаграммы с помощью класса CSSDrawing</title>
+    <style type="text/css">
+        .figure { border: solid black 2px; background-color: #eee; }
+        .grid { border: dotted black 1px; opacity: .1; }
+        .boxstyle {
+            border: solid black 2px;
+            background: #aaa;
+            padding: 2px 10px 2px 10px;
+            font: bold 12pt sans-serif;
+            text-align: center;
+        }
+        .boldline { border: solid black 2px; }
+    </style>
+    <script src="CSSDrawing.js"></script>
+    <script>
+        function drawGrid(drawing, x, y, w, h, dx, dy) {
+            for (var x0 = x; x0 < x + w; x0 += dx) {
+                drawing.vertical(x0, y, h, "grid");
+            }
+            for (var y0 = y; y0 < y + h; y0 += dy) {
+                drawing.horizontal(x, y0, w, "grid");
+            }
+        }
+
+        function drawFigure() {
+            var figure = new CSSDrawing(500, 200, "figure");
+
+            drawGrid(figure, 0, 0, 500, 200, 25, 25);
+
+            figure.box(200, 50, 75, 25, "Life", "boxstyle");
+            figure.box(50, 125, 75, 25, "Archaea", "boxstyle");
+            figure.box(200, 125, 75, 25, "Bacteria", "boxstyle");
+            figure.box(350, 125, 75, 25, "Eukaryota", "boxstyle");
+
+            figure.horizontal(100, 103, 300, "boldline");
+            figure.vertical(100, 103, 22, "boldline");
+            figure.vertical(250, 83, 42, "boldline");
+            figure.vertical(400, 103, 22, "boldline");
+
+            figure.replace("placeholder");
+        }
+    </script>
+</head>
+<body onload="drawFigure()">
+
+<div id="placeholder"></div>
+
+</body>
+</html>
