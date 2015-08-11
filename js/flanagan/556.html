@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Создание гистрограмм средствами CSS</title>
+    <script src="BarChart.js"></script>
+    <script>
+        function drawChart() {
+            var chart = makeBarChart([1, 2, 4, 8, 16, 32, 64, 128, 256], 600, 300);
+            var container = document.getElementById("chartContainer");
+            container.appendChild(chart);
+        }
+    </script>
+</head>
+<body onload="drawChart()">
+
+<h2>y = 2<sup>n</sup></h2>
+<div id="chartContainer"></div>
+<i>Обратите внимание: каждый столбец в два раза выше предыдущего -- это характеристика экспоненциальной функции</i>
+
+</body>
+</html>
