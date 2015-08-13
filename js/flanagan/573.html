@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Создание графики с помощью тега &lt;canvas&gt;</title>
+    <script>
+        window.onload = function() {
+            var canvas = document.getElementById("square");
+            var context = canvas.getContext("2d");
+            context.fillStyle = "#f00";
+            context.fillRect(0, 0, 10, 10);
+
+            canvas = document.getElementById("circle");
+            context = canvas.getContext("2d");
+            context.fillStyle = "#00f";
+            context.beginPath();
+            context.arc(5, 5, 5, 0, 2 * Math.PI, true);
+            context.fill();
+        };
+    </script>
+</head>
+<body>
+
+<p>Это красный квадрат: <canvas id="square" width="10" height="10"></canvas></p>
+<p>Это голубой круг: <canvas id="circle" width="10" height="10"></canvas></p>
+
+</body>
+</html>
