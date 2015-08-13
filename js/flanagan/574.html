@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Рисование круговой диаграммы в теге &lt;canvas&gt;</title>
+    <script src="canvaspiechart.js"></script>
+    <script>
+        // Создает и возвращает новый тег <canvas> с заданным id и размерами
+        function makeCanvas(id, width, height) {
+            var canvas = document.createElement("canvas");
+            canvas.id = id;
+            canvas.width = width;
+            canvas.height = height;
+            return canvas;
+        }
+
+        function init() {
+            var canvas = makeCanvas("canvas", 600, 400);
+            document.body.appendChild(canvas);
+            pieChart("canvas", [12, 23, 34, 45], 200, 200, 150,
+                ["red", "blue", "yellow", "green"],
+                ["Север", "Юг", "Восток", "Запад"],
+                400, 100);
+        }
+    </script>
+</head>
+<body onload="init()">
+
+</body>
+</html>
