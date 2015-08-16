@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Инструкция "use strict"</title>
+    <script>
+        function defaultMode(mode, mode) {
+            with(document.forms[0]) {
+                console.log(name.value);
+            }
+
+            scope = "global";
+            console.log(window.scope);
+
+            console.log(this); // Window
+
+            Object.prototype = 0;
+            console.log(Object.prototype);
+
+            arguments[0] += " mode";
+            console.log(mode);
+
+            console.log(delete mode);
+            console.log(delete window.location);
+
+            var obj = {x: 1, x: 2};
+            console.log(obj);
+
+            var oct = 011;
+            console.log(oct); // 9
+
+            var eval = function(code) {
+                return code;
+            };
+            console.log(eval("1 + 2")); // "1 + 2"
+
+            console.log(arguments.callee);
+        }
+
+        function strictMode(mode/*, mode*/) {
+            "use strict";
+
+            var f = document.forms[0];
+            console.log(f.name.value);
+
+            var scope = "local";
+            console.log(scope);
+
+            console.log(this); // undefined
+
+            try {
+                Object.prototype = 0;
+            } catch(e) {
+                console.log(e);
+            }
+
+            arguments[0] += " mode";
+            console.log(mode);
+
+            // delete mode;
+            // delete f;
+            try {
+                delete window.location
+            } catch(e) {
+                console.log(e);
+            }
+
+            // var obj = {x: 1, x: 2};
+
+            var oct = 11;
+            console.log(oct); // 11
+
+            console.log(eval("1 + 2")); // 3
+
+            try {
+                console.log(arguments.callee);
+            } catch(e) {
+                console.log(e);
+            }
+        }
+    </script>
+</head>
+<body>
+
+<form>
+    <input type="text" name="name" value="value"/>
+    <button type="button" name="default" onclick="defaultMode(this.name)">Default Mode</button>
+    <button type="button" name="strict" onclick="strictMode(this.name)">Strict Mode</button>
+</form>
+
+</body>
+</html>
