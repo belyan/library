@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Создание нового объекта, наследующего прототип</title>
+    <script>
+        /**
+         * Возвращает вновь созданный объект, наследующий свойства
+         * объекта-прототипа p
+         * @param {Object} p
+         */
+        function inherit(p) {
+            if (p == null) throw new TypeError();
+            if (Object.create) return Object.create(p);
+
+            var t = typeof p;
+            if (t !== "object" && t !== "function") throw new TypeError();
+            function F() {}
+            F.prototype = p;
+
+            return new F();
+        }
+
+        var o = inherit({x: 1, y: 2});
+        console.log(o);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
