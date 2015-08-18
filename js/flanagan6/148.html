@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Проверка существования свойств</title>
+    <script>
+        var o1 = {x: 1};
+        console.log("x" in o1); // true
+        console.log("y" in o1); // false
+        console.log("toString" in o1); // true
+
+        console.log(o1.hasOwnProperty("x")); // true
+        console.log(o1.hasOwnProperty("y")); // false
+        console.log(o1.hasOwnProperty("toString")); // false
+
+        var o2 = Object.create({ y: 2});
+        o2.x = 1;
+        console.log(o2.propertyIsEnumerable("x")); // true
+        console.log(o2.propertyIsEnumerable("y")); // false
+        console.log(Object.prototype.propertyIsEnumerable("toString")); // false
+    </script>
+</head>
+<body>
+
+</body>
+</html>
