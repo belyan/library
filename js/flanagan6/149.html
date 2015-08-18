@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Перечисление свойств</title>
+    <script>
+        var o = {x: 1, y: 2, z: 3};
+        console.log(o.propertyIsEnumerable("toString")); // false
+
+        for (var p in o) {
+            if (!o.hasOwnProperty(p)) continue; // пропустить унаследованные свойства
+            if (typeof o[p] === "function") continue; // пропустить методы
+            console.log(p);
+        }
+
+        /**
+         * Копирует перечислимые свойства из объекта p в объект o и возвращает o.
+         * Если o и p имеют свойства с одинаковыми именами, значение свойства
+         * в объекте o затирается значением свойства из объекта p.
+         */
+        function extend(o, p) {
+            for (prop in p) {
+                o[prop] = p[prop];
+            }
+            return o;
+        }
+
+        var o1 = {x: 1};
+        var p1 = {x: 2, y: 2};
+        console.log(extend(o1, p1));
+
+        /**
+         * Копирует перечислимые свойства из объекта p в объект o и возвращает o.
+         * Если o и p имеют свойства с одинаковыми именами, значение свойства
+         * в объекте o остается неизменным.
+         */
+        function merge(o, p) {
+            for (prop in p) {
+                if (o.hasOwnProperty(prop)) continue;
+                o[prop] = p[prop];
+            }
+            return o;
+        }
+
+        var o2 = {x: 1};
+        var p2 = {x: 2, y: 2};
+        console.log(merge(o2, p2));
+
+        /**
+         * Удаляет из объекта o свойства, отсутствующие в объекте p.
+         */
+        function restrict(o, p) {
+            for (prop in o) {
+                if (!(prop in p)) delete o[prop];
+            }
+            return o;
+        }
+
+        var o3 = {x: 1, y: 1};
+        var p3 = {x: 2};
+        console.log(restrict(o3, p3));
+
+        /**
+         * Удаляет из объекта o свойства, присутствующие в объекте p.
+         */
+        function subtract(o, p) {
+            for (prop in p) {
+                delete o[prop];
+            }
+            return o;
+        }
+
+        var o4 = {x: 1, y: 1};
+        var p4 = {x: 2};
+        console.log(subtract(o4, p4));
+
+        /**
+         * Возвращает новый объект, содержащий свойства, присутствующие хотя бы в одном
+         * из объектов o или p.
+         */
+        function union(o, p) {
+            return extend(extend({}, o), p);
+        }
+
+        var o5 = {x: 1, y: 1};
+        var p5 = {y: 2, z: 2};
+        console.log(union(o5, p5));
+
+        /**
+         * Возвращает новый объект, содержащий свойства, присутствующие сразу в обоих
+         * объектах o или p.
+         */
+        function intersection(o, p) {
+            return restrict(extend({}, o), p);
+        }
+
+        var o6 = {x: 1, y: 1};
+        var p6 = {y: 2, z: 2};
+        console.log(intersection(o6, p6));
+
+        /**
+         * Возвращает массив имен собственных перечислимых свойств объекта o.
+         */
+        function keys(o) {
+            if (typeof o !== "object") throw new TypeError();
+            var result = [];
+            for (var prop in o) {
+                if (o.hasOwnProperty(prop)) result.push(prop);
+            }
+            return result;
+        }
+
+        console.log(keys(o));
+        console.log(Object.keys(o));
+    </script>
+</head>
+<body>
+
+</body>
+</html>
