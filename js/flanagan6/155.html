@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Атрибуты свойств</title>
+    <script>
+        console.log(Object.getOwnPropertyDescriptor({x: 1}, "x"));
+        console.log(Object.getOwnPropertyDescriptor({get octet() {
+            return Math.floor(Math.random() * 256);
+        }}, "octet"));
+        console.log(Object.getOwnPropertyDescriptor({}, "x")); // undefined
+        console.log(Object.getOwnPropertyDescriptor({}, "toString")); // undefined
+
+        var o = {};
+        Object.defineProperty(o, "x", {
+            value: 1,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
+        console.log(o.x); // 1
+        console.log(Object.keys(o)); // ["x"]
+
+        Object.defineProperty(o, "x", {writable: false});
+        o.x = 2;
+        console.log(o.x); // 1
+
+        Object.defineProperty(o, "x", {value: 2});
+        console.log(o.x); // 2
+
+        Object.defineProperty(o, "x", {get: function() { return 0; }});
+        console.log(o.x); // 0
+
+        var p = Object.defineProperties({}, {
+            x: {value: 3, writable: true, enumerable: true, configurable: true},
+            y: {value: 4, writable: true, enumerable: true, configurable: true},
+            r: {
+                get: function() { return Math.sqrt(this.x * this.x + this.y * this.y);  },
+                enumerable: true,
+                configurable: true
+            }
+        });
+        console.log(p);
+
+        /**
+         * Добавляет неперечислимый метод extend() в Object.prototype.
+         * Этот метод копирует не только значение свойств, но и все их атрибуты.
+         */
+        Object.defineProperty(Object.prototype, "extend", {
+            writable: true,
+            enumerable: false,
+            configurable: true,
+            value: function(o) {
+                var names = Object.getOwnPropertyNames(o);
+                for (var i = 0; i < names.length; i++) {
+                    if (names[i] in this) continue;
+                    var desc = Object.getOwnPropertyDescriptor(o, names[i]);
+                    Object.defineProperty(this, names[i], desc);
+                }
+            }
+        });
+
+        o.extend(p);
+        console.log(o);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
