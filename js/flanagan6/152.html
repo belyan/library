@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Методы чтения и записи свойств</title>
+    <script>
+        var p = {
+            x: 1.0,
+            y: 1.0,
+            get r() {
+                return Math.sqrt(this.x * this.x + this.y * this.y);
+            },
+            set r(newvalue) {
+                var oldvalue = Math.sqrt(this.x * this.x + this.y * this.y);
+                var ratio = newvalue / oldvalue;
+                this.x *= ratio;
+                this.y *= ratio;
+            },
+            get theta() {
+                return Math.atan2(this.y, this.x);
+            }
+        };
+
+        var q = Object.create(p);
+        q.x = 3;
+        q.y = 4;
+        console.log(q.r);
+        console.log(q.theta);
+
+        var serialnum = {
+            $n: 0,
+            get next() {
+                return this.$n++;
+            },
+            set next(n) {
+                if (n >= this.$n) {
+                    this.$n = n;
+                } else {
+                    throw "Число может быть только увеличено";
+                }
+            }
+        };
+
+        console.log(serialnum);
+        serialnum.next = 2;
+        console.log(serialnum.next);
+        try{
+            serialnum.next = 1;
+        } catch(e) {
+            console.log(e);
+        }
+
+        var random = {
+            get octet() {
+                return Math.floor(Math.random() * 256);
+            },
+            get uint16() {
+                return Math.floor(Math.random() * 256 * 256);
+            },
+            get int16() {
+                return Math.floor(Math.random() * 256 * 256) - 256 * 128;
+            }
+        };
+
+        console.log(random.octet);
+        console.log(random.uint16);
+        console.log(random.int16);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
