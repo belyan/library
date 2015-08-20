@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Атрибуты объекта</title>
+    <script>
+        // Атрибут prototype
+        var p = {x: 1};
+        var o = Object.create(p);
+        console.log(p.isPrototypeOf(o)); // true
+        console.log(Object.prototype.isPrototypeOf(p)); // true
+
+        // Атрибут class
+        console.log(p.toString()); // [object Object]
+
+        function classof(o) {
+            if (o === null) return "Null";
+            if (o === undefined) return "Undefined";
+            return Object.prototype.toString.call(o).slice(8, -1);
+        }
+
+        console.log(classof(null)); // Null
+        console.log(classof(1)); // Number
+        console.log(classof("")); // String
+        console.log(classof(false)); // Boolean
+        console.log(classof({})); // Object
+        console.log(classof([])); // Array
+        console.log(classof(/./)); // RegExp
+        console.log(classof(new Date())); // Date
+        function F() {}
+        console.log(classof(new F())); // Object
+
+        // Атрибут extensible
+        o.y = 1;
+        Object.preventExtensions(o);
+        console.log(Object.isExtensible(o)); // false
+        o.z = 1; // false
+        console.log(o); // {y: 1}
+
+        Object.seal(o);
+        console.log(Object.isSealed(o)); // true
+        delete o.y; // false
+        console.log(o); // {y: 1}
+
+        Object.freeze(o);
+        console.log(Object.isFrozen(o)); // true
+        o.y = 2; // false
+        console.log(o); // {y: 1}
+    </script>
+</head>
+<body>
+
+</body>
+</html>
