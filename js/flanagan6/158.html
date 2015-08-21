@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <title>Атрибуты объекта</title>
     <script>
-        // Атрибут prototype
+        /**
+         * Атрибут prototype
+         */
         var p = {x: 1};
         var o = Object.create(p);
         console.log(p.isPrototypeOf(o)); // true
         console.log(Object.prototype.isPrototypeOf(p)); // true
 
-        // Атрибут class
+        /**
+         * Атрибут class
+         */
         console.log(p.toString()); // [object Object]
 
         function classof(o) {
@@ -30,7 +34,9 @@
         function F() {}
         console.log(classof(new F())); // Object
 
-        // Атрибут extensible
+        /**
+         * Атрибут extensible
+         */
         o.y = 1;
         Object.preventExtensions(o);
         console.log(Object.isExtensible(o)); // false
