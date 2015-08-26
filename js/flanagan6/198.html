@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Функции как данные</title>
+    <script>
+        function square(x) { return x * x; }
+        var s = square;
+
+        console.log( square(4) ); // 16
+        console.log( s(4) ); // 16
+
+        var o = {
+            square: function(x) { return x * x; }
+        };
+        console.log(o.square(16)); // 256
+
+        var a = [function(x) { return x * x; }, 20];
+        console.log( a[0](a[1]) ); // 400
+
+        /**
+         * Использование функций как данных
+         */
+        function add(x, y) { return x + y; }
+        function subtract(x, y) { return x - y; }
+        function multiply(x, y) { return x * y; }
+        function divide(x, y) { return x / y; }
+
+        function operate(operator, operand1, operand2) {
+            return operator(operand1, operand2);
+        }
+
+        console.log( operate(add, operate(add, 2, 3), operate(multiply, 4, 5)) ); // (2 + 3) + (4 * 5) = 25
+
+        var operators = {
+            add: function(x, y) { return x + y; },
+            subtract: function (x, y) { return x - y; },
+            multiply: function (x, y) { return x * y; },
+            divide: function (x, y) { return x / y; },
+            pow: Math.pow
+        };
+
+        function operate2(operation, operand1, operand2) {
+            if (typeof operators[operation] === "function") {
+                return operators[operation](operand1, operand2);
+            } else {
+                throw "неизвестный оператор";
+            }
+        }
+
+        console.log( operate2("add", "hello", operate2("add", " ", "world")) ); // "hello world"
+        console.log( operate2("pow", 2, 10) ); // 1024
+
+        /**
+         * Определение собственных свойств функций
+         */
+        uniqueInteger.counter = 0;
+
+        function uniqueInteger() {
+            return uniqueInteger.counter++;
+        }
+
+        console.log(uniqueInteger()); // 0
+        console.log(uniqueInteger()); // 1
+        console.log(uniqueInteger()); // 2
+    </script>
+</head>
+<body>
+
+</body>
+</html>
