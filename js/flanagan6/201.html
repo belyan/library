@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Функции как пространства имен</title>
+    <script>
+        function mymodule() {
+            // Здесь находится реализация модуля
+        }
+        mymodule();
+
+        (function() {
+            // Здесь находится реализация модуля
+        })();
+
+        /**
+         * Функция копирует свойства второго и последующих аргументов в первый аргумент
+         */
+        var extend = (function() {
+            for (var p in {toString: null}) {
+                return function extend(o) {
+                    for (var i = 1; i < arguments.length; i++) {
+                        var source = arguments[i];
+                        for (var prop in source) o[prop] = source[prop];
+                    }
+                    return o;
+                }
+            }
+        })();
+
+        console.log( extend({x: 1}, {y: 2}, {z: 3}) );
+    </script>
+</head>
+<body>
+
+</body>
+</html>
