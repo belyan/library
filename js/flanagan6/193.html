@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Аргументы и параметры функций</title>
+    <script>
+        /**
+         * Необязательные аргументы
+         */
+        function getPropertyNames(o, a) {
+            if (a === undefined) a = [];
+            for (var property in o) a.push(property);
+            return a;
+        }
+
+        var keys = getPropertyNames({x: 1, y: 2});
+        console.log(keys); // ["x", "y"]
+        console.log(getPropertyNames({z: 3}, keys)); // ["x", "y", "z"]
+
+        function max() {
+            var m = Number.NEGATIVE_INFINITY;
+            for (var i = 0; i < arguments.length; i++) {
+                if (arguments[i] > m) m = arguments[i];
+            }
+            return m;
+        }
+
+        console.log(max(1, 10, 100, 2, 3, 1000, 4, 5, 10000, 6)); // 10000
+
+        /**
+         * Использование свойств объекта в качестве аргументов
+         */
+        function arraycopy(from, from_start, to, to_start, length) {
+            for (var i = from_start, j = to_start; i < from_start + length; i++, j++) {
+                to[j] = from[i];
+            }
+            return to;
+        }
+
+        function easycopy(args) {
+            return arraycopy(args.from, args.from_start || 0, args.to, args.to_start || 0, args.length);
+        }
+
+        var a = [1, 2, 3, 4];
+        var b = [];
+        console.log( easycopy({from: a, to: b, length: 4}) ); // [1, 2, 3, 4]
+    </script>
+</head>
+<body>
+
+</body>
+</html>
