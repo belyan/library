@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Замыкания</title>
+    <script>
+        var scope = "global";
+
+        function checkscope() {
+            var scope = "local";
+            function f() { return scope; }
+            return f();
+        }
+
+        console.log( checkscope() ); // local
+
+        function checkscope2() {
+            var scope = "local";
+            function f() { return scope; }
+            return f;
+        }
+
+        console.log( checkscope2()() ); // local
+
+        var uniqueInteger = (function() {
+            var counter = 0;
+            return function() {
+                return counter++;
+            }
+        })();
+
+        console.log( uniqueInteger() ); // 0
+        console.log( uniqueInteger() ); // 1
+        console.log( uniqueInteger() ); // 2
+
+        function counter() {
+            var n = 10;
+            return {
+                count: function() { return n++; },
+                reset: function() { n = 0; }
+            };
+        }
+
+        var a = counter(), b = counter();
+        console.log(a.count()); // 10
+        console.log(b.count()); // 10
+        a.reset();
+        console.log(a.count()); // 0
+        console.log(b.count()); // 11
+
+        function counter2(n) {
+            return {
+                get count() { return n++; },
+                set count(m) {
+                    if (m >= n) {
+                        n = m;
+                    } else {
+                        throw Error("значение счетчика нельзя уменьшить");
+                    }
+                }
+            };
+        }
+
+        var c = counter2(1000);
+        console.log(c.count); // 1000
+        console.log(c.count); // 1001
+        c.count = 2000;
+        console.log(c.count); // 2000
+        try {
+            c.count = 100;
+        } catch(e) {
+            console.log(e);
+        }
+
+        /**
+         * Реализация методов доступа к частному свойству с использованием замыканий
+         */
+        function addPrivateProperty(o, name, predicate) {
+            var value;
+            o["get" + name] = function() { return value; };
+            o["set" + name] = function(v) {
+                if (predicate && !predicate(v)) {
+                    throw Error("set" + name + ": недопустимое значение " + v);
+                } else {
+                    value = v;
+                }
+            };
+        }
+
+        var o = {};
+        addPrivateProperty(o, "Name", function(x) { return typeof x == "string"});
+        o.setName("Frank");
+        console.log(o.getName()); // Frank
+        try {
+            o.setName(1);
+        } catch(e) {
+            console.log(e);
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
