@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Свойства и методы функций</title>
+    <script>
+        /**
+         * Свойство length
+         * возвращает количество аргументов, которое функция ожидает получить
+         */
+        function check(args) {
+            var actual = args.length;
+            var expected = args.callee.length;
+            if (actual !== expected) {
+                throw new Error("ожидается: " + expected + "; получено " + actual);
+            }
+        }
+
+        function f(x, y, z) {
+            check(arguments);
+            return x + y + z;
+        }
+
+        console.log(check.length); // 1
+        console.log(f.length); // 3
+
+        console.log(f(1, 2, 3)); // 6
+        try {
+            f(1, 2);
+        } catch(e) {
+            console.log(e); // Error
+        }
+
+        /**
+         * Методы call() и apply()
+         */
+        var o = {};
+        console.log( f.call(o, 1, 2, 3) ); // 6
+        console.log(f.apply(o, [1, 2, 3])); // 6
+
+        o.m = f;
+        console.log( o.m(1, 2, 3) ); // 6
+        delete o.m;
+
+        console.log(Math.max.apply(Math, [10, 100, 20])); // 100
+
+        // Замещает метод m объекта o версией метода, которая регистрирует
+        // сообщения до и после вызова оригинального метода
+        function trace(o, m) {
+            var original = o[m];
+            console.log(o[m]);
+            o[m] = function() {
+                console.log(new Date(), "Entering:", m);
+                var result = original.apply(this, arguments);
+                console.log(new Date(), "Exiting:", m);
+                return result;
+            }
+        }
+
+        o.m = f;
+        trace(o, "m");
+        console.log( o.m(1, 2, 3) ); // 6
+
+        /**
+         * Метод bind()
+         */
+        function f2(y) { return this.x + y; }
+        var o2 = {x: 1};
+        var m2 = f2.bind(o2);
+        console.log(m2(2)); // 3
+
+        function bind(f, o) {
+            if (f.bind) {
+                return f.bind(o);
+            } else {
+                return function() {
+                    return f.apply(o, arguments);
+                }
+            }
+        }
+
+        m2 = bind(f2, o2);
+        console.log(m2(2)); // 3
+
+        var sum = function(x, y) { return x + y; };
+        var succ = sum.bind(null, 1);
+        console.log(succ(2)); // 3
+
+        function f3(y, z) { return this.x + y + z; }
+        var m3 = f3.bind({x: 4}, 5);
+        console.log(m3(6)); // 15
+
+        // Метод Function.bind() для ECMAScript 3
+        Function.prototype.bind = function(o) {
+            var self = this, boundArgs = arguments;
+
+            return function() {
+                var args = [], i;
+                for (i = 1; i < boundArgs.length; i++) args.push(boundArgs[i]);
+                for (i = 0; i < arguments.length; i++) args.push(arguments[i]);
+
+                console.log(args); // [5, 6]
+                return self.apply(o, args);
+            }
+        };
+
+        m3 = f3.bind({x: 4}, 5);
+        console.log(m3(6)); // 15
+    </script>
+</head>
+<body>
+
+</body>
+</html>
