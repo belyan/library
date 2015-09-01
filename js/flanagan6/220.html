@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Мемоизация</title>
+    <script>
+        /**
+         * Возвращает мемоизованную версию функции f
+         * @param f
+         * @return {Function}
+         */
+        function memoize(f) {
+            var cache = {};
+            return function() {
+                var key = arguments.length + "_" + Array.prototype.join.call(arguments, "+");
+                if (key in cache) {
+                    return cache[key];
+                } else {
+                    return cache[key] = f.apply(this, arguments);
+                }
+            };
+        }
+
+        /**
+         * Вовзвращает наибольший общий делитель двух целых чисел
+         * @param a
+         * @param b
+         * @return {*}
+         */
+        function gcd(a, b) {
+            var t;
+            if (a < b) {
+                t = b;
+                b = a;
+                a = t;
+            }
+            while(b != 0) {
+                t = b;
+                b = a % b;
+                a = t;
+            }
+            console.log(arguments.callee);
+            return a;
+        }
+
+        var gcdmemo = memoize(gcd);
+        console.log(gcdmemo(5, 25)); // 5
+        console.log(gcdmemo(85, 187)); // 17
+        console.log(gcdmemo(85, 187)); // 17
+
+        var factorial = memoize(function(n) {
+            console.log(arguments.callee);
+            return (n <= 1) ? 1 : n * factorial(n - 1);
+        });
+        console.log(factorial(5)); // 120
+        console.log(factorial(6)); // 720
+    </script>
+</head>
+<body>
+
+</body>
+</html>
