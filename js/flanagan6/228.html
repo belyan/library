@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Классы в стиле Java</title>
+    <script>
+        /**
+         * Complex.js
+         * В этом файле определяется класс Complex, представляющий комплексные числа.
+         * Комплексные числа представляют собой сумму вещественной и мнимой части,
+         * где множитель i в мнимой части - это квадратный корень из -1.
+         */
+
+        // Функция-конструктор
+        function Complex(real, imaginary) {
+            if (isNaN(real) || isNaN(imaginary)) throw new TypeError();
+
+            // Поля экземпляров класса
+            this.r = real;
+            this.i = imaginary;
+        }
+
+        // Методы экземплятор класса определяются как свойства-функции объекта-прототипа.
+        // Методы, определяемые ниже, наследуются всеми экземплярами и обеспечивают общность
+        // поведения класса.
+
+        /**
+         * Складывает комплексное число that с текущим и возвращает сумму в виде нового объекта
+         */
+        Complex.prototype.add = function(that) {
+            return new Complex(this.r + that.r, this.i + that.i);
+        };
+
+        /**
+         * Умножает текущее комплексное число на число that и возвращает произведение
+         */
+        Complex.prototype.mul = function(that) {
+            return new Complex(this.r * that.r - this.i * that.i, this.r * that.i + this.i * that.r);
+        };
+
+        /**
+         * Возвращает вещественный модуль комплексного числа
+         */
+        Complex.prototype.mag = function() {
+            return Math.sqrt(this.r * this.r + this.i * this.i);
+        };
+
+        /**
+         * Возвращает комплексное число с противоположным знаком
+         */
+        Complex.prototype.neg = function() {
+            return new Complex(-this.r, -this.i);
+        };
+
+        /**
+         * Преобразует объект Complex в строку в понятном формате
+         */
+        Complex.prototype.toString = function() {
+            return "{" + this.r + "," + this.i + "}";
+        };
+
+        /**
+         * Проверяет равенство комплексного числа с заданным
+         */
+        Complex.prototype.equals = function(that) {
+            return that != null &&
+                that.constructor === Complex &&
+                this.r === that.r && this.i === that.i;
+        };
+
+        // Поля класса (например, константы) и методы класса определяются как свойства
+        // конструктора. В методах класса вообще не используется ключевое слово this.
+
+        Complex.ZERO = new Complex(0, 0);
+        Complex.ONE = new Complex(1, 0);
+        Complex.I = new Complex(0, 1);
+
+        console.log(Object.keys(Complex)); // ["ZERO", "ONE", "I"]
+
+        /**
+         * Преобразует строку в формате, возвращаемом методом экземпляра toString(),
+         * в объект Complex или возбуждает исключение TypeError.
+         * @param s
+         */
+        Complex.parse = function(s) {
+            try {
+                var m = Complex._format.exec(s);
+                return new Complex(parseFloat(m[1]), parseFloat(m[2]));
+            } catch(x) {
+                throw new TypeError("Строка '" + s + "' не может быть преобразована в комплексное число");
+            }
+        };
+
+        // "Частное" поле класса, предназначенное для внутреннего использования.
+        Complex._format = /^{([^,]+),([^}]+)}$/;
+
+        var c = new Complex(2, 3);
+        var d = new Complex(c.i, c.r);
+        console.log(c);
+        console.log(d);
+        console.log( c.add(d).toString() ); // {5,5}
+
+        var e = Complex.parse("{1,2}");
+        console.log(e);
+        console.log( e.add(e.neg()).equals(Complex.ZERO) ); // true
+    </script>
+</head>
+<body>
+
+</body>
+</html>
