@@ -10,20 +10,24 @@
         }
 
         Range.prototype = {
+            constructor: Range, // Явно установить обратную ссылку на конструктор
             includes: function(x) { return this.from <= x && x <= this.to; },
             foreach: function(f) {
                 for (var x = Math.ceil(this.from); x <= this.to; x++) {
                     f(x);
                 }
-            },
-            toString: function() { return "(" + this.from + "..." + this.to + ")"; }
+            }
         };
+
+        Range.prototype.toString = function() { return "(" + this.from + "..." + this.to + ")"; };
 
         var r = new Range(1, 3);
         console.log(r);
+        console.log(r.constructor === Range); // true
 
         console.log( r.includes(2) ); // true
         r.foreach(function(x) { console.log(x); }); // 1 2 3
+        console.log(r.toString()); // (1...3)
     </script>
 </head>
 <body>
