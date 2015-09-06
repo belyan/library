@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Грубое определение типа</title>
+    <script>
+        /**
+         * Возвращает true, если объект o реализует методы, определяемые последующими аргументами
+         */
+        function quacks(o) {
+            for (var i = 1; i < arguments.length; i++) {
+                var arg = arguments[i];
+
+                switch(typeof arg) {
+                    case "string":
+                        if (typeof o[arg] !== "function") return false;
+                        continue;
+                    case "function":
+                        arg = arg.prototype; // Если аргумент является функцией, использовать ее прототип
+                    case "object":
+                        for (var m in arg) {
+                            if (typeof arg[m] !== "function") continue;
+                            if (typeof o[m] !== "function") return false;
+                        }
+                }
+            }
+
+            return true;
+        }
+
+        var s = "string";
+        var a = [1, 2, 3];
+
+        console.log(quacks(s, "trim")); // true
+        console.log(quacks(a, "trim")); // false
+        console.log(quacks(a, {sort: function(a, b) { return a - b; }})); // true
+    </script>
+</head>
+<body>
+
+</body>
+</html>
