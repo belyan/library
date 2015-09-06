@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Имя конструктора</title>
+    <script>
+        /**
+         * Возвращает тип объекта в виде строки
+         */
+        function type(o) {
+            var type, cl, name;
+
+            if (o === null) return "null";
+            if (o != o) return "NaN"; // NaN - единственное значение, не равное самому себе
+            if ((type = typeof o) !== "object") return type;
+            if ((cl = classof(o)) !== "Object") return cl;
+            if (o.constructor && typeof o.constructor === "function" &&
+                (name = o.constructor.getName())) return name;
+
+            return "Object";
+        }
+
+        /**
+         * Возвращает класс объекта
+         */
+        function classof(o) {
+            return Object.prototype.toString.call(o).slice(8, -1);
+        }
+
+        /**
+         * Возвращает имя функции
+         */
+        Function.prototype.getName = function() {
+            if ("name" in this) return this.name;
+            return this.name = this.toString().match(/function\s*([^(]*)\(/)[1];
+        };
+
+        function F() {}
+        var o = new F();
+
+        console.log(type(o)); // F
+    </script>
+</head>
+<body>
+
+</body>
+</html>
