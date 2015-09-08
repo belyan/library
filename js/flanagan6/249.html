@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Приватные свойства</title>
+    <script>
+        function Range(from, to) {
+            this.from = function() { return from; };
+            this.to = function() { return to; };
+        }
+
+        Range.prototype = {
+            constructor: Range,
+            includes: function(x) { return this.from() <= x && x <= this.to(); },
+            foreach: function(f) {
+                for (var x = Math.ceil(this.from()), max = this.to(); x <= max; x++) {
+                    f(x);
+                }
+            },
+            toString: function() { return "(" + this.from() + "..." + this.to() + ")"; }
+        };
+
+        var r = new Range(1, 5);
+        console.log(r.toString()); // (1...5)
+    </script>
+</head>
+<body>
+
+</body>
+</html>
