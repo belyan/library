@@ -16,10 +16,22 @@
                 for (var x = Math.ceil(this.from); x <= this.to; x++) {
                     f(x);
                 }
-            }
+            },
+            toString: function() { return "(" + this.from + "..." + this.to + ")"; }
         };
 
-        Range.prototype.toString = function() { return "(" + this.from + "..." + this.to + ")"; };
+        Range.prototype.equals = function(that) {
+            if (that == null) return false;
+            if (that.constructor != Range) return false;
+            return this.from == that.from && this.to == that.to;
+        };
+
+        Range.prototype.compareTo = function(that) {
+            if (!(that instanceof Range)) throw new Error("Нельзя сравнить Range c " + that);
+            var diff = this.from - that.from;
+            if (diff == 0) diff = this.to - that.to;
+            return diff;
+        };
 
         var r = new Range(1, 3);
         console.log(r);
@@ -28,6 +40,8 @@
         console.log( r.includes(2) ); // true
         r.foreach(function(x) { console.log(x); }); // 1 2 3
         console.log(r.toString()); // (1...3)
+        console.log(r.equals(new Range(1, 3))); // true
+        console.log(r.compareTo(new Range(1, 5))); // -2
     </script>
 </head>
 <body>
