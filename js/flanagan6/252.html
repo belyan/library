@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Подклассы</title>
+    <script src="Set.js"></script>
+    <script>
+        /**
+         * SingletonSet: простой подкласс множеств
+         */
+        function SingletonSet(member) {
+            this.member = member;
+        }
+
+        // Сделать SingletonSet подклассом класса Set
+        SingletonSet.prototype = Object.create(Set.prototype);
+        SingletonSet.prototype.constructor = SingletonSet;
+
+        // Переопределить методы базового класса
+        SingletonSet.prototype.add = function() { throw "множество доступно только для чтения"; };
+        SingletonSet.prototype.remove = function() { throw "множество доступно только для чтения"; };
+        SingletonSet.prototype.size = function() { return 1; };
+        SingletonSet.prototype.foreach = function(f, context) { f.call(context, this.member); };
+        SingletonSet.prototype.contains = function(x) { return x === this.member; };
+        SingletonSet.prototype.equals = function(that) {
+            return that instanceof Set && that.size() == 1 && that.contains(this.member);
+        };
+
+        var set1 = new SingletonSet(0);
+        console.log(set1);
+        console.log(set1.size()); // 1
+        console.log(set1.contains(0)); // true
+        console.log(set1.equals(new Set(0))); // true
+
+        /**
+         * NonNullSet: подкласс множеств, который не может содержать элементы со значениями null и undefined
+         */
+        function NonNullSet() {
+            // Вызов конструктора базового класса
+            Set.apply(this, arguments);
+        }
+
+        NonNullSet.prototype = Object.create(Set.prototype);
+        NonNullSet.prototype.constructor = NonNullSet;
+
+        NonNullSet.prototype.add = function() {
+            for (var i = 0; i < arguments.length; i++) {
+                if (arguments[i] == null) throw new Error("Нельзя добавить null или undefined в NonNullSet");
+            }
+            return Set.prototype.add.apply(this, arguments);
+        };
+
+        var set2 = new NonNullSet(1, 2, 3);
+        console.log(set2);
+        try { set2.add(null); } catch(e) { console.log(e); }
+
+        /**
+         * Фабричная функция для создания фильтрованных множеств
+         */
+        function filteredSetSubclass(superclass, filter) {
+            var constructor = function() {
+                superclass.apply(this, arguments);
+            };
+            var proto = constructor.prototype = Object.create(superclass.prototype);
+            proto.constructor = constructor;
+            proto.add = function() {
+                for (var i = 0; i < arguments.length; i++) {
+                    var v = arguments[i];
+                    if (!filter(v)) throw new Error ("Значение " + v + " отвергнуто фильтром");
+                }
+                superclass.prototype.add.apply(this, arguments);
+            };
+            return constructor;
+        }
+
+        var StringSet = filteredSetSubclass(Set, function(x) { return typeof x === "string"; });
+        var MySet = filteredSetSubclass(NonNullSet, function(x) { return typeof x !== "function"; });
+
+        var set3 = new StringSet("1", "2");
+        console.log(set3);
+        try { set3.add(3); } catch(e) { console.log(e); }
+
+        var set4 = new MySet("my");
+        console.log(set4);
+        try { set4.add(function(x) { return x; }); } catch(e) { console.log(e); }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
