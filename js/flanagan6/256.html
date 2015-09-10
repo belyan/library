@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Композиция в сравнении с наследованием</title>
+    <script src="Set.js"></script>
+    <script>
+        /**
+         * Копирует перечислимые свойства из объекта p в объект o и возвращает o.
+         * Если o и p имеют свойства с одинаковыми именами, значение свойства
+         * в объекте o затирается значением свойства из объекта p.
+         */
+        function extend(o, p) {
+            for (prop in p) {
+                o[prop] = p[prop];
+            }
+            return o;
+        }
+
+        /**
+         * Вспомогательная фукнция определения подклассов
+         */
+        function defineSubclass(superclass, constructor, methods, statics) {
+            constructor.prototype = Object.create(superclass.prototype);
+            constructor.prototype.constructor = constructor;
+
+            if (methods) extend(constructor.prototype, methods);
+            if (statics) extend(constructor, statics);
+            return constructor;
+        }
+
+        /**
+         * Объект FilteredSet обертывает объект множества и применяет
+         * указанный фильтр в своем методе add()
+         */
+        var FilteredSet = defineSubclass(Set, function FilteredSet(set, filter) {
+                this.set = set;
+                this.filter = filter;
+            }, {
+                add: function() {
+                    if (this.filter) {
+                        for (var i = 0; i < arguments.length; i++) {
+                            var v = arguments[i];
+                            if (!this.filter(v)) {
+                                throw new Error ("FilteredSet: значение " + v + " отвергнуто фильтром");
+                            }
+                        }
+                    }
+                },
+                remove: function() {
+                    this.set.remove.apply(this.set, arguments);
+                    return this;
+                },
+                contains: function(v) { return this.set.contains(v); },
+                size: function() { return this.set.size(); },
+                foreach: function(f, c) { this.set.foreach(f, c); }
+            }
+        );
+
+        var s = new FilteredSet(new Set(1, 2, 3), function(x) { return x !== null; });
+        console.log(s.set);
+        try { s.add(null); } catch(e) { console.log(e); }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
