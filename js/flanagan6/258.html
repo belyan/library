@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Абстрактные классы</title>
+    <script>
+        /**
+         * Копирует перечислимые свойства из объекта p в объект o и возвращает o.
+         * Если o и p имеют свойства с одинаковыми именами, значение свойства
+         * в объекте o затирается значением свойства из объекта p.
+         */
+        function extend(o, p) {
+            for (prop in p) {
+                o[prop] = p[prop];
+            }
+            return o;
+        }
+
+        /**
+         * Вспомогательная фукнция определения подклассов
+         */
+        function defineSubclass(superclass, constructor, methods, statics) {
+            constructor.prototype = Object.create(superclass.prototype);
+            constructor.prototype.constructor = constructor;
+
+            if (methods) extend(constructor.prototype, methods);
+            if (statics) extend(constructor, statics);
+            return constructor;
+        }
+
+        Function.prototype.extend = function(constructor, methods, statics) {
+            return defineSubclass(this, constructor, methods, statics);
+        };
+
+        // Вспомогательная функция, которая может использоваться для определения
+        // любого абстрактного метода
+        function abstractmethod() { throw new Error("абстрактный метод"); }
+
+        /**
+         * AbstractSet - абстрактный класс
+         */
+        function AbstractSet() {
+            throw new Error("Нельзя создать экземпляр абстрактного класса");
+        }
+
+        AbstractSet.prototype.contains = abstractmethod;
+
+        /**
+         * AbstractEnumerableSet - абстрактный подкласс класса AbstractSet
+         */
+        var AbstractEnumerableSet = AbstractSet.extend(function() {
+            throw new Error("Нельзя создать экземпляр абстрактного класса");
+        }, {
+            size: abstractmethod,
+            foreach: abstractmethod,
+            isEmpty: function() { return this.size() == 0; },
+            toString: function() {
+                var s = "{", i = 0;
+                this.foreach(function(v) {
+                    if (i++ > 0) s += ", ";
+                    s += v;
+                });
+                return s + "}";
+            },
+            toLocaleString: function() {
+                var s = "{", i = 0;
+                this.foreach(function(v) {
+                    if (i++ > 0) s += ", ";
+                    if (v == null) { // null и undefined
+                        s += v;
+                    } else {
+                        s += v.toLocaleString();
+                    }
+                });
+                return s + "}";
+            },
+            toArray: function() {
+                var a = [];
+                this.foreach(function(v) {a.push(v); });
+                return a;
+            },
+            equals: function(that) {
+                if (!(that instanceof AbstractEnumerableSet)) return false;
+                if (this.size() != that.size()) return false;
+                try {
+                    this.foreach(function(v) { if (!that.contains(v)) throw false; });
+                    return true;
+                } catch(x) {
+                    if (x === false) return false;
+                    throw x;
+                }
+            }
+        });
+
+        /**
+         * SingletonSet - конкретный подкласс класса AbstractEnumerableSet
+         */
+        var SingletonSet = AbstractEnumerableSet.extend(function SingletonSet(member) {
+            this.member = member;
+        }, {
+            contains: function(x) { return x === this.member; },
+            size: function() { return 1; },
+            foreach: function(f, context) { f.call(context, this.member); }
+        });
+
+        var set1 = new SingletonSet(1);
+        console.log(set1);
+        console.log(set1.isEmpty()); // false
+        console.log(set1.toString()); // {1}
+        console.log(set1.toArray()); // [1]
+        console.log(set1.contains(1)); // true
+
+        /**
+         * AbstractWritableSet - абстрактный подкласс класса AbstractEnumerableSet
+         */
+        var AbstractWritableSet = AbstractEnumerableSet.extend(function() {
+            throw new Error("Нельзя создать экземпляр абстрактного класса");
+        }, {
+            add: abstractmethod,
+            remove: abstractmethod,
+            union: function(that) {
+                var self = this;
+                that.foreach(function(v) { self.add(v); });
+                return this;
+            },
+            intersection: function(that) {
+                var self = this;
+                that.foreach(function(v) { if (!that.contains(v)) self.remove(v); });
+                return this;
+            },
+            difference: function(that) {
+                var self = this;
+                that.foreach(function(v) { self.remove(v); });
+                return this;
+            }
+        });
+
+        /**
+         * ArraySet - конкретный подкласс класса AbstractWritableSet
+         */
+        var ArraySet = AbstractWritableSet.extend(function ArraySet() {
+            this.values = [];
+            this.add.apply(this, arguments);
+        }, {
+            contains: function(v) { return this.values.indexOf(v) != -1; },
+            size: function() { return this.values.length; },
+            foreach: function(f, c) { this.values.forEach(f, c); },
+            add: function() {
+                for (var i = 0; i < arguments.length; i++) {
+                    var arg = arguments[i];
+                    if (!this.contains(arg)) this.values.push(arg);
+                }
+                return this;
+            },
+            remove: function() {
+                for (var i = 0; i < arguments.length; i++) {
+                    var p = this.values.indexOf(arguments[i]);
+                    if (p == -1) continue;
+                    this.values.splice(p, 1);
+                }
+                return this;
+            }
+        });
+
+        var set2 = new ArraySet(1, 2, 3);
+        console.log(set2);
+        set2.add(4, 5);
+        console.log(set2.values); // [1, 2, 3, 4, 5]
+        set2.remove(2, 3, 4);
+        console.log(set2.values); // [1, 5]
+        console.log(set2.size()); // 2
+    </script>
+</head>
+<body>
+
+</body>
+</html>
