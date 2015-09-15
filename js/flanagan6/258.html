@@ -169,6 +169,49 @@
         set2.remove(2, 3, 4);
         console.log(set2.values); // [1, 5]
         console.log(set2.size()); // 2
+
+        /**
+         * StringSet - конкретный подкласс класса AbstractWritableSet
+         */
+        function StringSet() {
+            this.set = Object.create(null);
+            this.n = 0;
+            this.add.apply(this, arguments);
+        }
+
+        StringSet.prototype = Object.create(AbstractWritableSet.prototype, {
+            constructor: { value: StringSet },
+            contains: { value: function(x) { return x in this.set; } },
+            size: { value: function(x) { return this.n; } },
+            foraech: { value: function(f, c) { Object.keys(this.set).forEach(f, c); } },
+            add: {
+                value: function() {
+                    for (var i = 0; i < arguments.length; i++) {
+                        if (!(arguments[i] in this.set)) {
+                            this.set[arguments[i]] = true;
+                            this.n++;
+                        }
+                    }
+                    return this;
+                }
+            },
+            remove: {
+                value: function() {
+                    for (var i = 0; i < arguments.length; i++) {
+                        if (arguments[i] in this.set) {
+                            delete this.set[arguments[i]];
+                            this.n--;
+                        }
+                    }
+                    return this;
+                }
+            }
+        });
+
+        var set3 = new StringSet("a", "b", "c");
+        console.log(set3);
+        set3.remove("b");
+        console.log(set3);
     </script>
 </head>
 <body>
