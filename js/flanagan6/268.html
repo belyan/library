@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Дескрипторы свойств</title>
+    <script>
+        /**
+         * Метод properties() возвращает объект, который представляет указанные или все свойства объекта,
+         * относительно которого был вызван метод
+         */
+        (function namespace() {
+            function properties() {
+                var names;
+
+                if (arguments.length == 0) {
+                    names = Object.getOwnPropertyNames(this);
+                } else if (arguments.length == 1 && Array.isArray(arguments[0])) {
+                    names = arguments[0];
+                } else {
+                    names = Array.prototype.splice.call(arguments, 0);
+                }
+
+                return new Properties(this, names);
+            }
+
+            Object.defineProperty(Object.prototype, "properties", {
+                value: properties, enumerable: false, writable: true, configurable: true
+            });
+
+            // Класс Properties представляет множество свойств объекта
+            function Properties(o, names) {
+                this.o = o;
+                this.names = names;
+            }
+
+            Properties.prototype.hide = function() {
+                var o = this.o, hidden = { enumerable: false };
+                this.names.forEach(function(n) {
+                    if (o.hasOwnProperty(n)) Object.defineProperty(o, n, hidden);
+                });
+                return this;
+            };
+
+            Properties.prototype.freeze = function() {
+                var o = this.o, frozen = { writable: false, configurable: false };
+                this.names.forEach(function(n) {
+                    if (o.hasOwnProperty(n)) Object.defineProperty(o, n, frozen);
+                });
+                return this;
+            };
+
+            Properties.prototype.descriptors = function() {
+                var o = this.o, desc = {};
+                this.names.forEach(function(n) {
+                    if (!o.hasOwnProperty(n)) return;
+                    desc[n] = Object.getOwnPropertyDescriptor(o, n);
+                });
+                return desc;
+            };
+
+            Properties.prototype.toString = function() {
+                var o = this.o;
+                var lines = this.names.map(nameToString);
+                return "{\n\t" + lines.join(",\n\t") + "\n}";
+
+                function nameToString(n) {
+                    var s = "", desc = Object.getOwnPropertyDescriptor(o, n);
+                    if (!desc) return "nonexistent " + n + ":undefined";
+                    if (!desc.configurable) s += "permanent ";
+                    if ((desc.get && !desc.set) || !desc.writable) s += "readonly ";
+                    if (!desc.enumerable) s += "hidden ";
+                    if (desc.get || desc.set) {
+                        s += "accessor " + n;
+                    } else {
+                        s += n + ": " + ((typeof desc.value === "function" ? "function" : desc.value))
+                    }
+
+                    return s;
+                }
+            };
+
+            Properties.prototype.properties().hide();
+        })();
+
+        var p = Object.defineProperties({}, {
+            x: {value: 3, writable: true, enumerable: true, configurable: true},
+            y: {value: 4, writable: true, enumerable: true, configurable: true},
+            r: {
+                get: function() { return Math.sqrt(this.x * this.x + this.y * this.y);  },
+                enumerable: true,
+                configurable: true
+            }
+        });
+        var props = p.properties();
+        console.log(props);
+        props.hide();
+        console.log(props.descriptors());
+        console.log(props.toString());
+    </script>
+</head>
+<body>
+
+</body>
+</html>
