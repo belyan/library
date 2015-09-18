@@ -46,6 +46,19 @@
         AbstractSet.prototype.contains = abstractmethod;
 
         /**
+         * NotSet - конкретный подкласс класса AbstractSet
+         */
+        var NotSet = AbstractSet.extend(function NotSet(set) {
+            this.set= set;
+        }, {
+            contains: function(x) { return !this.set.contains(x); },
+            toString: function() { return "~" + this.set.toString(); },
+            equals: function(that) {
+                return that instanceof NotSet && this.set.equals(that.set);
+            }
+        });
+
+        /**
          * AbstractEnumerableSet - абстрактный подкласс класса AbstractSet
          */
         var AbstractEnumerableSet = AbstractSet.extend(function() {
