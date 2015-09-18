@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Модули</title>
+    <script>
+        /**
+         * Класс Set внутри функции модуля
+         */
+        var Set = (function namespace() {
+            function Set() {
+                this.values = {};
+                this.n = 0;
+                this.add.apply(this, arguments);
+            }
+
+            Set.prototype.contains = function(value) {
+                return this.values.hasOwnProperty(v2s(value));
+            };
+
+            Set.prototype.size = function() {
+                return this.n;
+            };
+
+            Set.prototype.add = function() {
+                for (var i = 0; i < arguments.length; i++) {
+                    var val = arguments[i];
+                    var str = v2s(val);
+                    if (!this.values.hasOwnProperty(str)) {
+                        this.values[str] = val;
+                        this.n++;
+                    }
+                }
+                return this;
+            };
+
+            Set.prototype.remove = function() { /* ... */ };
+            Set.prototype.foreach = function(f, context) { /* ... */ };
+
+            function v2s(val) {
+                switch(val) {
+                    case undefined: return "u";
+                    case null: return "n";
+                    case true: return "t";
+                    case false: return "f";
+                    default: switch(typeof val) {
+                        case "number": return "#" + val;
+                        case "string": return "@" + val;
+                        default: return "$" + objectId(val);
+                    }
+                }
+            }
+
+            function objectId(o) {
+                var prop = "__id__";
+                if (!o.hasOwnProperty(prop)) {
+                    o[prop] = next++;
+                }
+                return o[prop];
+            }
+
+            var next = 100;
+
+            // Общедоступным API этого модуля является функция-конструктор Set()
+            return Set;
+        })();
+
+        var set1 = new Set(1, 2, 3);
+        console.log(set1);
+        set1.add(4, 5);
+        console.log(set1.size()); // 5
+
+        var set2 = new Set("x", "y", "z");
+        console.log(set2);
+        console.log(set2.contains("x")); // true
+
+        /**
+         * Модуль, определяющий более одного элемента API, и возвращающий объект пространства имен
+         */
+        var collections1;
+        if (!collections1) collections1 = {};
+
+        collections1.sets = (function namespace() {
+            function AbstractSet() {
+                throw new Error("Нельзя создать экземпляр абстрактного класса");
+            }
+
+            function NotSet(set) {
+                this.set= set;
+            }
+
+            // Экспортировать API в видк возвращаемого объекта пространства имен
+            return {
+                AbstractSet: AbstractSet,
+                NotSet: NotSet
+            };
+        })();
+
+        console.log(collections1);
+
+        /**
+         * Модуль как конструктор, экспортирующий значения за счет их присваивания
+         */
+        var collections2;
+        if (!collections2) collections2 = {};
+
+        collections2.sets = (new function namespace() {
+            function AbstractSet() {
+                throw new Error("Нельзя создать экземпляр абстрактного класса");
+            }
+
+            function NotSet(set) {
+                this.set= set;
+            }
+
+            // Экспортировать API в объекте this
+            this.AbstractSet = AbstractSet;
+            this.NotSet = NotSet;
+        }());
+
+        console.log(collections2);
+
+        /**
+         * Модуль с заранее определенным объектом глобального пространства имен
+         */
+        var collections3;
+        if (!collections3) collections3 = {};
+        collections3.sets = {};
+
+        (function namespace() {
+            function AbstractSet() {
+                throw new Error("Нельзя создать экземпляр абстрактного класса");
+            }
+
+            function NotSet(set) {
+                this.set= set;
+            }
+
+            // Экспортировать общедоступный API в уже созданный объект пространства имен
+            collections3.sets.AbstractSet = AbstractSet;
+            collections3.sets.NotSet = NotSet;
+        }());
+
+        console.log(collections3);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
