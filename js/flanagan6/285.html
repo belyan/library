@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Методы класса String</title>
+    <script>
+        /**
+         * Метод search()
+         * Возвращает позицию первого символа найденной подстроки,
+         * либо -1, если соотвествие не найдено
+         */
+        console.log("JavaScript".search(/script/i)); // 4
+
+        /**
+         * Метод replace()
+         * Выполняет операцию поиска с заменой
+         */
+        var text = "Единообразная расстановка прописных букв в слове \"javascript\" для всей строки текста.";
+        console.log(text.replace(/JavaScript/gi, "JavaScript"));
+
+        var quote = /"([^"]*)"/g;
+        console.log(text.replace(quote, "«$1»"));
+
+        /**
+         * Метод match()
+         * Возвращает массив, содержащий результаты поиска
+         */
+        console.log("1 плюс 2 плюс 3".match(/\d+/g)); // ["1", "2", "3"]
+
+        var url = /(\w+):\/\/([\w.]+)\/(\S*)/;
+        var result = "Посетите мою домашнюю страницу http://www.example.com/~david".match(url);
+        console.log(result);
+
+        /**
+         * Метод split()
+         * Разбивает строку на массив подстрок, используя регулярное выражение в качестве разделителя
+         */
+        console.log("123,456,789".split(",")); // ["123", "456", "789"]
+        console.log("1, 2, 3 , 4 ,5".split(/\s*,\s*/)); // ["1", "2", "3", "4", "5"]
+    </script>
+</head>
+<body>
+
+</body>
+</html>
