@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Определение регулярных выражений</title>
+    <script>
+        var pattern = new RegExp("s$");
+        console.log(pattern);
+
+        var p1 = /\d{2,4}/;
+        var p2 = /\w{3}\d?/;
+        var p3 = /\s+java\s+/;
+        var p4 = /[^(]*/;
+
+        console.log(p1.test("123")); // true
+        console.log(p2.test("abc4")); // true
+        console.log(p3.test("JavaScript")); // false
+        console.log(p4.test("()")); // true
+
+        var str = "JavaScript is fun!";
+        console.log(str.match(/([Jj]ava([Ss]cript)?)\sis\s(fun\w*)/));
+
+        var json = "{'name': 'value'}";
+        console.log(json.search(/(['"])[^'"]*\1/)); // 1
+    </script>
+</head>
+<body>
+
+</body>
+</html>
