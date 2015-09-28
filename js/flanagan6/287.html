@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Объект RegExp</title>
+    <script>
+        var zipcode = new RegExp("\\d{5}", "g");
+        console.log(zipcode); // /\d{5}/g
+
+        /**
+         * Метод exec()
+         * Выполняет регулярное выражение для указанной строки и вовзращает массив
+         * с полной информацией о соответствии
+         */
+        console.log(zipcode.exec("12345")); // ["12345", index: 0, input: "12345"]
+        console.log(zipcode.lastIndex); // 5
+
+        var pattern = /Java/g;
+        var text = "JavaScript - это более забавная штука, чем Java!";
+        var result;
+
+        while((result = pattern.exec(text)) != null) {
+            console.log("Найдено '" + result[0] + "' в позиции " + result.index + ";"
+                + " следующий поиск начнется с позиции " + pattern.lastIndex);
+        }
+
+        /**
+         * Метод test()
+         * Проверяет строку на соответствие регулярному выражению
+         * и возвращает логическое значение
+         */
+        console.log(zipcode.test("12345")); // false
+        zipcode.lastIndex = 0;
+        console.log(zipcode.test("12345")); // true
+        console.log(pattern.test("JavaScript")); // true
+    </script>
+</head>
+<body>
+
+</body>
+</html>
