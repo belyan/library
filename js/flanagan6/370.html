@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Таймеры</title>
+    <script>
+        /**
+         * Планирует вызов или вызовы функции f() в будущем.
+         * Ожидает перед первым вызовом start миллисекунд, затем вызывает f()
+         * каждые interval миллисекунд и останавливается через start+end миллисекунд
+         */
+        function invoke(f, start, interval, end) {
+            if (!start) start = 0;
+            if (arguments.length <= 2) {
+                setTimeout(f, start);
+            } else {
+                setTimeout(repeat, start);
+
+                function repeat() {
+                    var h = setInterval(f, interval);
+                    if (end) setTimeout(function() {
+                        clearInterval(h);
+                    }, end);
+                }
+            }
+        }
+
+        function updateTime() {
+            console.log((new Date()).toLocaleTimeString());
+        }
+
+        invoke(updateTime, 0, 1000, 5500);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
