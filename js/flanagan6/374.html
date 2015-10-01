@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Объект Navigator</title>
+    <script>
+        /**
+         * Определение типа браузера с помощью свойства navigator.userAgent
+         */
+        var browser = (function() {
+            var s = navigator.userAgent.toLowerCase();
+            var match = /(webkit)[ \/]([\w.]+)/.exec(s) ||
+                /(opera)(?:.*version)?[ \/]([\w.]+)/.exec(s) ||
+                /(msie) ([\w.]+)/.exec(s) ||
+                !/compatible/.test(s) && /(mozilla)(?:.*? rv:([\w.]+))?/.exec(s) || [];
+            return {name: match[1] || "", version: match[2] || "0"};
+        })();
+
+        console.log(browser);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
