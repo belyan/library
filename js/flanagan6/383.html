@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Открытие и закрытие окон</title>
+    <script>
+        window.name = "main";
+        var w = window.open("index.html", "modal", "width=400,height=350,status=yes,resizable=yes");
+        console.log(w.name);
+        console.log(w.opener.name);
+        console.log(w.opener === window);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
