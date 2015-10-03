@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Выбор элементов документа</title>
+    <script>
+        function selectElements() {
+            // По значению атрибута id
+            var section1 = document.getElementById("section1");
+            console.log(section1);
+            console.log(getElements("section1", "section2"));
+
+            // По значению атрибута name
+            var radioButtons = document.getElementsByName("favorite_color");
+            console.log(radioButtons);
+            console.log(radioButtons[2].value); // Blue
+
+            console.log(document.forms.shipping_address);
+
+            // По имени тега
+            var spans = document.getElementsByTagName("span");
+            console.log(spans);
+
+            var firstPara = document.getElementsByTagName("p")[0];
+            console.log(firstPara);
+            var firstParaSpans = firstPara.getElementsByTagName("span");
+            console.log(firstParaSpans);
+
+            // По классу CSS
+            var warnings = document.getElementsByClassName("warning");
+            console.log(warnings);
+
+            var log = document.getElementById("log");
+            var fatal = log.getElementsByClassName("fatal error");
+            console.log(fatal);
+        }
+
+        /**
+         * Поиск нескольких элементов по значениям атрибута id
+         */
+        function getElements() {
+            var elements = {};
+            for (var i = 0; i < arguments.length; i++) {
+                var id = arguments[i];
+                var elt = document.getElementById(id);
+                if (elt == null) throw new Error("No element with id: " + id);
+                elements[id] = elt;
+            }
+            return elements;
+        }
+    </script>
+</head>
+<body onload="selectElements()">
+
+<h2 id="section1">Section 1</h2>
+
+<div id="log">
+    <p><span class="error">Error</span></p>
+    <p><span class="warning">Warning</span></p>
+    <p><span class="fatal error">Fatal Error</span></p>
+</div>
+
+<h2 id="section2">Section 2</h2>
+
+<form name="shipping_address">
+    <label><input name="favorite_color" type="radio" value="red"/>Red</label>
+    <label><input name="favorite_color" type="radio" value="green"/>Green</label>
+    <label><input name="favorite_color" type="radio" value="Blue"/>Blue</label>
+</form>
+
+</body>
+</html>
