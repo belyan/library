@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Содержимое элемента</title>
+    <script>
+        function ready() {
+            var para = document.getElementsByTagName("p")[0];
+            console.log(para.innerHTML); // "This is a <i>simple</i> document."
+            console.log(para.outerHTML); // "<p>This is a <i>simple</i> document.</p>"
+            console.log(para.textContent); // "This is a simple document."
+
+            textContent(para, "Hello World!");
+
+            function textContent(element, value) {
+                var content = element.textContent;
+                if (value === undefined) {
+                    if (content !== undefined) {
+                        return content;
+                    } else {
+                        return element.innerText;
+                    }
+                } else {
+                    if (content !== undefined) {
+                        element.textContent = value;
+                    } else {
+                        element.innerText = value;
+                    }
+                }
+            }
+
+            var target = document.getElementById("target");
+
+            target.insertAdjacentHTML("beforebegin", "<i>before begin</i>");
+            target.insertAdjacentHTML("afterbegin", "<i>after begin</i> ");
+            target.insertAdjacentHTML("beforeend", " <i>before end</i>");
+            target.insertAdjacentHTML("afterend", "<i>after end</i>");
+        }
+    </script>
+</head>
+<body onload="ready()">
+
+<h1>An HTML Document</h1>
+<p>This is a <i>simple</i> document.</p>
+
+<div id="target">This is the element content</div>
+
+</body>
+</html>
