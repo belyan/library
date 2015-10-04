@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Структура документа и навигация по документу</title>
+    <script>
+        function ready() {
+            var self = document.getElementsByClassName("self")[0];
+            console.log(self);
+            console.log(parent(self, 2)); // ancestor
+            console.log(parent(self, 3)); // root
+            console.log(sibling(self, 1)); // next sibling
+            console.log(sibling(self, -1)); // prev sibling
+            console.log(child(self, 0)); // child first
+            console.log(child(self, -1)); // child last
+        }
+
+        /**
+         * Возвращает ссылку на n-го предка элемента e или null, если нет такого предка
+         */
+        function parent(e, n) {
+            if (n === undefined) n = 1;
+            while (n-- && e) {
+                e = e.parentNode;
+            }
+            if (!e || e.nodeType != 1) return null;
+            return e;
+        }
+
+        /**
+         * Возвращает n-й братский элемент элемента e
+         */
+        function sibling(e, n) {
+            while (e && n !== 0) {
+                if (n > 0) {
+                    if (e.nextElementSibling) {
+                        e = e.nextElementSibling;
+                    } else {
+                        for (e = e.nextSibling; e && e.nodeType !== 1; e = e.nextSibling) {}
+                    }
+                    n--;
+                } else {
+                    if (e.previousElementSibling) {
+                        e = e.previousElementSibling;
+                    } else {
+                        for (e = e.previousSibling; e && e.nodeType !== 1; e = e.previousSibling) {}
+                    }
+                    n++;
+                }
+            }
+            return e;
+        }
+
+        /**
+         * Возвращает n-й дочерний элемент элемента e или null, если нет такого дочернего элемента
+         */
+        function child(e, n) {
+            if (e.children) {
+                if (n < 0) n += e.children.length;
+                if (n < 0) return null;
+                return e.children[n];
+            }
+
+            if (n >= 0) {
+                if (e.firstElementChild) {
+                    e = e.firstElementChild;
+                } else {
+                    for (e = e.firstChild; e && e.nodeType !== 1; e = e.nextSibling) {}
+                }
+                return sibling(e, n);
+            } else {
+                if (e.lastElementChild) {
+                    e = e.lastElementChild;
+                } else {
+                    for (e = e.lastChild; e && e.nodeType !== 1; e = e.previousSibling) {}
+                }
+                return sibling(e, n + 1);
+            }
+        }
+    </script>
+</head>
+<body onload="ready()">
+
+<ol class="root">
+    <li class="ancestor">
+        <ol class="parent">
+            <li class="sibling prev"></li>
+            <li class="self">
+                <p class="child first"></p>
+                <ol class="child">
+                    <li class="descendant"></li>
+                </ol>
+                <p class="child last"></p>
+            </li>
+            <li class="sibling next"></li>
+        </ol>
+    </li>
+</ol>
+
+</body>
+</html>
