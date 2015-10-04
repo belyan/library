@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Атрибуты с данными</title>
+    <script>
+        function ready() {
+            var sparklines = document.getElementsByClassName("sparkline");
+            for (var i = 0; i < sparklines.length; i++) {
+                var elt = sparklines[i];
+                var ymin, ymax;
+                if (elt.dataset) {
+                    console.log(elt.dataset);
+                    ymin = parseFloat(elt.dataset.ymin);
+                    ymax = parseFloat(elt.dataset.ymax);
+                } else {
+                    ymin = parseFloat(elt.getAttribute("data-ymin"));
+                    ymax = parseFloat(elt.getAttribute("data-ymax"));
+                }
+                var data = elt.textContent.split(" ").map(parseFloat);
+                console.log(elt, ymin, ymax, data);
+            }
+        }
+    </script>
+</head>
+<body onload="ready()">
+
+<span class="sparkline" data-ymin="0" data-ymax="10">1 1 1 2 2 3 4 5 5 4 3 5 6 7 7 4 2 1</span>
+
+</body>
+</html>
