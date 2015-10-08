@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Создание, вставка и удаление узлов</title>
+    <script>
+        function loadAsync(url) {
+            var head = document.getElementsByTagName("head")[0];
+            var s = document.createElement("script");
+            s.src = url;
+            head.appendChild(s);
+        }
+    </script>
+</head>
+<body onload="loadAsync('Set.js');">
+
+<script>
+    // Создание узлов
+    var div = document.createElement("div");
+    div.className = "test";
+    div.innerHTML = "Hello, World!";
+    console.log(div);
+    console.log(div.nodeType); // 1
+
+    var newNode = document.createTextNode("содержимое текстового узла");
+    console.log(newNode);
+    console.log(newNode.nodeType); // 3
+    console.log(typeof newNode); // object
+</script>
+
+<ul id="list">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+</ul>
+
+<script>
+    // Вставка узлов
+    var list = document.getElementById("list");
+    var lastItem = document.createElement("li");
+    lastItem.innerHTML = "5";
+    list.appendChild(lastItem);
+
+    var firstItem = document.createElement("li");
+    firstItem.innerHTML = "0";
+    list.insertBefore(firstItem, list.firstChild);
+
+    /**
+     * Вставляет узел child в узел parent так, что он становится n-м дочерним узлом
+     */
+    function insertAt(parent, child, n) {
+        if (n < 0 || n > parent.children.length) {
+            throw new Error("недопустимый индекс");
+        } else if (n == parent.children.length) {
+            parent.appendChild(child);
+        } else {
+            parent.insertBefore(child, parent.children[n]);
+        }
+    }
+
+    var newItem = document.createElement("li");
+    newItem.innerHTML = "4";
+
+    insertAt(list, newItem, 4);
+</script>
+
+</body>
+</html>
