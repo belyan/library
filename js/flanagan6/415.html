@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Удаление и замена узлов</title>
+    <script>
+        /**
+         * Замещает узел n новым элементом <b> и делает узел n его дочерним элементом
+         */
+        function embolden(n) {
+            if (typeof n == "string") n = document.getElementById(n);
+            var parent = n.parentNode;
+            var b = document.createElement("b");
+            parent.replaceChild(b, n);
+            b.appendChild(n);
+        }
+    </script>
+</head>
+<body>
+
+<ul id="list">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+</ul>
+<script>
+    // Удаление узлов
+    var list = document.getElementById("list");
+    var firstItem = list.firstElementChild;
+    var lastItem = list.lastElementChild;
+
+    firstItem.parentNode.removeChild(firstItem);
+
+    // Замена узлов
+    var newItem = document.createElement("li");
+    newItem.innerHTML = "4";
+
+    lastItem.parentNode.replaceChild(newItem, lastItem);
+</script>
+
+<span id="text">text</span>
+<script>
+    embolden(document.getElementById("text"));
+</script>
+
+</body>
+</html>
