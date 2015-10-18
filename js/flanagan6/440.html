@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Получение выделенного текста</title>
+    <script>
+        function getSelectedText() {
+            if (window.getSelection) {
+                return window.getSelection().toString();
+            } else if (document.selection) {
+                return document.selection.createRange().text;
+            }
+        }
+    </script>
+</head>
+<body>
+
+<a href="javascript: var q = getSelectedText();
+    void window.open('http://ru.wikipedia.org/wiki/' + q)">Поиск выделенного текста в Википедии</a>
+
+<h2>Browsers</h2>
+<ul>
+    <li>Firefox</li>
+    <li>Internet Explorer</li>
+</ul>
+
+</body>
+</html>
