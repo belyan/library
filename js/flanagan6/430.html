@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Выбор форм и элементов форм</title>
+</head>
+<body>
+
+<form name="shipping">
+    <fieldset>
+        <legend>Shipping Method</legend>
+        <label><input type="radio" name="method" value="1st"/>Первым классом</label>
+        <label><input type="radio" name="method" value="2day" checked/>За 2 дня самолетом</label>
+        <label><input type="radio" name="method" value="overnight"/>В течение ночи</label>
+    </fieldset>
+</form>
+
+<script>
+    var shipping = document.forms.shipping;
+    console.log(shipping);
+
+    var methods = shipping.method;
+    console.log(methods);
+
+    var shipping_method;
+    for (var i = 0; i < methods.length; i++) {
+        if (methods[i].checked) shipping_method = methods[i].value;
+    }
+    console.log(shipping_method); // "2day"
+</script>
+
+</body>
+</html>
