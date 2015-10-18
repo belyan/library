@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Координаты документа и видимой области</title>
+    <script>
+        /**
+         * Возвращает текущие позиции полос прокрутки в виде свойств x и y объекта
+         */
+        function getScrollOffset(w) {
+            w = w || window;
+            if (w.pageXOffset != null) {
+                return {x: w.pageXOffset, y: w.pageYOffset};
+            }
+
+            var d = w.document;
+            if (document.compatMode == "CSS1Compat") {
+                return {x: d.documentElement.scrollLeft, y: d.documentElement.scrollTop};
+            } else {
+                return {x: d.body.scrollLeft, y: d.body.scrollTop};
+            }
+        }
+
+        var scroll = getScrollOffset();
+        console.log(scroll);
+
+        /**
+         * Возвращает размеры видимой области в виде свойств w и h объекта
+         */
+        function getViewportSize(w) {
+            w = w || window;
+            if (w.innerWidth != null) {
+                return {w: w.innerWidth, h: w.innerHeight};
+            }
+
+            var d = w.document;
+            if (document.compatMode == "CSS1Compat") {
+                return {w: d.documentElement.clientWidth, h: d.documentElement.clientHeight};
+            } else {
+                return {w: d.body.clientWidth, h: d.body.clientHeight};
+            }
+        }
+
+        var viewport = getViewportSize();
+        console.log(viewport);
+    </script>
+</head>
+<body>
+
+</body>
+</html>
