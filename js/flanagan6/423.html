@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Определение геометрии элемента</title>
+</head>
+<body>
+
+<div id="elt" style="width: 200px; height: 100px;"></div>
+
+<script>
+    var e = document.getElementById("elt");
+    var box = e.getBoundingClientRect();
+    console.log(box);
+    console.log(box.width); // 200
+    console.log(box.height); // 100
+
+    // Определение элемента в указанной точке
+    console.log(document.elementFromPoint(100, 50));
+
+    function getElementPosition(elt) {
+        var e, x = 0, y = 0;
+
+        for (e = elt; e != null; e = e.offsetParent) {
+            x += e.offsetLeft;
+            y += e.offsetTop;
+        }
+        for (e = elt.parentNode; e != null && e.nodeType == 1; e = e.parentNode) {
+            x -= e.scrollLeft;
+            y -= e.scrollTop;
+        }
+
+        return {x: x, y: y};
+    }
+
+    console.log(getElementPosition(e));
+</script>
+
+</body>
+</html>
