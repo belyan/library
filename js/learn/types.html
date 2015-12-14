@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Типы данных</title>
+</head>
+<body>
+
+<!--
+Введение в типы данных
+http://learn.javascript.ru/types-intro
+-->
+<script>
+    /* Есть 5 «примитивных» типов: number, string, boolean, null, undefined и объекты object. */
+
+    /* Число number */
+    var n = 123;
+    n = 12.345;
+
+    alert(1 / 0); // Infinity
+    alert("нечисло" * 2); // NaN, ошибка
+
+    /* Строка string */
+    var str = "Мама мыла раму";
+    str = 'Одинарные кавычки тоже подойдут';
+
+    /* Булевый (логический) тип boolean */
+    var checked = true; // поле формы помечено галочкой
+    checked = false;    // поле формы не содержит галочки
+
+    /* null */
+    var age = null;
+
+    /* undefined */
+    var u;
+    alert(u); // выведет "undefined"
+</script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Преобразование типов</title>
+</head>
+<body>
+
+<!--
+Преобразование типов
+http://learn.javascript.ru/types-conversion
+-->
+<script>
+    var num = 123,
+        str = "123",
+        obj = {},
+        arr = [];
+
+    /* Строковое преобразование */
+    console.log(typeof String(num)); // string
+
+    console.log(true + str); // "true123"
+    console.log(str + undefined); // "123undefined"
+
+    /* Численное преобразование */
+    console.log(typeof Number(str)); // number
+    console.log(typeof +str); // number
+
+    // Специальные значения
+    console.log(+undefined); // NaN
+    console.log(+null); // 0
+    console.log(+true); // 1
+    console.log(+false); // 0
+
+    /* Логическое преобразование */
+    console.log(typeof Boolean(obj)); // boolean
+    console.log(typeof !!arr); // boolean
+
+    // Все значения, которые интуитивно «пусты», становятся false.
+    // Их несколько: 0, пустая строка, null, undefined и NaN.
+    console.log(!!0); // false
+    console.log(!!""); // false
+    console.log(!!null); // false
+    console.log(!!undefined); // false
+    console.log(!!NaN); // false
+
+    // Непустая строка приводится к true
+    console.log(!!"0"); // true
+    console.log(!!" "); // true
+
+    // Два значения могут быть равны, но одно из них в логическом контексте true, другое — false.
+    console.log(0 == "\n0\n");  // true
+    console.log(false == " "); // true
+
+    /* Задача */
+    console.log("" + 1 + 0); // "10"
+    console.log("" - 1 + 0); // -1
+    console.log(true + false); // 1
+    console.log(6 / "3"); // 2
+    console.log("2" * "3"); // 6
+    console.log(4 + 5 + "px"); // "9px"
+    console.log("$" + 4 + 5); // "$45"
+    console.log("4" - 2); // 2
+    console.log("4px" - 2); // NaN
+    console.log(7 / 0); // Infinity
+    console.log( parseInt("09") ); // 9
+    console.log("  -9\n" + 5); // "  -9\n5"
+    console.log("  -9\n" - 5); // -14
+    console.log(5 && 2); // 2
+    console.log(2 && 5); // 5
+    console.log(5 || 0); // 5
+    console.log(0 || 5); // 5
+    console.log(null + 1); // 1
+    console.log(undefined + 1); // NaN
+</script>
+
+</body>
+</html>

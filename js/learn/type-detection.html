@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Получение и проверка типа</title>
+</head>
+<body>
+
+<!--
+Получение и проверка типа
+http://learn.javascript.ru/type-detection
+-->
+<script>
+    /* [[Class]] для встроенных объектов */
+    // У всех встроенных объектов есть скрытое свойство [[Class]]
+    var obj = {};
+    console.log(obj); // [object Object]
+
+    // Внутренняя реализация toString стандартного объекта Object возвращает [[Class]]
+    var getClass = obj.toString;
+
+    console.log( getClass.call([1, 2]) ); // [object Array]
+    console.log( getClass.call(new Date) ); // [object Date]
+    console.log( getClass.call(123) ); // [object Number]
+    console.log( getClass.call("строка") ); // [object String]
+
+    // Этот метод может определить тип только для встроенных объектов.
+    // Для пользовательских объектов [[Class]] всегда равен "Object"
+    function Animal(name) {
+        this.name = name;
+    }
+
+    var animal = new Animal("Винни-пух");
+    var type = {}.toString.call(animal);
+
+    console.log(type); // [object Object]
+
+    /* «Утиная» типизация */
+    // Смысл утиной типизации — в проверке методов и свойств, безотносительно типа объекта
+    var a = [1, 2, 3];
+
+    if (a.splice) {
+        console.log("Массив");
+    }
+
+    var d = new Date();
+
+    if (d.getTime) {
+        console.log("Дата");
+    }
+
+    /* Проверка типа для пользовательских объектов */
+    // Для проверки, кем был создан объект, есть оператор instanceof.
+    console.log(animal instanceof Animal); // true
+    console.log(d instanceof Date); // true
+
+    function f () { }
+    console.log(f instanceof Function); // true
+
+    // Оператор instanceof может лишь осуществить проверку, он не позволяет получить тип в виде строки,
+    // но в большинстве случаев этого и не требуется.
+
+    /* Полиморфизм */
+    function sayHi(who) {
+        if (!arguments.length) {
+            console.log("Привет");
+            return;
+        }
+
+        if ({}.toString.call(who) == "[object Array]") {
+            for (var i = 0; i < who.length; i++) {
+                sayHi( who[i] );
+            }
+            return;
+        }
+
+        console.log("Привет, " + who);
+    }
+
+    // Использование:
+    sayHi(); // Привет
+    sayHi("Вася"); // Привет, Вася
+    sayHi( ["Саша", "Петя", ["Маша", "Юля"] ] ); // Привет, Саша..Петя..Маша..Юля
+
+    /* Задача */
+    function outputDate(date) {
+        if (typeof date == "string") {
+            var split = date.split("-");
+            date = new Date(split[0], split[1] - 1, split[2]);
+        } else if (typeof date == "number") {
+            date = new Date(date * 1000);
+        } else if ({}.toString.call(date) == "[object Array]") {
+            date = new Date(date[0], date[1], date[2]);
+        }
+
+        var day = date.getDate(),
+            month = date.getMonth() + 1,
+            year = date.getFullYear();
+
+        day = day < 10 ? "0" + day : day;
+        month = month < 10 ? "0" + month : month;
+        year = (year + "").substring(2);
+
+        return day + "." + month + "." + year;
+    }
+
+    console.log( outputDate("2011-10-02") ); // 02.10.11
+    console.log( outputDate(1234567890) ); // 14.02.09
+    console.log( outputDate([2000, 0, 1]) ); // 01.01.00
+    console.log( outputDate(new Date(2000, 0, 1)) ); // 01.01.00
+</script>
+
+</body>
+</html>

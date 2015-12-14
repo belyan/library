@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Массивы: методы</title>
+</head>
+<body>
+
+<!--
+Массивы: методы
+http://learn.javascript.ru/array-methods
+-->
+<script>
+    /* Object.keys(obj) */
+    // Метод возвращает ключи объекта в виде массива
+    var user = {
+        name: "Петя",
+        age: 30
+    };
+
+    var keys = Object.keys(user);
+    console.log(keys); // ["name", "age"]
+
+    /* Задача */
+    function unique(arr) {
+        var obj = {};
+
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] in obj) continue;
+            obj[arr[i]] = true;
+        }
+
+        return Object.keys(obj);
+    }
+
+    var strings = ["кришна", "кришна", "харе", "харе", "харе", "харе", "кришна", "кришна", "8-()"];
+
+    console.log( unique(strings) ); // ["кришна", "харе", "8-()"]
+
+    /* Метод split */
+    var names = 'Маша, Петя, Марина, Василий';
+    var arr = names.split(", ");
+
+    for (var i = 0; i < arr.length; i++) {
+        console.log("Вам сообщение " + arr[i]);
+    }
+
+    // Необязательный второй аргумент — ограничение на количество элементов в массиве
+    console.log( "a,b,c,d".split(",", 2) ); // ["a", "b"]
+
+    // Вызов str.split("") разобьёт строку на буквы
+    var str = "тест";
+    console.log( str.split("") ); // ["т", "е", "с", "т"]
+
+    /* Метод join */
+    var arr2 = ["Маша", "Петя", "Марина", "Василий"];
+    var str2 = arr2.join(";");
+    console.log(str2); // Маша;Петя;Марина;Василий
+
+    console.log( new Array(4).join("ля") ); // ляляля
+
+    /* Задача */
+    // Создайте функцию, которая добавляет в список класс, но только если его там еще нет
+    var obj = {
+        className: "open menu"
+    };
+
+    function addClass(obj, cls) {
+        var classes = obj.className ? obj.className.split(" ") : [];
+
+        for (var i = 0; i < classes.length; i++) {
+            if (classes[i] == cls) {
+                return obj;
+            }
+        }
+
+        classes.push(cls);
+        obj.className = classes.join(" ");
+        return obj;
+    }
+
+    addClass(obj, "new");
+    addClass(obj, "open");
+    addClass(obj, "me");
+
+    console.log(obj.className);  // "open menu new me"
+
+    /* Задача */
+    // Напишите функцию, которая преобразует строки вида «my-short-string» в «myShortString»
+    function camelize(str) {
+        var arr = str.split("-");
+
+        for (var i = 1; i < arr.length; i++) {
+            arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].substr(1);
+        }
+
+        return arr.join("");
+    }
+
+    console.log( camelize("background-color") ); // "backgroundColor"
+    console.log( camelize("list-style-image") ); // "listStyleImage"
+
+    /* Удаление из массива */
+    var arr3 = ["Я", "иду", "домой"];
+    delete arr3[1]; // значение с индексом 1 удалено
+    // теперь arr = ["Я", undefined, "домой"];
+    console.log(arr3[1]); // undefined
+
+    /* Метод splice */
+    var arr4 = ["Я", "изучаю", "JavaScript"];
+    arr4.splice(1, 1);  // начиная с позиции 1, удалить 1 элемент
+    console.log(arr4); //  осталось ["Я", "JavaScript"]
+
+    // Следующие за удаленным элементы сдвигаются, чтобы заполнить его место
+    var arr5 = ["Я", "изучаю", "JavaScript"];
+    arr5.splice(0, 1);  // удалить 1 элемент, начиная с позиции 0
+    console.log(arr5[0]); // "изучаю" стал первым элементом
+
+    var arr6 = ["Я", "сейчас", "изучаю", "JavaScript"];
+    arr6.splice(0, 3, "Мы", "изучаем"); // удалить 3 первых элемента и добавить другие вместо них
+    console.log(arr6); // ["Мы", "изучаем", "JavaScript"]
+
+    // Метод splice возвращает массив из удаленных элементов
+    var arr7 = ["Я", "сейчас", "изучаю", "JavaScript"];
+    var removed = arr7.splice(0, 2); // удалить 2 первых элемента
+    console.log(removed); // ["Я", "сейчас"]
+
+    // Метод splice также может вставлять элементы без удаления
+    var arr8 = ["Я", "изучаю", "JavaScript"];
+    arr8.splice(2, 0, "сложный", "язык"); // с позиции 2 удалить 0 элементов и вставить "сложный", "язык"
+    console.log(arr8); // ["Я", "изучаю", "сложный", "язык", "JavaScript"]
+
+    var arr9 = [1, 2, 5];
+    arr9.splice(-1, 0, 3, 4); // начиная с позиции индексом -1 удалить 0 элементов, затем вставить числа 3 и 4
+    console.log(arr9); // [1, 2, 3, 4, 5]
+
+    /* Задача */
+    // Напишите функцию, которая удаляет класс, если он есть
+    var obj2 = {
+        className: "my menu menu"
+    };
+
+    function removeClass(obj, cls) {
+        var classes = obj.className ? obj.className.split(" ") : [];
+
+        for (var i = classes.length; i >= 0; i--) { // чтобы избежать сдвига массив лучше обходить с конца
+            if (classes[i] == cls) {
+                classes.splice(i, 1);
+            }
+        }
+
+        obj.className = classes.join(" ");
+        return obj;
+    }
+
+    console.log( removeClass(obj2, "menu") );
+
+    /* Задача */
+    // Создайте функцию, которая получает массив с числами и удаляет из него все числа вне диапазона
+    var arr10 = [5, 3, 8, 1];
+
+    function filterRangeInPlace(arr, a, b) {
+        for (var i = arr.length; i >= 0; i--) {
+            if (arr[i] < a || arr[i] > b) {
+                arr.splice(i, 1);
+            }
+        }
+    }
+
+    filterRangeInPlace(arr10, 1, 4);
+    console.log(arr10); // [3, 1]
+
+    /* Метод slice */
+    // Метод slice(begin, end) копирует участок массива от begin до end, не включая end
+    var arr11 = ["Почему", "надо", "учить", "JavaScript"];
+    var arr12 = arr11.slice(1, 3); // элементы 1, 2 (не включая 3)
+    console.log(arr12); // ["надо", "учить"]
+
+    // Если не указать end — копирование будет до конца массива
+    var arr13 = ["Почему", "надо", "учить", "JavaScript"];
+    console.log(arr13.slice(1)); // взять все элементы, начиная с номера 1
+
+    // Можно использовать отрицательные индексы, они отсчитываются с конца
+    console.log(arr13.slice(-2)); // ["учить", "JavaScript"]
+
+    // Если вообще не указать аргументов — скопируется весь массив
+    var fullCopy = arr13.slice();
+
+    /* Сортировка, метод sort(fn) */
+    // Сортирует, преобразуя элементы к строке
+    var arr14 = [1, 2, 15];
+    arr14.sort();
+    console.log(arr14);  // [1, 15, 2]
+
+    // Свой порядок сортировки
+    // Функция должна возвращать:
+    //   * положительное значение, если a > b,
+    //   * отрицательное значение, если a < b,
+    //   * если равны — не важно, что возвращать, их взаимный порядок не имеет значения
+    function compareNumeric(a, b) {
+        return (a >= b ? 1 : -1);
+        // return a - b;
+    }
+
+    var arr15 = [1, 2, 15];
+    arr15.sort(compareNumeric);
+    console.log(arr15);  // [1, 2, 15]
+
+    /* Задача */
+    // Как отсортировать массив чисел в обратном порядке?
+    var arr16 = [5, 2, 1, -10, 8];
+
+    arr16.sort(function(a, b) {
+        return b - a;
+    });
+    console.log(arr16);  // [8, 5, 2, 1, -10]
+
+    /* Задача */
+    // Есть массив строк arr. Создайте массив arrSorted — из тех же элементов, но отсортированный
+    var arr17 = ["HTML", "JavaScript", "CSS"];
+    var arrSorted = arr17.slice().sort();
+
+    console.log(arrSorted);  // ["CSS", "HTML", "JavaScript"]
+
+    /* Задача */
+    // Используйте функцию sort для того, чтобы «перетрясти» элементы массива в случайном порядке
+    var arr18 = [1, 2, 3, 4, 5];
+
+    function compareRandom() {
+        return Math.random() - 0.5;
+    }
+
+    arr18.sort(compareRandom);
+    console.log(arr18); // элементы в случайном порядке, например [3, 5, 1, 2, 4]
+
+    /* Задача */
+    // Напишите код, который отсортирует массив объектов people по полю age
+    var vasya = { name: "Вася", age: 23 };
+    var masha = { name: "Маша", age: 18 };
+    var vovochka = { name: "Вовочка", age: 6 };
+    var people = [vasya, masha, vovochka];
+
+    function compareAge(a, b) {
+        return a.age - b.age;
+    }
+
+    people.sort(compareAge);
+
+    for (i = 0; i < people.length; i++) {
+        console.log(people[i].name);
+    }
+
+    /* reverse */
+    var arr19 = [1,2,3];
+    arr19.reverse();
+    console.log(arr19); // [3, 2, 1]
+
+    /* Задача */
+    var list = { value: 1 };
+    list.next = { value: 2 };
+    list.next.next = { value: 3 };
+    list.next.next.next = { value: 4 };
+
+    // Напишите функцию, которая выводит элементы списка по очереди
+    function printList(list) {
+        var obj = list;
+
+        while (obj) {
+            console.log(obj.value);
+            obj = obj.next;
+        }
+    }
+
+    printList(list);
+
+    // Напишите функцию, которая выводит элементы списка в обратном порядке, используя рекурсию
+    function printReverseList(list) {
+        if (list.next) {
+            printReverseList(list.next);
+        }
+
+        console.log(list.value);
+    }
+
+    printReverseList(list);
+
+    // Напишите такую же функцию без использования рекурсии
+    function printReverseList2(list) {
+        var obj = list,
+            arr = [];
+
+        while (obj) {
+            arr.push(obj.value);
+            obj = obj.next;
+        }
+
+        console.log( arr.reverse() ); // [4, 3, 2, 1]
+    }
+
+    printReverseList2(list);
+
+    /* concat */
+    var arr20 = [1, 2];
+    var newArr = arr20.concat(3, 4);
+    console.log(newArr); // [1, 2, 3, 4]
+
+    // Если value — массив, то concat добавляет его элементы
+    var arr21 = [1, 2];
+    var newArr2 = arr21.concat([3, 4], 5); // то же самое, что arr.concat(3, 4, 5)
+    console.log(newArr2); // [1, 2, 3, 4, 5]
+
+    /* indexOf/lastIndexOf */
+    // Метод возвращает номер элемента в массиве или -1, если его нет
+    var arr22 = [1, 0, false];
+    console.log( arr22.indexOf(0) ); // 1
+    console.log( arr22.indexOf(false) ); // 2
+    console.log( arr22.indexOf(null) ); // -1
+
+    // Коллекция уникальных элементов
+    var store = { }; // объект для коллекции
+    var items = ["div", "a", "form"];
+
+    for (i = 0; i < items.length; i++) {
+        var key = items[i]; // для каждого элемента создаём свойство
+        store[key] = true; // значение здесь не важно
+    }
+
+    // Теперь для проверки, есть ли ключ key, достаточно выполнить if (store[key])
+
+    /* Задача */
+    // Напишите функцию, которая возвращает массив слов, очищенный от анаграмм
+    var arr23 = ["воз", "киборг", "корсет", "ЗОВ", "гробик", "костер", "сектор"];
+
+    function aclean(arr) {
+        var obj = {},
+            result = [];
+
+        for (var i = 0; i < arr.length; i++) {
+            var key = arr[i].toLowerCase().split("").sort().join("");
+
+            if (obj[key]) continue;
+
+            obj[key] = true;
+            result.push(arr[i]);
+        }
+
+        return result;
+    }
+
+    console.log( aclean(arr23) ); // ["воз", "киборг", "корсет"]
+</script>
+
+</body>
+</html>

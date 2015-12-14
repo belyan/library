@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Хранение данных в замыкании, модули</title>
+</head>
+<body>
+
+<!--
+Хранение данных в замыкании, модули
+http://learn.javascript.ru/closures-usage
+-->
+<script>
+    /* Данные для счётчика */
+    function makeCounter() {
+        var currentCount = 0;
+
+        return function() {
+            currentCount++;
+            // вернём текущее значение, счётчик всегда возвращает его (это удобно)
+            return currentCount;
+        };
+    }
+
+    var counter = makeCounter();
+
+    // каждый вызов увеличивает счётчик
+    console.log( counter() ); // 1
+    console.log( counter() ); // 2
+    console.log( counter() ); // 3
+
+    var c1 = makeCounter();
+    var c2 = makeCounter();
+
+    console.log( c1() ); // 1
+    console.log( c2() ); // 1, счётчики независимы
+
+    function makeCounter2() {
+        var currentCount = 0;
+
+        return function(newCount) {
+            if (newCount !== undefined) { // если есть аргумент
+                currentCount = +newCount; // сделаем его новым значением счётчика
+                return currentCount;
+            }
+
+            currentCount++;
+            return currentCount;
+        };
+    }
+
+    var counter2 = makeCounter2();
+
+    console.log( counter2() ); // 1
+    console.log( counter2(3) ); // 3
+    console.log( counter2() ); // 4
+
+    /* Объект счётчика */
+    function makeCounter3() {
+        var currentCount = 0;
+
+        return {
+            getNext: function() {
+                return ++currentCount;
+            },
+
+            set: function(value) {
+                currentCount = value;
+            },
+
+            reset: function() {
+                currentCount = 0;
+            }
+        };
+    }
+
+    var counter3 = makeCounter3();
+    console.log(counter3);
+    counter3.set(10);
+
+    console.log( counter3.getNext() ); // 11
+    console.log( counter3.getNext() ); // 12
+
+    counter3.reset();
+
+    console.log( counter3.getNext() ); // 1
+
+    /* Объект счётчика + функция */
+    function makeCounter4() {
+        var currentCount = 0;
+
+        // возвращаемся к функции
+        function counter() {
+            return ++currentCount;
+        }
+
+        // ...и добавляем ей методы!
+        counter.set = function(value) {
+            currentCount = value;
+        };
+
+        counter.reset = function() {
+            currentCount = 0;
+        };
+
+        return counter;
+    }
+
+    var counter4 = makeCounter4();
+
+    console.log( counter4() ); // 1
+    console.log( counter4() ); // 2
+
+    counter4.reset();
+    console.log( counter4() ); // 1
+
+    /* Приём проектирования «Модуль» */
+    // 1. Создаётся функция-обёртка, которая выполняется «на месте»
+    // 2. Внутрь этой функции пишутся локальные переменные и функции,
+    //    которые пользователю модуля не нужны, но нужны самому модулю
+    // 3. Те функции, которые нужны пользователю, «экспортируются» во внешнюю область видимости
+
+    var MyLibrary = (function() {
+        var count = 0;
+
+        function helper() {}
+
+        return {
+            createMenu: function() {},
+            createDialog: function() {}
+        };
+
+    })();
+
+    // Использование
+    MyLibrary.createMenu();
+    MyLibrary.createDialog();
+
+    /* Задача */
+    // Напишите функцию sum, которая работает так: sum(a)(b) = a + b
+    var sum = function(a) {
+        return function(b) {
+            console.log(a + b);
+        }
+    };
+
+    sum(1)(2); // 3
+    sum(5)(-1); // 4
+
+    /* Задача */
+    function filter(arr, func) {
+        var result = [];
+
+        for (var i = 0; i < arr.length; i++) {
+            var val = arr[i];
+
+            if ( func(val) ) result.push(val);
+        }
+
+        return result;
+    }
+
+    function inBetween(a, b) {
+        return function(x) {
+            return (x >= a && x <= b);
+        };
+    }
+
+    function inArray(arr) {
+        return function(x) {
+            return arr.indexOf(x) != -1;
+        };
+    }
+
+    var arr = [1, 2, 3, 4, 5, 6, 7];
+
+    console.log( filter(arr, function(a) { return a % 2 == 0 }) ); // [2, 4, 6]
+    console.log( filter(arr, inBetween(3, 6)) ); // [3, 4, 5, 6]
+    console.log( filter(arr, inArray([1, 2, 10])) ); // [1, 2]
+
+    /* Задача */
+    // Реализовать строковый буфер на функциях в JavaScript
+    function makeBuffer() {
+        var result = "";
+
+        var buffer = function(str) {
+            return (str !== undefined) ? result += str : result;
+        };
+
+        buffer.clear = function() {
+            result = "";
+        };
+
+        return buffer;
+    }
+
+    var buffer = makeBuffer();
+
+    buffer("Замыкания");
+    buffer(" использовать");
+    buffer(" нужно!");
+
+    console.log( buffer() ); // "Замыкания использовать нужно!"
+
+    var buffer2 = makeBuffer();
+    buffer2(0);
+    buffer2(1);
+    buffer2(0);
+
+    console.log( buffer2() ); // "010"
+
+    var buffer3 = makeBuffer();
+
+    buffer3("Тест");
+    buffer3(" тебя не съест");
+    console.log( buffer3() ); // "Тест тебя не съест"
+
+    buffer3.clear();
+
+    console.log( buffer3() ); // ""
+
+    /* Задача */
+    var makeDonkey = function() {
+        var name = "Ослик Иа";
+
+        return {
+            sayHi: function() {
+                console.log(name);
+            },
+            yell: function() {
+                console.log("И-а, и-а!");
+            }
+        };
+    };
+
+    var donkey = makeDonkey();
+    donkey.sayHi(); // "Ослик Иа"
+
+    delete donkey.sayHi;
+    console.log(donkey); // переменная "name" останется в памяти, но обратиться к ней будет нельзя
+
+    donkey.yell = null;
+    console.log(donkey); // переменная "name" удалится из памяти
+
+    /* Задача */
+    // Почему все стрелки выводят одно и тоже значение? Поправьте код так, чтобы стрелки работали как задумано
+    function makeArmy() {
+        var shooters = [];
+
+        for (var i = 0; i < 10; i++) {
+            var shooter = function() {
+                console.log(i);
+            };
+            shooters.push(shooter);
+        }
+
+        return shooters;
+    }
+
+    var army = makeArmy();
+
+    army[0](); // 10
+    army[1](); // 10
+    army[2](); // 10
+
+    // 1 способ
+    function makeArmy1() {
+        var shooters = [];
+
+        for (var i = 0; i < 10; i++) {
+            var shooter = function me() { // Named Function Expression
+                console.log(me.i);
+            };
+            shooter.i = i; // Сохраняем номер в свойстве функции
+
+            shooters.push(shooter);
+        }
+
+        return shooters;
+    }
+
+    var army1 = makeArmy1();
+
+    army1[0](); // 0
+    army1[1](); // 1
+    army1[2](); // 1
+
+    // 2 способ
+    function makeArmy2() {
+        var shooters = [];
+
+        for (var i = 0; i < 10; i++) {
+            var shooter = (function(x) {
+                return function() {
+                    console.log(x);
+                };
+            })(i);
+
+            shooters.push(shooter);
+        }
+
+        return shooters;
+    }
+
+    var army2 = makeArmy2();
+
+    army2[0](); // 0
+    army2[1](); // 1
+    army2[2](); // 2
+
+    // 3 способ
+    function makeArmy3() {
+        var shooters = [];
+
+        for (var i = 0; i < 10; i++) (function(i) {
+            var shooter = function() {
+                console.log(i);
+            };
+
+            shooters.push(shooter);
+
+        })(i);
+
+        return shooters;
+    }
+
+    var army3 = makeArmy3();
+
+    army3[0](); // 0
+    army3[1](); // 1
+    army3[2](); // 2
+</script>
+
+</body>
+</html>

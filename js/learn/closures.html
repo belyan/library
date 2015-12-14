@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Замыкания</title>
+</head>
+<body>
+
+<!--
+Замыкания
+http://learn.javascript.ru/closures
+-->
+<script>
+    /* Лексическое окружение */
+    function sayHi(name) {
+        // LexicalEnvironment = { name: "Вася", phrase: undefined }
+        var phrase = "Привет, " + name;
+
+        // LexicalEnvironment = { name: "Вася", phrase: "Привет, Вася"}
+        console.log(phrase);
+    }
+
+    sayHi("Вася");
+
+    /* Доступ ко внешним переменным */
+    // window = { a: undefined, f: function f() {...} }
+    var a = 5;
+
+    // f.[[Scope]] = window
+    function f() {
+        console.log(a);  // 5
+    }
+
+    f();
+
+    // Каждая функция при создании получает ссылку [[Scope]] на объект с переменными, в контексте которого была создана
+    // При запуске функции создается новый объект с переменными. В него копируется ссылка на внешний объект из [[Scope]]
+    // При поиске переменных он осуществляется сначала в текущем объекте переменных, а потом — по этой ссылке
+
+    /* Задача */
+    var value = 0;
+
+    function f2() {
+        if (1) {
+            value = true;
+        } else {
+            var value = false;
+        }
+
+        console.log(value); // true
+    }
+
+    f2();
+    console.log(value); // 0
+
+    /* Задача */
+    var b = 5;
+
+    (function() {
+        console.log(b); // 5
+    })();
+
+    /* Вложенные функции */
+    function sayHi2(person) {
+
+        var message = makeMessage(person);
+        console.log(message);
+
+        function getHello(age) {
+            return age >= 18 ? "Здравствуйте" : "Привет";
+        }
+
+        function makeMessage(person) {
+            return getHello(person.age) + ", " + person.name;
+        }
+    }
+
+    // Вложенные функции обрабатываются в точности так же, как и глобальные.
+    // Единственная разница — они создаются в объекте переменных внешней функции, а не в window.
+
+    // LexicalEnvironment = { person: {...}, message: undefined, getHello: function ..., makeMessage: function ... }
+    sayHi2({
+        name: "Петька",
+        age: 17
+    }); // Привет, Петька
+
+    // Вложенная функция имеет доступ к внешним переменным через [[Scope]].
+    function sayHi3(person) {
+
+        var message = makeMessage();
+        console.log(message);
+
+        function getHello(age) {
+            return age >= 18 ? "Здравствуйте" : "Привет";
+        }
+
+        // Переменная person будет взята из внешнего объекта переменных
+        function makeMessage() {
+            return getHello(person.age) + ", " + person.name;
+        }
+    }
+
+    // Вложенную функцию можно возвратить
+    function sayHi4(person) {
+        return function() {
+            var message = makeMessage();
+            console.log(message);
+        };
+
+        function getHello(age) {
+            return age >= 18 ? "Здравствуйте" : "Привет";
+        }
+
+        function makeMessage() {
+            return getHello(person.age) + ", " + person.name;
+        }
+    }
+
+    var sayHiPete = sayHi4({ name: "Петька", age: 17 });
+    var sayHiOther = sayHi4({ name: "Василий Иванович", age: 35 });
+
+    console.log(sayHiOther);
+
+    sayHiOther(); // Здравствуйте, Василий Иванович
+
+    // Замыканием функции называется сама эта функция, плюс вся цепочка LexicalEnvironment, которая при этом образуется
+    var add = (function() {
+        var counter = 0;
+        return function() {
+            console.log(counter += 1);
+        }
+    })();
+
+    add(); // 1
+    add(); // 2
+    add(); // 3
+
+    function makeFunc() {
+        var name = "Mozilla";
+        function displayName() {
+            console.log(name); // использует переменную, объявленную в родительской функции
+        }
+        return displayName;
+    }
+
+    var myFunc = makeFunc(); // замыкание, которое содержит и функцию displayName, и строку "Mozilla"
+    myFunc(); // Mozilla
+
+    /* Управление памятью */
+    // Объект переменных внешней функции существует в памяти до тех пор,
+    // пока существует хоть одна внутренняя функция, ссылающаяся на него через свойство [[Scope]]
+    function func() {
+        var a = Math.random();
+
+        function g() {
+            console.log(a);
+        }
+        return g;
+    }
+
+    console.log([func(), func(), func()]);
+
+    var g = func(); // функция g будет жить и сохранит ссылку на объект переменных
+    g();
+    g = null; // а вот теперь память будет очищена
+
+    /* [[Scope]] для new Function */
+    var sum = new Function("a, b", "return a + b;");
+
+    var result = sum(1, 2);
+    console.log(result); // 3
+
+    // При создании функции с использованием new Function,
+    // её свойство [[Scope]] ссылается не на текущий LexicalEnvironment, а на window
+    var c = 1;
+    function getFunc() {
+        var c = 2;
+        var func = function() {
+            console.log(c);
+        };
+        return func;
+    }
+
+    getFunc()(); // 2, из LexicalEnvironment функции getFunc
+
+    var d = 1;
+    function getFunc2() {
+        var d = 2;
+        var func = new Function("", "console.log(d)");
+        return func;
+    }
+
+    getFunc2()(); // 1, из window
+</script>
+
+</body>
+</html>

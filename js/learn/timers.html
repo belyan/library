@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>setTimeout и setInterval</title>
+</head>
+<body>
+
+<!--
+setTimeout и setInterval
+http://learn.javascript.ru/settimeout-setinterval
+-->
+<script>
+    /* setTimeout */
+    function func() {
+        console.log("Привет");
+    }
+
+    setTimeout(func, 1000);
+
+    setTimeout(function() {
+        console.log("Привет");
+    }, 1000);
+
+    /* Параметры для функции и контекст */
+    function sayHi(who) {
+        console.log("Привет, я " + who);
+    }
+
+    setTimeout(function() { sayHi("Вася") }, 1000);
+
+    // Вызов через setTimeout не передаёт контекст this
+    function User(id) {
+        this.id = id;
+
+        this.sayHi = function() {
+            console.log(this.id);
+        };
+    }
+
+    var user = new User(12345);
+    setTimeout(user.sayHi, 1000); // ожидается 12345, но выведет "undefined"
+
+    // Функция-обёртка используется, чтобы кросс-браузерно передать аргументы и сохранить контекст выполнения
+    setTimeout(function() {
+        user.sayHi();
+    }, 1000);
+
+    /* Отмена исполнения */
+    var timerId = setTimeout(function() {
+        console.log(1);
+    }, 1000);
+
+    clearTimeout(timerId);
+
+    /* setInterval */
+    var j = 1;
+    var timer = setInterval(function() {
+        console.log(j++);
+
+        if (j > 3) clearInterval(timer);
+    }, 1000);
+
+    /* Очередь и наложение вызовов в setInterval */
+    // Если запуск функции невозможен, потому что браузер занят — она становится в очередь
+    // и выполнится, как только браузер освободится.
+
+    // Больше одного раза в очередь выполнение не ставится.
+
+    /* Задача */
+    function printNumbersInterval10_100() {
+        var i = 1;
+        var timer = setInterval(function() {
+            console.log(i);
+            if (i == 10) clearInterval(timer);
+            i++;
+        }, 100);
+    }
+
+    setTimeout(function() {
+        printNumbersInterval10_100();
+    }, 3000);
+
+    /* Повторение вложенным setTimeout */
+    // В случаях, когда нужно не просто регулярное повторение, а обязательна задержка между запусками,
+    // используется повторная установка setTimeout при каждом выполнении функции.
+    setTimeout(function() {
+        var timer = setTimeout(function run() {
+            console.log(123);
+            timer = setTimeout(run, 2000);
+            clearTimeout(timer);
+        }, 2000);
+    }, 3000);
+
+    /* Задача */
+    function printNumbersTimeout10_100() {
+        var i = 1;
+        setTimeout(function() {
+            console.log(i);
+            if (i < 10) setTimeout(arguments.callee, 100);
+            i++;
+        }, 100);
+    }
+
+    setTimeout(function() {
+        printNumbersTimeout10_100();
+    }, 5000);
+
+    /* Минимальная задержка таймера */
+    // У браузерного таймера есть минимальная возможная задержка.
+    // Она меняется от примерно нуля до 4мс в современных браузерах
+
+    /* Реальная частота срабатывания */
+    var timeMark = new Date;
+    var counter = 1;
+
+    setTimeout(function go() {
+        var diff = new Date - timeMark;
+
+        console.log(diff);
+
+        // запомним время в самом конце,
+        // чтобы измерить задержку именно между вызовами
+        timeMark = new Date;
+
+        if (counter < 5) setTimeout(go, 100);
+        counter++;
+    }, 7000);
+
+    /* Трюк setTimeout(func, 0) */
+    // Функцию оборачивают в setTimeout(func, 0), если хотят запустить ее после окончания текущего скрипта
+    var result;
+
+    function showResult() {
+        console.log(result);
+    }
+
+    setTimeout(showResult, 0); // выведет 4
+    result =  2 * 2;
+
+    /* Задача */
+    // Когда сработает setTimeout?
+    setTimeout(function() {
+        console.log(c1); // 100000000
+    }, 10);
+
+    var c1;
+
+    function f1() {
+        for (c1 = 0; c1 < 1e8; c1++) f1[c1 % 10] = c1;
+    }
+
+    f1();
+    // Вызов setTimeout будет отложен и произойдет сразу же после выполнения функции f1
+
+    /* Задача */
+    // Когда сработает setInterval?
+    var timer2 = setInterval(function() {
+        c2++;
+    }, 10);
+
+    setTimeout(function() {
+        clearInterval(timer2);
+        console.log(c2); // 100000001
+    }, 50);
+
+    var c2;
+
+    function f2() {
+        for (c2 = 0; c2 < 1e8; c2++) f2[c2 % 10] = c2;
+    }
+
+    f2();
+    // Вызов setInterval будет отложен, но только один раз, и произойдет сразу же после выполнения функции f2,
+    // затем сработает отложенный вызов setTimeout и сбросит таймер
+
+    /* Задача */
+    // Напишите функцию delay(f, ms), которая возвращает обёртку вокруг f, задерживающую вызов на ms миллисекунд.
+    function delay(f, ms) {
+        return function() {
+            var args = arguments;
+            var that = this;
+
+            setTimeout(function() {
+                f.apply(that, args);
+            }, ms);
+        };
+    }
+
+    function f(x) {
+        console.log(x);
+    }
+
+    var f7000 = delay(f, 7000);
+    var f7500 = delay(f, 7500);
+
+    f7000("тест1"); // выведет "тест1" через 7000 миллисекунд
+    f7500("тест2"); // выведет "тест2" через 7500 миллисекунд
+
+    /* Задача */
+    // Напишите функцию debounce(f, ms), которая возвращает обёртку, вызывающую f не чаще, чем раз в ms миллисекунд
+    function debounce(f, ms) {
+        var timeout = false;
+
+        return function() {
+            if (!timeout) {
+                f.apply(this, arguments);
+                timeout = true;
+
+                setTimeout(function() {
+                    timeout = false;
+                }, ms);
+            }
+        };
+    }
+
+    function test() {
+        var log = "test: ";
+        function f(a) { log += a; }
+
+        f = debounce(f, 1000);
+
+        f(1); // выполнится сразу же
+        f(2); // игнор
+
+        setTimeout(function() { f(3) }, 100); // игнор (рановато)
+        setTimeout(function() { f(4) }, 1100); // выполнится (таймаут прошёл)
+        setTimeout(function() { f(5) }, 1500); // игнор
+
+        setTimeout(function() {
+            console.log(log);
+        }, 8000); // выведет "test: 14" через 8000 миллисекунд
+    }
+
+    test();
+
+    /* Задача */
+    // Напишите функцию throttle(f, ms), которая возвращает обёртку, вызывающую f не чаще, чем раз в ms миллисекунд,
+    // но если игнорируемый вызов оказался последним - то он выполнится
+    function throttle(f, ms) {
+        var timeout = false;
+        var scheduled = false;
+
+        var context, args;
+
+        return function() {
+            if (!timeout) {
+                f.apply(this, arguments);
+                timeout = true;
+
+                setTimeout(calling, ms);
+            } else {
+                context = this;
+                args = arguments;
+
+                scheduled = true;
+            }
+        };
+
+        function calling() {
+            if (scheduled) {
+                f.apply(context, args);
+                scheduled = false;
+
+                setTimeout(calling, ms);
+            } else {
+                timeout = false;
+            }
+        }
+    }
+
+    // время        ------0-------1000---
+    // вызовы       ------123------------
+    // срабатывания ------!-------!------
+    // значение     ------1-------13-----
+    function test1() {
+        var log = "test1: ";
+        function f(a) { log += a; }
+
+        var f1000 = throttle(f, 1000);
+
+        f1000(1); // такой вызов должен сработать тут же
+        f1000(2); // (тормозим, не прошло 1000мс)
+        f1000(3); // (тормозим, не прошло 1000мс)
+        // через 1000 мс запланирован вызов с последним аргументом
+
+        console.log(log); // "test1: 1" (пока что сработал только первый вызов)
+
+        setTimeout(function() {
+            console.log(log)
+        }, 1100);  // "test1: 13" через 1100 миллисекунд
+    }
+
+    // время        ------0-----1000------1500--1600--1700-----2000---
+    // вызовы       ------12--------------3-----4-----5---------------
+    // срабатывания ------!-----!------------------------------!------
+    // значение     ------1-----12-----------------------------125----
+    function test2() {
+        var log = "test2: ";
+        function f(a) { log += a; }
+
+        var f1000 = throttle(f, 1000);
+
+        f1000(1); // сработает тут же
+        f1000(2); // (тормозим, пока не прошло 1000мс)
+        // по истечении 1000 мс будет вызов с 2
+
+        setTimeout(function() {
+            console.log(log);
+        }, 1100);  // "test2: 12" через 1100 миллисекунд
+
+        setTimeout(function() { f1000(3) }, 1500); // тормозим, следующий вызов в 2000 мс
+        setTimeout(function() { f1000(4) }, 1600); // ...
+        setTimeout(function() { f1000(5) }, 1700); // ...
+        setTimeout(function() { f1000(6) }, 3100); // ...
+
+        setTimeout(function() {
+            console.log(log)
+        }, 2100);  // "test2: 125" через 2100 миллисекунд
+    }
+
+    test1();
+    test2();
+</script>
+
+</body>
+</html>

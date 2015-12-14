@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Глобальный объект</title>
+</head>
+<body>
+
+<!--
+Глобальный объект
+http://learn.javascript.ru/global-object
+-->
+<script>
+    /* Глобальный объект */
+    // В JavaScript все глобальные переменные и функции являются свойствами специального объекта,
+    // который называется «глобальный объект» (global object)
+
+    var a = 5;   // объявление var создаёт свойство window.a
+    console.log(window.a); // 5
+
+    window.b = 5;
+    console.log(b); // 5
+
+    /* Порядок инициализации */
+    // Функции, объявленные как Function Declaration, создаются сразу работающими,
+    // а переменные — равными undefined
+
+    console.log("c" in window); // true,  т.к. есть свойство window.a
+    console.log(c); // undefined, присваивание будет выполнено далее
+    console.log(f); // function f() {},  готовая к выполнению функция
+    console.log(g); // undefined, т.к. это переменная, а не Function Declaration
+
+    var c = 5;
+    function f() {}
+    var g = function() {};
+
+    console.log(a1); // undefined
+    var a1 = 5; // переменная будет создана на этапе инициализации
+    a2 = 5; // переменная будет создана в момент присваивания
+
+    /* Задача */
+    if ("a3" in window) {
+        a3 = 1;
+    }
+    try {
+        console.log(a3); // Error: a3 is not defined
+    } catch(err) {
+        console.log("Error: a3 is not defined");
+    }
+
+    /* Задача */
+    if ("a4" in window) {
+        a4 = 1;
+    }
+    var a4;
+
+    console.log(a4); // 1
+
+    /* Задача */
+    var a5 = 5;
+    function a5() {}
+
+    console.log(a5); // 5
+</script>
+
+</body>
+</html>

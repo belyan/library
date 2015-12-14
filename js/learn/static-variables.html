@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Статические переменные</title>
+</head>
+<body>
+
+<!--
+Статические переменные
+http://learn.javascript.ru/static-variables
+-->
+<script>
+    /* Использование замыкания */
+    var sayHi = (function() {
+        var count = 0; // статическая переменная
+
+        return function() {
+            count++;
+            console.log("Привет " + count);
+        };
+    })();
+
+    sayHi(); // Привет 1
+    sayHi(); // Привет 2
+
+    /* Запись свойств в функцию */
+    function sayHi2() {
+        sayHi2.count++;
+        console.log("Привет " + sayHi2.count);
+    }
+
+    sayHi2.count = 0; // начальное значение
+
+    sayHi2(); // Привет 1
+    sayHi2(); // Привет 2
+
+    // Статическая переменная, записанная как свойство функции — общедоступна
+
+    /* Задача */
+    function makeCounter() {
+        var count = function f() {
+            return ++f.currentCount;
+        };
+
+        count.currentCount = 0;
+
+        return count;
+    }
+
+    var c1 = makeCounter();
+    var c2 = makeCounter();
+
+    console.log( c1() ); // 1
+    console.log( c2() ); // 1
+    console.log( c1() ); // 2
+
+    // Текущее значение счётчика теперь доступно снаружи через свойство функции
+    var counter = makeCounter();
+
+    counter();
+    console.log( counter.currentCount ); // 1
+</script>
+
+</body>
+</html>

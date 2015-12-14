@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Псевдо-массив arguments</title>
+</head>
+<body>
+
+<!--
+Псевдо-массив arguments
+http://learn.javascript.ru/arguments-pseudoarray
+-->
+<script>
+    // В JavaScript любая функция может быть вызвана с произвольным количеством аргументов.
+    function go(a, b) {
+        console.log("a=" + a + ", b=" + b);
+    }
+
+    go(1); // a=1, b=undefined
+    go(1, 2); // a=1, b=2
+    go(1, 2, 3); // a=1, b=2 (третий аргумент не вызовет ошибку)
+
+    /* Доступ к «лишним» аргументам */
+    function sayHi() {
+        for (var i = 0; i < arguments.length; i++) {
+            console.log("Привет, " + arguments[i]);
+        }
+    }
+
+    sayHi("Винни", "Пятачок");  // "Привет, Винни", "Привет, Пятачок"
+
+    // В старом стандарте JavaScript псевдо-массив arguments и переменные-параметры ссылаются на одни и те же значения.
+    function f1(x) {
+        arguments[0] = 5; // меняет переменную x
+        console.log(x); // 5
+    }
+
+    f1(1);
+
+    function f2(x) {
+        x = 5;
+        console.log(arguments[0]); // 5, обновленный x
+    }
+
+    f2(1);
+
+    function f3(x) {
+        "use strict"; // для браузеров с поддержкой строгого режима
+
+        arguments[0] = 5;
+        console.log(x); // не 5, а 1! Переменная "отвязана" от arguments
+    }
+
+    f3(1);
+
+    /* Пример использования */
+    var user = {
+        name: "Вася"
+    };
+    console.log(user); // {name: "Вася"}
+
+    function copy(dst) {
+        for (var i = 1; i < arguments.length; i++) {
+            var obj = arguments[i];
+            for (var key in obj) {
+                dst[key] = obj[key];
+            }
+        }
+        return dst;
+    }
+
+    copy(user, {
+        age: 25,
+        surname:"Петров"
+    }, {
+        name: "Петя"
+    });
+    console.log(user); // {name: "Петя", age: 25, surname: "Петров"}
+
+    /* arguments.callee */
+    // Содержит ссылку на функцию, которая выполняется в данный момент
+    // Рекомендованной альтернативой arguments.callee являются именованные функциональные выражения.
+    function f() {
+        console.log(arguments.callee === f); // true
+    }
+    f();
+
+    // factorial(n) = n * factorial(n-1)
+    var factorial = function(n) {
+        return n == 1 ? 1 : n * arguments.callee(n - 1);
+    };
+
+    var g = factorial;
+    factorial = null; // функция переместилась в переменную g
+
+    console.log( g(5) ); // 120, работает!
+
+    /* arguments.callee.caller */
+    // Хранит ссылку на функцию, которая вызвала данную.
+    f4();
+
+    function f4() {
+        console.log(arguments.callee.caller); // null
+        f5();
+    }
+
+    function f5() {
+        console.log(arguments.callee.caller); // f4, функция вызвавшая меня
+    }
+
+    /* Задача */
+    // Как в функции отличить отсутствующий аргумент от undefined?
+    function f6(x) {
+        console.log(arguments.length ? true : false);
+    }
+
+    f6(undefined); // true
+    f6(); // false
+
+    /* Задача */
+    function sum() {
+        var result = 0;
+        for (var i = 0; i < arguments.length; i++) {
+            result += arguments[i];
+        }
+        return result;
+    }
+
+    console.log( sum() ); // 0
+    console.log( sum(1) ); // 1
+    console.log( sum(1, 2) ); // 3
+    console.log( sum(1, 2 ,3) ); // 6
+    console.log( sum(1, 2, 3, 4) ); // 10
+</script>
+
+</body>
+</html>

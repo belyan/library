@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Массивы c числовыми индексами</title>
+</head>
+<body>
+
+<!--
+Массивы c числовыми индексами
+http://learn.javascript.ru/array
+-->
+<script>
+    /* Объявление */
+    var fruits = ["Яблоко", "Апельсин", "Слива"];
+
+    // Элементы нумеруются, начиная с нуля
+    console.log(fruits[0]); // Яблоко
+    console.log(fruits[1]); // Апельсин
+    console.log(fruits[2]); // Слива
+
+    fruits[2] = "Груша"; // теперь ["Яблоко", "Апельсин", "Груша"]
+    fruits[3] = "Лимон"; // теперь ["Яблоко", "Апельсин", "Груша", "Лимон"]
+
+    console.log(fruits.length); // 4
+
+    // микс значений
+    var arr = [1, "Имя", { name: "Петя" }, true];
+
+    // получить объект из массива и тут же -- его свойство
+    console.log(arr[2].name); // Петя
+
+    /* Задача */
+    // Как получить последний элемент из произвольного массива?
+    var lastItem = fruits[fruits.length - 1];
+
+    /* Задача */
+    // Как добавить элемент в конец произвольного массива?
+    fruits[fruits.length] = "Абрикос";
+
+    /* Методы pop/push, shift/unshift */
+
+    /* Очередь - упорядоченная коллекция элементов, в которой элементы
+       добавляются в конец, а обрабатываются — с начала (FIFO)
+
+       Стек - такая коллекция элементов, в которой новые элементы
+       добавляются в конец и берутся с конца (LIFO) */
+
+    // pop - Удаляет последний элемент из массива и возвращает его
+    var fruits1 = ["Яблоко", "Апельсин", "Груша"];
+    console.log(fruits1.pop()); // Груша
+    console.log(fruits1); // ["Яблоко", "Апельсин"]
+
+    // push - Добавляет элемент в конец массива
+    var fruits2 = ["Яблоко", "Апельсин"];
+    fruits2.push("Груша");
+    console.log(fruits2); // ["Яблоко", "Апельсин", "Груша"]
+
+    // shift - Удаляет из массива первый элемент и возвращает его
+    var fruits3 = ["Яблоко", "Апельсин", "Груша"];
+    console.log(fruits3.shift()); // Яблоко
+    console.log(fruits3); // ["Апельсин", "Груша"]
+
+    // unshift - Добавляет элемент в начало массива
+    var fruits4 = ["Апельсин", "Груша"];
+    fruits4.unshift("Яблоко");
+    console.log(fruits4); // ["Яблоко", "Апельсин", "Груша"]
+
+    // Методы push и unshift могут добавлять сразу по несколько элементов
+    var fruits5 = ["Яблоко"];
+    fruits5.push("Апельсин", "Персик");
+    fruits5.unshift("Ананас", "Лимон");
+    console.log(fruits5); // ["Ананас", "Лимон", "Яблоко", "Апельсин", "Персик"]
+
+    /* Задача */
+    var styles = ["Джаз", "Блюз"];
+    styles.push("Рок-н-Ролл");
+    styles[styles.length - 2] = "Классика";
+    console.log( styles.shift() ); // Джаз
+    styles.unshift("Рэп", "Регги");
+
+    /* Задача */
+    arr = styles;
+    var rand = Math.floor(Math.random() * arr.length);
+    console.log(arr[rand]);
+
+    /* Задача */
+    var numbers = [];
+    while (true) {
+        var value = +prompt("Введите число", "");
+        if (!value) break; // "", NaN или null (отмена)
+        numbers.push(value);
+    }
+    var sum = 0;
+    for (var i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+    }
+    console.log(sum);
+
+    /* Внутреннее устройство массива */
+    /* Массив — это объект, где в качестве ключей выбраны цифры,
+       с дополнительными методами и свойством length */
+    function eat(arr) {
+        arr.pop();
+    }
+    var arr2 = ["нам", "не", "страшен", "серый", "волк"];
+    console.log(arr2.length); // 5
+    eat(arr2);
+    eat(arr2);
+    console.log(arr2.length); // 3, в функцию массив не скопирован, а передана ссылка
+
+    var arr3 = []; // создать массив
+    arr3[99999] = 5; // присвоить свойство с любым номером
+    arr3.age = 25; // назначить свойство со строковым именем
+
+    var a = [];
+    a[0] = 0;
+    a[5] = 5;
+    console.log( a.toString() ); // 0,,,,,5
+
+    /* Влияние на быстродействие */
+    // Методы push/pop выполняются быстро, а shift/unshift — медленно
+
+    /* Перебор элементов */
+    var arr4 = ["Яблоко", "Апельсин", "Груша"];
+    for (var n = 0; n < arr4.length; n++) {
+        console.log(arr4[n]);
+    }
+    // Не используйте for..in для перебора массивов!
+
+    /* Особенности работы length */
+    // Длина length — не количество элементов массива, а последний индекс + 1
+    var arr5 = [];
+    arr5[1000] = true;
+    console.log(arr5.length); // 1001
+
+    // При уменьшении length массив укорачивается
+    var arr6 = [1, 2, 3, 4, 5];
+    arr6.length = 2; // укоротить до 2 элементов
+    console.log(arr6); // [1, 2]
+    arr6.length = 5; // вернуть length обратно, как было: значения не вернулись
+    console.log(arr6[3]); // undefined
+
+    // Самый простой способ очистить массив
+    arr6.length = 0;
+
+    /* Создание вызовом new Array */
+    var arr7 = new Array(1, 2, 3); // создает массив [1, 2, 3]
+    var arr8 = new Array(2); // создаст массив [2]? нет! у нас массив без элементов, длины 2
+    console.log( arr8[0] ); // undefined
+
+    /* Многомерные массивы */
+    var matrix = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ];
+    console.log(matrix[1][1]); // центральный элемент
+
+    /* Задача
+       Создайте функцию find(arr, value), которая ищет в массиве arr значение value
+       и возвращает его номер, если найдено, или -1, если не найдено */
+    function find(array, value) {
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] === value) return i;
+        }
+        return -1;
+    }
+    var arr9 = ["test", 2, 1.5, false];
+    find(arr9, "test"); // 0
+    find(arr9, 2); // 1
+    find(arr9, 1.5); // 2
+    find(arr9, 0); // -1
+
+    /* Задача
+       Создайте фунцию filterRange, которая принимает массив чисел и возвращает
+       новый массив, который содержит только числа из диапазона от min до max */
+    function filterRange(array, min, max) {
+        var result = [];
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] >= min && array[i] <= max) {
+                result.push(array[i]);
+            }
+        }
+        return result;
+    }
+
+    var arr10 = [5, 4, 3, 8, 0];
+    console.log( filterRange(arr10, 3, 5) ); // [5, 4, 3]
+
+    /* Задача
+       Найдите все простые числа до 100 с помощью алгоритма «Решето Эратосфена»
+       и выведите их сумму */
+    function sumSimpleNumbers(n) {
+        var numbers = [];
+        for (var i = 2; i < n; i++) {
+            numbers[i] = i;
+        }
+        var p = 2;
+        while (p * p < n) {
+            for (i = p * 2; i < n; i += p) {
+                numbers[i] = null;
+            }
+            for (i = p + 1; i < n; i++) {
+                if (numbers[i]) break;
+            }
+            p = i;
+        }
+        var sum = 0;
+        for (i = 2; i < n; i++) {
+            if (numbers[i]) {
+                sum += numbers[i];
+            }
+        }
+
+        return sum;
+    }
+    console.log( sumSimpleNumbers(100) );
+
+    /* Задача
+       Найдите непрерывный подмассив, сумма элементов которого максимальна */
+    function getMaxSubSum(arr) {
+        var i, j, sum, maxSum = 0;
+
+        for (i = 0; i < arr.length; i++) {
+            sum = 0;
+            for (j = i; j < arr.length; j++) {
+                sum += arr[j];
+
+                if (sum > maxSum) {
+                    maxSum = sum;
+                }
+            }
+        }
+
+        return maxSum;
+    }
+
+    console.log( getMaxSubSum([-1, 2, 3, -9]) );  // 5
+    console.log( getMaxSubSum([2, -1, 2, 3, -9]) ); // 6
+    console.log( getMaxSubSum([-1, 2, 3, -9, 11]) ); // 11
+    console.log( getMaxSubSum([-2, -1, 1, 2]) ); // 3
+    console.log( getMaxSubSum([100, -9, 2, -3, 5]) ); // 100
+    console.log( getMaxSubSum([1, 2, 3]) ); // 6
+    console.log( getMaxSubSum([-1, -2, -3]) ); // 0
+
+    function getMaxSubSum2(arr) {
+        var sum = 0,
+            maxSum = 0;
+
+        for (var i = 0; i < arr.length; i++) {
+            sum += arr[i];
+
+            if (sum < 0) {
+                sum = 0;
+            } else if (sum > maxSum) {
+                maxSum = sum;
+            }
+        }
+
+        return maxSum;
+    }
+</script>
+
+</body>
+</html>

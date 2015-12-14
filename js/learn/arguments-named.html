@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Именованные аргументы</title>
+</head>
+<body>
+
+<!--
+Именованные аргументы
+http://learn.javascript.ru/arguments-named
+-->
+<script>
+    function showWarning(width, height, title, contents, showYesNo) {
+        width = width || 200; // почти все значения - по умолчанию
+        height = height || 100;
+
+        title = title || "Предупреждение";
+
+        console.log(arguments);
+    }
+
+    // Неудобство такого вызова заключается в том, что порядок аргументов легко забыть или перепутать.
+    showWarning(null, null, null, "Вы вызвали функцию", true);
+
+    function showWarning2(options) {
+        var width = options.width || 200;  // по умолчанию
+        var height = options.height || 100;
+
+        var title = options.title || "Предупреждение";
+
+        console.log(options);
+    }
+
+    showWarning2({
+        contents: "Вы вызвали функцию",
+        showYesNo: true
+    });
+
+    var opts = {
+        width: 400,
+        height: 200,
+        contents: "Текст",
+        showYesNo: true
+    };
+
+    showWarning2(opts);
+
+    opts.contents = "Другой текст";
+    showWarning2(opts); // Не нужно копировать остальные аргументы в вызов
+</script>
+
+</body>
+</html>

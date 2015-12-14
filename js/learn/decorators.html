@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Приём программирования "Декоратор"</title>
+</head>
+<body>
+
+<!--
+Приём программирования "Декоратор"
+http://learn.javascript.ru/decorators
+-->
+<script>
+    /* Пример декоратора */
+    function doublingDecorator(f) {
+        return function() {
+            return 2 * f.apply(this, arguments);
+        };
+    }
+
+    // Использование:
+    function sum(a, b) {
+        return a + b;
+    }
+
+    sum = doublingDecorator(sum);
+
+    console.log( sum(1, 2) ); // 6
+    console.log( sum(2, 3) ); // 10
+
+    // Декоратор — приём программирования, который позволяет взять существующую функцию
+    // и изменить/расширить ее поведение
+
+    /* Ещё пример */
+    function checkPermissionDecorator(f) {
+        return function() {
+            if ( isAdmin() ) {
+                return f.apply(this, arguments);
+            }
+            console.log("Недостаточно прав");
+        }
+    }
+
+    function save() {}
+
+    save = checkPermissionDecorator(save);
+
+    /* Задача */
+    function work(a) {
+        console.log(a);
+    }
+
+    function makeLogging(f, log) {
+        return function(a) {
+            log.push(a);
+            return f.call(this, a)
+        };
+    }
+
+    var log = [];
+    work = makeLogging(work, log);
+
+    work(1); // 1
+    work(5); // 5
+
+    for (var i = 0; i < log.length; i++) {
+        console.log( "Лог: " + log[i] ); // "Лог: 1", "Лог: 5"
+    }
+
+    /* Задача */
+    function work2(a, b) {
+        console.log(a + b);
+    }
+
+    function makeLogging2(f, log) {
+        return function() {
+            log.push(arguments);
+            return f.apply(this, arguments);
+        };
+    }
+
+    var log2 = [];
+    work2 = makeLogging2(work2, log2);
+
+    work2(1, 2); // 3
+    work2(4, 5); // 9
+
+    for (var j = 0; j < log2.length; j++) {
+        console.log( "Лог: " + [].join.call(log2[j]) ); // "Лог: 1,2", "Лог: 4,5"
+    }
+
+    /* Задача */
+    function f(arg) {
+        return Math.random() * arg;
+    }
+
+    function makeCaching(f) {
+        var cache = {};
+        return function(arg) {
+            if (!(arg in cache)) {
+                cache[arg] = f.call(this, arg);
+            }
+            return cache[arg];
+        };
+    }
+
+    f = makeCaching(f);
+
+    var a, b;
+
+    a = f(1);
+    b = f(1);
+    console.log( a == b ); // true (значение закешировано)
+
+    b = f(2);
+    console.log( a == b ); // false, другой аргумент => другое значение
+</script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Строки</title>
+</head>
+<body>
+
+<!--
+Строки
+http://learn.javascript.ru/string
+-->
+<script>
+    /* Создание строк */
+    var text = "моя строка";
+    var anotherText = 'еще строка';
+    var str = "012345";
+
+    /* Специальные символы
+       \b - Backspace
+       \f - Form feed
+       \n - New line
+       \r - Carriage return
+       \t - Tab
+       \uNNNN - Символ в кодировке Юникод с шестнадцатиричным кодом NNNN
+                Например, \u00A9 — юникодное представление символа копирайт © */
+
+    alert('Привет\nМир'); // выведет "Мир" на новой строке
+
+    /* Экранирование специальных символов */
+    var str = 'I\'m a JavaScript programmer';
+    var str = "I'm a JavaScript \"programmer\"";
+    alert(str);
+
+    var str = 'символ \\';
+    alert(str); // символ \
+
+    /* Методы и свойства */
+
+    // Длина length
+    var str = "My\n"; // 3 символа. Третий - перевод строки
+    alert(str.length);  // 3
+
+    // Доступ к символам
+    var str = "jQuery";
+    alert(str.charAt(0));  // "j"
+
+    var str = "Я - современный браузер!";
+    alert(str[0]);  // "Я", IE8+
+
+    alert("".charAt(0)); // пустая строка
+    alert(""[0]); // undefined, IE8+
+
+    // Смена регистра
+    alert("Интерфейс".toUpperCase()); // ИНТЕРФЕЙС
+    alert("Интерфейс".charAt(0).toLowerCase()); // 'и'
+
+    /* Задача
+       Напишите функцию ucFirst(str), которая возвращает строку str
+       с заглавным первым символом */
+    function ucFirst(str) {
+        var result = str.charAt(0).toUpperCase();
+        for (var i = 1; i < str.length; i++) {
+            result += str.charAt(i).toLowerCase();
+        }
+        return result;
+    }
+    ucFirst("вася"); // Вася
+
+    // Поиск подстроки
+    var str = "Widget with id";
+    alert(str.indexOf("Widget")); // 0, т.к. "Widget" найден прямо в начале str
+    alert(str.indexOf("id")); // 1, т.к. "id" найден, начиная с позиции 1
+    alert(str.indexOf("Lalala")); // -1, подстрока не найдена
+    alert(str.indexOf("id", 2)) // 12, поиск начат с позиции 2
+
+    /* вызов ~n эквивалентен выражению -(n+1)
+       ~n ноль только в случае, когда n == -1 */
+    if (~str.indexOf("get")) {
+        alert('совпадение есть!');
+    }
+
+    /* Задача
+       Напишите функцию checkSpam(str), которая возвращает true,
+       если строка str содержит ‘viagra’ or ‘XXX’ */
+    function checkSpam(str) {
+        lowerStr = str.toLowerCase();
+        return !!(~lowerStr.indexOf('viagra') || ~lowerStr.indexOf('xxx'));
+    }
+
+    // Поиск всех вхождений
+    var str = "Ослик Иа-Иа посмотрел на виадук"; // ищем в этой строке
+    var target = "Иа"; // цель поиска
+    var pos = 0;
+    while(true) {
+        var foundPos = str.indexOf(target, pos);
+        if (foundPos == -1) break;
+        alert(foundPos); // нашли на этой позиции
+        pos = foundPos + 1; // продолжить поиск со следующей
+    }
+
+    // Взятие подстроки: substr, substring, slice
+    var str = "stringify";
+    alert(str.substring(0, 1)); // "s", символы с позиции 0 по 1 не включая 1
+    alert(str.substring(2)); // ringify, символы с позиции 2 до конца
+
+    alert(str.substr(2, 4)); // ring, со 2й позиции 4 символа
+
+    // Различие между substring и slice — в том, как они работают с отрицательными
+    // и выходящими за границу строки аргументами
+
+    alert("testme".substring(-2));  // "testme", -2 становится 0
+    alert("testme".substring(4, -1));  // "test"
+    // -1 становится 0 -> получили substring(4, 0)
+    // 4 > 0, так что аргументы меняются местами -> substring(0, 4) = "test"
+
+    alert("testme".slice(-2));  // "me", от 2 позиции с конца
+    alert("testme".slice(1, -1)); // "estm", от 1 позиции до первой с конца
+
+    /* Задача
+       Создайте функцию truncate(str, maxlength),
+       которая проверяет длину строки str,
+       и если она превосходит maxlength — заменяет конец str на '…',
+       так чтобы ее длина стала равна maxlength */
+    function truncate(str, maxlength) {
+        if (str.length <= maxlength) return str;
+        return str.substr(0, maxlength - 1) + '…';
+        //return (str.length > maxlength) ? str.slice(0, maxlength - 1) + '…' : str;
+    }
+
+    /* Кодировка Юникод */
+    alert(String.fromCharCode(1072)); // 'а'
+    alert("абрикос".charCodeAt(0)); // 1072, код 'а'
+
+    // Выведем отрезок символов юникода с кодами от 1040 до 1105
+    var str = '';
+    for (var i = 1040; i <= 1105; i++) {
+        str += String.fromCharCode(i);
+    }
+    alert(str); // АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяѐё
+
+    // Сравнение строк
+    "Z" > "A" // true
+    "Вася" > "Ваня" // true, т.к. с > н
+    "aa" > "a"  // true, т.к. начало совпадает, но в 1й строке больше символов
+    "2" > "14" // true, так как это строки, и для первых символов верно "2" > "1"
+    2 > "14" // false
+</script>
+
+</body>
+</html>

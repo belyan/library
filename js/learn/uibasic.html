@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Взаимодействие с пользователем</title>
+</head>
+<body>
+
+<!--
+Взаимодействие с пользователем
+http://learn.javascript.ru/uibasic
+-->
+<script>
+    /* alert */
+    // Приостанавливает выполнение скрипта, является модальным окном
+    alert("Привет");
+
+    /* prompt */
+    // Если пользователь нажал "Отмена", то возвращается null
+    var years = prompt("Сколько вам лет?", 100);
+
+    alert("Вам " + years + " лет!");
+
+    /* confirm */
+    // Результатом будет true или false
+    var isAdmin = confirm("Вы - администратор?");
+
+    alert(isAdmin);
+</script>
+</body>
+</html>

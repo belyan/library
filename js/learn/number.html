@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Числа</title>
+</head>
+<body>
+
+<!--
+Числа
+http://learn.javascript.ru/number
+-->
+<script>
+    /* Способы записи */
+    alert(0xFF); // 255 в шестнадцатиричной системе
+    alert(010); // 8 в восьмиричной системе
+
+    // Научная форма записи
+    alert(3e5);  // 300000 (3 с 5 нулями)
+    alert(3e-5); // 0.00003 (здесь 3 сдвинуто 5 раз вправо, за десятичную точку)
+
+    /* Деление на ноль, Infinity */
+    alert(1 / 0);  // Infinity
+    alert(12345 / 0); // Infinity
+    alert(Infinity > 1234567890); // true
+    alert(Infinity + 5 == Infinity);  // true
+    alert(-1 / 0); // -Infinity
+    alert(1e500); // Infinity
+
+    /* NaN */
+    var n = 0 / 0;
+    alert(n);  // NaN
+    alert(isNaN(n)); // true
+    alert(NaN + 1); // NaN
+
+    /* isFinite */
+    alert(isFinite(1)); // true
+    alert(isFinite(Infinity)); // false
+    alert(isFinite(NaN)); // false
+
+    /* Преобразование к числу */
+    var s = "12.34";
+    alert(+s);  // 12.34
+    alert(+"12test"); // NaN
+    alert(+"  -12"); // -12
+    alert(+" \n34  \n"); // 34, перевод строки \n является пробельным символом
+    alert(+""); // 0, пустая строка становится нулем
+    alert(+"1 2"); // NaN, пробел посередине числа - ошибка
+    alert('12.34' / "-2");  // -6.17
+
+    /* Задача
+       Создайте страницу, которая предлагает ввести два числа и выводит их сумму */
+    var a = +prompt('Enter the first number', '');
+    var b = +prompt('Enter the second number', '');
+    alert('Their sum: ' + (a + b)); // скобки нужны, иначе вместо сложения получим конкатенацию
+
+    /* Проверка на число для строк */
+    isNaN("-11.5"); // false
+    isNaN(" \n\n  "); // false, т.к. строка из пробелов преобразуется к 0
+    isNaN(+false); // false, т.к. false преобразуется к 0
+    isNaN(+true); // false, т.к. true преобразуется к 1
+    isNaN(+null); // false, т.к. null преобразуется к 0
+    isNaN(+undefined); // true
+
+    /* Мягкое преобразование: parseInt и parseFloat */
+    alert(+"12px"); // NaN
+    alert(parseInt('12px')); // 12, ошибка на символе 'p'
+    alert(parseFloat('12.3.4')); // 12.3, ошибка на второй точке
+    alert(parseInt('a123')); // NaN
+    alert(parseInt('0xFF')); // 255
+    alert(parseInt('010')); // в некоторых браузерах 8
+    alert(parseInt('010', 10)); // во всех браузерах 10
+
+    /* Проверка на число для всех типов */
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    /* toString(система счисления) */
+    var n = 255;
+    alert(n.toString(16)); // ff
+    var n = 4;
+    alert(n.toString(2)); // 100
+    var n = 1234567890;
+    alert(n.toString(36)); // kf12oi
+
+    /* Округление */
+    // Math.floor - Округляет вниз
+    // Math.ceil - Округляет вверх
+    // Math.round - Округляет до ближайшего целого
+
+    alert(Math.floor(3.1)); // 3
+    alert(Math.ceil(3.1)); // 4
+    alert(Math.round(3.1)); // 3
+
+    // Округление битовыми операторами
+    alert(~~12.3);  // 12
+    alert(12.3 ^ 0);  // 12
+    alert(1.2 + 1.3 ^ 0); // 2, приоритет ^ меньше, чем +
+
+    // Округление до заданной точности
+    var n = 3.456;
+    alert(Math.round(n * 100) / 100);  // 3.456 -> 345.6 -> 346 -> 3.46
+    var n = 12.34;
+    alert(n.toFixed(1)); // "12.3"
+    var n = 12.36;
+    alert(n.toFixed(1)); // "12.4"
+    var n = 12.34;
+    alert(n.toFixed(5)); // "12.34000", добавлены нули до 5 знаков после запятой
+    var n = 12.34;
+    alert(+n.toFixed(5)); // 12.34, округлили и преобразовали к числу
+
+    /* Неточные вычисления */
+    alert(0.1 + 0.2); // 0.30000000000000004
+    alert(0.1.toFixed(20));  // 0.10000000000000000555
+    alert((0.1 * 10 + 0.2 * 10) / 10); // 0.3
+    alert(+(0.1 + 0.2).toFixed(10)); // 0.3
+
+    /* Задача */
+    function price(n) {
+        return +n.toFixed(2) + '$';
+    }
+
+    alert(9999999999999999); // 10000000000000000
+
+    /* Другие математические методы */
+    /*
+    Math.sqrt(x) - Возвращает квадратный корень из x
+    Math.log(x) - Возвращает натуральный (по основанию e) логарифм x
+    Math.pow(x, exp) - Возводит число в степень, возвращает xexp, например Math.pow(2,3) = 8.
+        Работает в том числе с дробными и отрицательными степенями, например: Math.pow(4, -1/2) = 0.5
+    Math.abs(x) - Возвращает абсолютное значение числа
+    Math.exp(x) - Возвращает ex, где e — основание натуральных логарифмов
+    Math.max(a, b, c...) - Возвращает наибольший из списка аргументов
+    Math.min(a, b, c...) - Возвращает наименьший из списка аргументов
+    Math.random(x) - Возвращает псевдо-случайное число в интервале [0,1) - то есть между 0(включительно) и 1(не включая).
+        Генератор случайных чисел инициализуется текущим временем
+    */
+
+    /* Тригонометрия */
+    /*
+    Math.acos(x) - Возвращает арккосинус x (в радианах)
+    Math.asin(x) - Возвращает арксинус x (в радианах)
+    Math.atan - Возвращает арктангенс x (в радианах)
+    Math.atan2(y, x) - Возвращает угол до точки (y, x). Описание функции: Atan2.
+    Math.sin(x) - Вычисляет синус x (в радианах)
+    Math.cos(x) - Вычисляет косинус x (в радианах)
+    Math.tan(x) - Возвращает тангенс x (в радианах)
+    */
+
+    /* Задача
+       Напишите функцию getDecimal(num), которая возвращает десятичную часть
+       положительного числа */
+    function getDecimal(num) {
+        return +(num - Math.floor(num)).toFixed(6);
+    }
+    // или
+    function getDecimal(num) {
+        return +(num % 1).toFixed(6);
+    }
+
+    /* Задача
+       Напишите функцию fib(n), которая будет вычислять Fn,
+       используя формулу Бине */
+    function fib(n) {
+        var phi = (1 + Math.sqrt(5)) / 2;
+        return Math.round(Math.pow(phi, n) / Math.sqrt(5));
+    }
+    alert(fib(77)); // 5527939700884755 (должно получиться 5527939700884757)
+
+    /* Задача
+       Напишите код для генерации случайного значения в диапазоне от 0 до max,
+       не включая max */
+    function getRandom(max) {
+        return Math.random() * max;
+    }
+
+    /* Задача
+       Напишите код для генерации случайного числа от min до max,
+       не включая max */
+    function getRandom(min, max) {
+        return min + Math.random() * (max - min);
+    }
+
+    /* Задача
+       Напишите код для генерации случайного ЦЕЛОГО числа между min и max,
+       включая min и max как возможные значения */
+    function getRandom(min, max) {
+        return Math.floor(min + Math.random() * (max - min + 1));
+    }
+</script>
+
+</body>
+</html>

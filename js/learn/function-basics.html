@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <title>Функции</title>
 </head>
 <body>
 
@@ -11,53 +12,53 @@ http://learn.javascript.ru/function-basics
 -->
 <script>
     /* Объявление */
-    function showMessage() {
-        alert("Привет всем присутствующим!");
+    function showMessage1() {
+        console.log("Привет всем присутствующим!");
     }
-    showMessage();
+    showMessage1();
 
     /* Локальные переменные */
-    function showMessage() {
+    function showMessage2() {
         var message = "Привет, я - Вася!"; // локальная переменная
-        alert(message);
+        console.log(message);
     }
-    showMessage(); // Привет, я - Вася!
-    alert(message); // <-- будет ошибка, т.к. переменная видна только внутри
+    showMessage2(); // Привет, я - Вася!
+    console.log(message); // <-- будет ошибка, т.к. переменная видна только внутри
 
     /* Внешние переменные */
     var userName = "Вася";
-    function showMessage() {
+    function showMessage3() {
         var message = "Привет, я " + userName;
-        alert(message);
+        console.log(message);
     }
-    showMessage(); // Привет, я Вася
+    showMessage3(); // Привет, я Вася
 
     /* Параметры */
-    function showMessage(from, text) { // параметры from, text
+    function showMessage4(from, text) { // параметры from, text
         from = "** " + from + " **"; // здесь может быть сложный код оформления
-        alert(from + "\n\n" + text);
+        console.log(from + "\n\n" + text);
     }
-    showMessage("Маша", "Привет!");
+    showMessage4("Маша", "Привет!");
 
     /* Аргументы по умолчанию */
-    function showMessage(from, text) {
+    function showMessage5(from, text) {
         text = text || "текст не передан";
-        alert(from + ": " + text);
+        console.log(from + ": " + text);
     }
-    showMessage("Маша"); // Маша: текст не передан
+    showMessage5("Маша"); // Маша: текст не передан
 
     /* Возврат значения */
     function calcD(a, b, c) {
         return b*b - 4*a*c;
     }
     var test = calcD(-4, 2, 1);
-    alert(test); // 20
+    console.log(test); // 20
 
     /* Задача */
     function checkAge(age) {
         return (age > 18) ? true : confirm("Родители разрешили?");
     }
-    function checkAge(age) {
+    function checkAge2(age) {
         return (age > 18) || confirm("Родители разрешили?");
     }
 

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Свои объекты: конструкторы и методы</title>
+</head>
+<body>
+
+<!--
+Свои объекты: конструкторы и методы
+http://learn.javascript.ru/object-methods
+-->
+<script>
+    /* Свои методы объектов */
+    var user = {
+        name: "Василий",
+        // Метод
+        sayHi: function() {
+            console.log("Привет!");
+        }
+
+    };
+
+    // Вызов метода
+    user.sayHi();
+
+    /* Доступ к объекту через this */
+    // Для доступа к объекту из метода используется ключевое слово this
+    var user2 = {
+        name: "Василий",
+        sayHi: function() {
+            console.log(this.name);
+        }
+    };
+
+    user2.sayHi();
+
+    var user3 = {
+        name: "Василий",
+        sayHi: function() {
+            showName(this); // передать текущий объект в showName
+        }
+    };
+
+    function showName(obj) {
+        console.log(obj.name);
+    }
+
+    user3.sayHi();
+
+    /* Задача */
+    var calculator = {
+        readValues: function() {
+            this.a = +prompt("Введите число a", "0");
+            this.b = +prompt("Введите число b", "0");
+        },
+        sum: function() {
+            return this.a + this.b;
+        },
+        mul: function() {
+            return this.a * this.b;
+        }
+    };
+
+    calculator.readValues();
+    console.log( calculator.sum() );
+    console.log( calculator.mul() );
+
+    /* Задача */
+    var ladder = {
+        step: 0,
+        up: function() {  // вверх по лестнице
+            this.step++;
+            return this;
+        },
+        down: function() {  // вниз по лестнице
+            this.step--;
+            return this;
+        },
+        showStep: function() { // вывести текущую ступеньку
+            console.log(this.step);
+        }
+    };
+
+    ladder.up().up().down().up().down().showStep(); // 1
+
+    /* Функция-конструктор, «new» */
+    // Конструктором становится любая функция, вызванная через new
+    // Названия функций, которые предназначены создавать объекты, как правило, начинают с большой буквы
+    function Animal(name) {
+        this.name = name;
+        this.canWalk = true;
+    }
+
+    var animal = new Animal("ёжик"); // объект (экземпляр) класса Animal
+    console.log(animal);
+
+    /* Задача */
+    var obj = {};
+    function A() { return obj; }
+    function B() { return obj; }
+
+    var a = new A;
+    var b = new B;
+
+    console.log( a == b ); // true
+
+    /* Создание методов в конструкторе */
+    function User(name) {
+        this.name = name;
+
+        this.sayHi = function() {
+            console.log("Моё имя: " + this.name);
+        };
+    }
+
+    var ivan = new User("Иван");
+    console.log(ivan);
+
+    ivan.sayHi(); // "Моё имя: Иван"
+
+    /* Задача */
+    function Summator() {
+        this.sum = function() {
+            return this.a + this.b;
+        };
+
+        this.run = function() {
+            this.a = +prompt("Введите число a", "0");
+            this.b = +prompt("Введите число b", "0");
+            return this.sum();
+        };
+    }
+
+    var sum = new Summator();
+    console.log( sum.run() );
+
+    /* Задача */
+    function Adder(startingValue) {
+        this.value = startingValue;
+        this.addInput = function() {
+            this.value += +prompt("Введите число", "0");
+        };
+        this.showValue = function() {
+            console.log(this.value);
+        }
+    }
+
+    var adder = new Adder(1); // начальное значение 1
+    adder.addInput(); // прибавит ввод prompt к текущему значению
+    adder.addInput(); // прибавит ввод prompt к текущему значению
+    adder.showValue(); // выведет текущее значение
+
+    /* Приватные свойства */
+    // Все переменные конструктора становятся приватными,
+    // так как доступны только через замыкание, из внутренних функций
+    function User2(name) {
+        this.upperCaseName = function() {
+            name = name.toUpperCase(); // <-- изменяет name из User
+        };
+        this.say = function(phrase) {
+            console.log(name + " сказал: " + phrase);
+        };
+    }
+
+    var user4 = new User2("Вася");
+    user4.upperCaseName();
+    user4.say("Да здравствует ООП!"); // "ВАСЯ сказал: Да здравствует ООП!"
+    console.log(user4);
+
+    /* Задача */
+    function User3(name) {
+        this.name = name;
+        this.sayHi = function(name) {
+            console.log(this.name + " сказал: Привет, " + name + "!");
+        };
+    }
+
+    var user5 = new User3("Петя");
+    user5.sayHi("Вася");
+
+    /* Задача */
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function Calculator() {
+        var operators = {
+            "+": function(a, b) { return a + b; },
+            "-": function(a, b) { return a - b; }
+        };
+
+        this.calculate = function(str) {
+            var arr = str.split(" "),
+                a = arr[0],
+                b = arr[2],
+                operator = arr[1];
+
+            if (operator in operators && isNumeric(a) && isNumeric(b)) {
+                return operators[operator](+a, +b)
+            } else {
+                return NaN;
+            }
+        };
+
+        this.addMethod = function(name, func) {
+            operators[name] = func;
+        };
+    }
+
+    var calc = new Calculator();
+    console.log(calc.calculate("3 + 7")); // 10
+
+    var powerCalc = new Calculator();
+    powerCalc.addMethod("*", function(a, b) { return a * b; });
+    powerCalc.addMethod("/", function(a, b) { return a / b; });
+    powerCalc.addMethod("**", function(a, b) { return Math.pow(a, b); });
+
+    console.log( powerCalc.calculate("5 * 3") ); // 15
+    console.log( powerCalc.calculate("20 / 5") ); // 4
+    console.log( powerCalc.calculate("2 ** 3") ); // 8
+</script>
+
+</body>
+</html>

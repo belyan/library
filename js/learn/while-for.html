@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Циклы while, for</title>
+</head>
+<body>
+
+<!--
+Циклы while, for
+http://learn.javascript.ru/while-for
+-->
+<script>
+    /* Цикл while */
+    // Пока условие верно — выполняется код из тела цикла
+    var i = 0;
+    while (i < 3) {
+        alert(i);
+        i++;
+    }
+
+    /* Цикл do..while */
+    // Сначала выполняется тело, а затем проверяется условие
+    var i = 0;
+    do {
+        alert(i);
+        i++;
+    } while (i < 3);
+
+    /* Задача */
+    // Какое последнее значение выведет этот код?
+    var i = 3;
+    while(i) {
+        alert(i--); // 3, 2, 1
+    }
+
+    /* Цикл for */
+    // Условие проверяется перед каждой итерацией
+    // Шаг i++ выполняется после каждой итерации, но перед проверкой условия
+    for (var i = 0; i < 3; i++) {
+        alert(i);
+    }
+
+    /* Задача */
+    var i = 0;
+    while (++i < 5) alert(i); // 1, 2, 3, 4
+    while (i++ < 5) alert(i); // 1, 2, 3, 4, 5
+
+    /* Задача */
+    for (var i = 0; i < 5; i++) alert(i); // 0, 1, 2, 3, 4
+    for (var i = 0; i < 5; ++i) alert(i); // 0, 1, 2, 3, 4
+
+    /* Задача */
+    var i = 0;
+    while (i < 3) {
+        alert("number " + i + "!");
+        i++;
+    }
+
+    /* Задача */
+    var number;
+    do {
+        number = prompt("Введите число, большее 100", "");
+    } while (number <= 100 && number != null);
+</script>
+
+</body>
+</html>

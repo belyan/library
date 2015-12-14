@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Логические операторы</title>
+</head>
+<body>
+
+<!--
+Логические операторы
+http://learn.javascript.ru/logical-ops
+-->
+<script>
+    /* || (ИЛИ) */
+    var hour = 12, isWeekend = true;
+    if (hour < 10 || hour > 18 || isWeekend) {
+        alert("Офис до 10 или после 18 или в выходной закрыт");
+    }
+
+    // Оператор ИЛИ возвращает то значение, на котором остановились вычисления
+    var undef; // переменная не присвоена, т.е. равна undefined
+    var zero = 0;
+    var emptyStr = "";
+    var msg = "Привет!";
+    var result = undef || zero || emptyStr || msg || 0;
+    alert(result); // выведет "Привет!" - первое значение, которое является true
+
+    /* Задача */
+    alert( alert(1) || 2 || alert(3) ); // сначала 1, затем 2
+
+    /* && (И) */
+    var hour = 12, minute = 30;
+    if (hour == 12 && minute == 30) {
+        alert("Время 12:30");
+    }
+
+    // Если левый аргумент — false, оператор И возвращает его и заканчивает вычисления
+    // Первый аргумент - true, поэтому возвращается второй аргумент
+    alert(1 && 0);  // 0
+    alert(1 && 5);  // 5
+
+    // Первый аргумент - false, он и возвращается, а второй аргумент игнорируется
+    alert(null && 5);  // null
+    alert(0 && "не важно"); // 0
+
+    /* Задача */
+    alert( alert(1) && alert(2) ); // сначала 1, затем undefined
+
+    /* ! (НЕ) */
+    alert(!true); // false
+    alert(!0);  // true
+
+    // Двойное НЕ используются для преобразования значений к логическому типу
+    alert(!!"0")  // true
+    alert(!!null); // false
+
+    /* Задача */
+    if (age >= 14 && age <= 90) {}
+
+    /* Задача */
+    if ( !(age >= 14 && age <= 90) ) {}
+    if (age < 14 && age > 90) {}
+
+    /* Задача */
+    if (-1 || 0) alert('первое'); // -1, true
+    if (-1 && 0) alert('второе'); // 0, false
+    if (null || -1 && 1) alert('третье'); // 1, true
+</script>
+
+</body>
+</html>

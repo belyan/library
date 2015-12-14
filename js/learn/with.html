@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Конструкция "with"</title>
+</head>
+<body>
+
+<!--
+Конструкция "with"
+http://learn.javascript.ru/with
+-->
+<script>
+    // Конструкция with позволяет использовать для области видимости произвольный объект
+    var a = 5;
+    var obj = { a : 10 };
+
+    with(obj) {
+        console.log(a); // 10, из obj
+    }
+
+    var b = 1;
+    var obj2 = { a : 10 };
+
+    with(obj2) {
+        console.log(b); // 1, из window
+    }
+
+    var obj3 = {
+        weight: 10,
+        size: {
+            width: 5,
+            height: 7
+        }
+    };
+
+    with(obj3) {
+        with(size) { // size будет взят из obj
+            console.log( width * height / weight ); // width, height из size, weight из obj
+        }
+    }
+
+    /* Изменения переменной */
+    var obj4 = { a : 10 }
+
+    with(obj4) {
+        a = 20;
+    }
+
+    console.log(obj4.a); // 20, переменная была изменена в объекте
+
+    /* Почему отказались от with? */
+    // 1. Конструкция with подвержена ошибкам и непрозрачна
+    var obj5 = { weight: 10 };
+
+    with(obj5) {
+        weight = 20;
+        size = 35;
+    }
+
+    console.log(obj5.size); // undefined
+    console.log(window.size); // 35
+
+    // 2. Алгоритмы сжатия JavaScript не любят with
+    // 3. Усложнение поиска переменной из-за with влечет дополнительные накладные расходы
+    var i = 0;
+
+    function fast() {
+        i++;
+    }
+
+    function slow() {
+        with(i) {}
+        i++;
+    }
+
+    var time1 = new Date();
+    while(i < 1000000) fast();
+    console.log(new Date - time1);
+
+    var time2 = new Date();
+    i = 0;
+    while(i < 1000000) slow();
+    console.log(new Date - time2);
+
+    /* Замена with */
+    var elem = {};
+    var s = elem.style = {};
+
+    s.top = "10px";
+    s.left = "0";
+
+    /* Задача */
+    var c = 1;
+
+    var obj6 = { d: 2 };
+
+    with(obj6) {
+        var d; // Конструкция with не создаёт области видимости
+        console.log(c + d); // 3
+    }
+</script>
+
+</body>
+</html>

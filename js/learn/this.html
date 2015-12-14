@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Контекст this в деталях</title>
+</head>
+<body>
+
+<!--
+Контекст this в деталях
+http://learn.javascript.ru/this
+-->
+<script>
+    /* Вызов в контексте объекта */
+    var user = {
+        firstName: "Вася"
+    };
+
+    function func() {
+        console.log(this.firstName);
+    }
+
+    user.sayHi = func;
+    user.sayHi();  // this = user
+
+    // Значение this не зависит от того, как функция была создана, оно определяется исключительно в момент вызова
+    var admin = { firstName: "Админ" };
+
+    user.a = func;
+    admin.b = func;
+
+    user.a(); // "Вася"
+    admin.b(); // "Админ"
+
+    /* Вызов в режиме обычной функции */
+    function func2() {
+        console.log(this); // [object Window]
+    }
+
+    func2();
+
+    function func3() {
+        "use strict";
+        console.log(this); // выведет undefined (кроме IE < 10)
+    }
+
+    func3();
+
+    /* Явное указание this: apply и call */
+    // Функцию можно вызвать, явно указав значение this
+    var user2 = {
+        firstName: "Василий",
+        lastName: "Петров"
+    };
+
+    function showName() {
+        console.log(this.firstName + " " + this.lastName);
+    }
+
+    showName.call(user2);  // "Василий Петров"
+
+    function getName(a, b) {
+        console.log(this[a] + " " + this[b]);
+    }
+
+    getName.apply(user2, ["firstName", "lastName"]);  // "Василий Петров"
+
+    // При помощи call/apply можно легко взять метод одного объекта, в том числе встроенного,
+    // и вызвать в контексте другого
+    function sayHi() {
+        arguments.join = [].join; // одолжили метод у массива
+        var argStr = arguments.join(":");
+        console.log(argStr);
+    }
+
+    sayHi(1, 2, 3); // "1:2:3"
+
+    // Для безопасного вызова используем apply/call
+    function sayHi2() {
+        var join = [].join; // ссылка на функцию теперь в переменной
+        var argStr = join.call(arguments, ":"); // this = arguments
+        console.log(argStr);
+    }
+
+    sayHi2(1, 2, 3); // "1:2:3"
+
+    function sayHi3() {
+        // вызов arr.slice() скопирует все элементы из this в новый массив
+        var args = [].slice.call(arguments);
+        console.log( args.join(":") );
+    }
+
+    sayHi(1, 2); // "1:2"
+
+    /* Задача */
+    function f() {
+        var args = [].slice.call(arguments);
+        console.log(args[0]);
+
+        args.shift();
+        g.apply(this, args);
+    }
+
+    function g(a, b, c) {
+        console.log( a + b + (c || 0) );
+    }
+
+    f("тест", 1, 2); // "тест", 3
+    f("тест2", 1, 2, 3); // "тест2", 6
+
+    /* Задача */
+    var obj = {
+        go: function() {
+            console.log(this);
+        }
+    };
+
+    (obj.go || 0)(); // [object Window]
+
+    /* Задача */
+    var arr = ["a", "b"];
+    arr.push(function() {
+        console.log(this);
+    });
+
+    arr[2]();  // ["a", "b", function]
+
+    /* Итого */
+    // При вызове функции как метода this = obj
+    // При обычном вызове this = window
+    // В конструкторе new this = {}
+    // Явное указание с помощью call/apply this = context
+</script>
+
+</body>
+</html>
