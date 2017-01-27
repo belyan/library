@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Автоматические тесты</title>
+
+    <!-- подключаем стили Mocha, для отображения результатов -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">
+    <!-- подключаем библиотеку Mocha -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script>
+    <!-- настраиваем Mocha: предстоит BDD-тестирование -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+
+    <!-- подключаем chai -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script>
+    <!-- в chai есть много всего, выносим assert в глобальную область -->
+    <script>
+        var assert = chai.assert;
+    </script>
+</head>
+<body>
+
+<!--
+Автоматические тесты
+https://learn.javascript.ru/testing
+-->
+<script>
+    function pow(x, n) {
+        if (n < 0) return NaN;
+        if (Math.round(n) != n) return NaN;
+        if (n == 0 && x == 0) return NaN;
+
+        var result = 1;
+
+        for (var i = 0; i < n; i++) {
+            result *= x;
+        }
+
+        return result;
+    }
+</script>
+
+<!-- Тесты -->
+<script>
+    /* Вот самые востребованные assert-проверки, встроенные в Chai:
+     - assert(value) – проверяет что value является true в логическом контексте.
+     - assert.equal(value1, value2) – проверяет равенство value1 == value2.
+     - assert.strictEqual(value1, value2) – проверяет строгое равенство value1 === value2.
+     - assert.notEqual, assert.notStrictEqual – проверки, обратные двум предыдущим.
+     - assert.isTrue(value) – проверяет, что value === true
+     - assert.isFalse(value) – проверяет, что value === false */
+
+    describe("pow", function() {
+        describe("возводит x в степень n", function() {
+            function makeTest(x) {
+                var expected = x * x * x;
+                it("при возведении " + x + " в степень 3 результат: " + expected, function() {
+                    assert.equal(pow(x, 3), expected);
+                });
+            }
+
+            for (var x = 1; x <= 5; x++) {
+                makeTest(x);
+            }
+        });
+
+        it("при возведении в отрицательную степень результат NaN", function() {
+            assert(isNaN(pow(2, -1)), "pow(2, -1) не NaN");
+        });
+
+        it("при возведении в дробную степень результат NaN", function() {
+            assert(isNaN(pow(2, 1.5)), "pow(2, -1.5) не NaN");
+        });
+
+        describe("любое число, кроме нуля, в степени 0 равно 1", function() {
+            function makeTest(x) {
+                it("при возведении " + x + " в степень 0 результат: 1", function() {
+                    assert.equal(pow(x, 0), 1);
+                });
+            }
+
+            for (var x = -5; x <= 5; x += 2) {
+                makeTest(x);
+            }
+        });
+
+        it("ноль в нулевой степени даёт NaN", function() {
+            assert(isNaN(pow(0, 0)), "0 в степени 0 не NaN");
+        });
+    });
+</script>
+
+<!-- в элементе с id="mocha" будут результаты тестов -->
+<div id="mocha"></div>
+
+<!-- запустить тесты! -->
+<script>
+    mocha.run();
+</script>
+
+</body>
+</html>
