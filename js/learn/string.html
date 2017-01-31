@@ -59,11 +59,7 @@ http://learn.javascript.ru/string
        Напишите функцию ucFirst(str), которая возвращает строку str
        с заглавным первым символом */
     function ucFirst(str) {
-        var result = str.charAt(0).toUpperCase();
-        for (var i = 1; i < str.length; i++) {
-            result += str.charAt(i).toLowerCase();
-        }
-        return result;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
     ucFirst("вася"); // Вася
 
@@ -72,7 +68,7 @@ http://learn.javascript.ru/string
     alert(str.indexOf("Widget")); // 0, т.к. "Widget" найден прямо в начале str
     alert(str.indexOf("id")); // 1, т.к. "id" найден, начиная с позиции 1
     alert(str.indexOf("Lalala")); // -1, подстрока не найдена
-    alert(str.indexOf("id", 2)) // 12, поиск начат с позиции 2
+    alert(str.indexOf("id", 2)); // 12, поиск начат с позиции 2
 
     /* вызов ~n эквивалентен выражению -(n+1)
        ~n ноль только в случае, когда n == -1 */
@@ -140,11 +136,19 @@ http://learn.javascript.ru/string
     alert(str); // АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяѐё
 
     // Сравнение строк
-    "Z" > "A" // true
-    "Вася" > "Ваня" // true, т.к. с > н
-    "aa" > "a"  // true, т.к. начало совпадает, но в 1й строке больше символов
-    "2" > "14" // true, так как это строки, и для первых символов верно "2" > "1"
-    2 > "14" // false
+    alert("Z" > "A"); // true
+    alert("Вася" > "Ваня"); // true, т.к. с > н
+    alert("aa" > "a");  // true, т.к. начало совпадает, но в 1й строке больше символов
+    alert("2" > "14"); // true, так как это строки, и для первых символов верно "2" > "1"
+    alert(2 > "14"); // false
+
+    /* Задача
+       Выделить число
+       Создайте функцию extractCurrencyValue(str), которая будет из строки "$120" выделять число-значение */
+    function extractCurrencyValue(str) {
+        return +str.slice(1);
+    }
+    alert(extractCurrencyValue("$120"));
 </script>
 
 </body>
