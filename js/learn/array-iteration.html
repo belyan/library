@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Массивы: перебирающие методы</title>
+</head>
+<body>
+
+<!--
+Массивы: перебирающие методы
+https://learn.javascript.ru/array-iteration
+-->
+<script>
+    /* forEach */
+    // Метод для каждого элемента массива вызывает функцию callback.
+    var arr = ["Яблоко", "Апельсин", "Груша"];
+
+    arr.forEach(function(item, i, arr) {
+        alert( i + ": " + item + " (массив:" + arr + ")" );
+    });
+
+    /* filter */
+    // Метод используется для фильтрации массива через функцию.
+    var arr2 = [1, -1, 2, -2, 3];
+
+    var positiveArr = arr2.filter(function(number) {
+        return number > 0;
+    });
+
+    alert( positiveArr ); // 1,2,3
+
+    /* map */
+    // Метод используется для трансформации массива.
+    var names = ['HTML', 'CSS', 'JavaScript'];
+
+    var nameLengths = names.map(function(name) {
+        return name.length;
+    });
+
+    // получили массив с длинами
+    alert( nameLengths ); // 4,3,10
+
+    /* every/some */
+    // Метод every возвращает true, если вызов callback вернёт true для каждого элемента arr.
+    // Метод some возвращает true, если вызов callback вернёт true для какого-нибудь элемента arr.
+    var arr3 = [1, -1, 2, -2, 3];
+
+    function isPositive(number) {
+        return number > 0;
+    }
+
+    alert( arr3.every(isPositive) ); // false, не все положительные
+    alert( arr3.some(isPositive) ); // true, есть хоть одно положительное
+
+    /* reduce/reduceRight */
+    // Метод используется для последовательной обработки каждого элемента массива
+    // с сохранением промежуточного результата.
+    var arr4 = [1, 2, 3, 4, 5];
+
+    // для каждого элемента массива запустить функцию,
+    // промежуточный результат передавать первым аргументом далее
+    var result = arr4.reduce(function(sum, current) {
+        return sum + current;
+    }, 0);
+
+    alert( result ); // 15
+
+    /* Задача */
+    // Перепишите цикл через map
+    var arr5 = ["Есть", "жизнь", "на", "Марсе"];
+
+    var arrLength = arr5.map(function(item) {
+        return item.length;
+    });
+
+    alert( arrLength ); // 4,5,2,5
+
+    /* Задача */
+    // Напишите функцию getSums(arr), которая возвращает массив его частичных сумм.
+    function getSums(arr) {
+        var result = [];
+
+        arr.reduce(function(previousValue, currentItem) {
+            var sum = previousValue + currentItem;
+            result.push(sum);
+            return sum;
+        }, 0);
+
+        return result;
+    }
+
+    alert(getSums([1, 2, 3, 4, 5])); // 1,3,6,10,15
+    alert(getSums([-2, -1, 0, 1])); // -2,-3,-3,-2
+</script>
+
+</body>
+</html>

@@ -87,9 +87,9 @@ http://learn.javascript.ru/array
     /* Задача */
     var numbers = [];
     while (true) {
-        var value = +prompt("Введите число", "");
+        var value = prompt("Введите число", "");
         if (!value) break; // "", NaN или null (отмена)
-        numbers.push(value);
+        numbers.push(+value);
     }
     var sum = 0;
     for (var i = 0; i < numbers.length; i++) {
