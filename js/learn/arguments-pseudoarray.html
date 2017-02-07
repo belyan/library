@@ -53,6 +53,20 @@ http://learn.javascript.ru/arguments-pseudoarray
 
     f3(1);
 
+    /* arguments – это не массив */
+    function sayHi2() {
+        var args = [];
+
+        for (var i = 0; i < arguments.length; i++) {
+            args[i] = arguments[i];
+        }
+
+        var args2 = Array.prototype.slice.call(arguments);
+        var args3 = [].slice.call(arguments);
+    }
+
+    sayHi2(1);
+
     /* Пример использования */
     var user = {
         name: "Вася"
@@ -61,9 +75,9 @@ http://learn.javascript.ru/arguments-pseudoarray
 
     function copy(dst) {
         for (var i = 1; i < arguments.length; i++) {
-            var obj = arguments[i];
-            for (var key in obj) {
-                dst[key] = obj[key];
+            var arg = arguments[i];
+            for (var key in arg) {
+                dst[key] = arg[key];
             }
         }
         return dst;
@@ -77,23 +91,23 @@ http://learn.javascript.ru/arguments-pseudoarray
     });
     console.log(user); // {name: "Петя", age: 25, surname: "Петров"}
 
-    /* arguments.callee */
+    /* Устаревшее свойство arguments.callee */
     // Содержит ссылку на функцию, которая выполняется в данный момент
-    // Рекомендованной альтернативой arguments.callee являются именованные функциональные выражения.
+    // Рекомендованной альтернативой arguments.callee являются именованные функциональные выражения (NFE)
     function f() {
         console.log(arguments.callee === f); // true
     }
     f();
 
-    // factorial(n) = n * factorial(n-1)
-    var factorial = function(n) {
-        return n == 1 ? 1 : n * arguments.callee(n - 1);
+    // подвызов через NFE
+    var factorial1 = function f(n) {
+        return n == 1 ? 1 : n * f(n-1);
     };
 
-    var g = factorial;
-    factorial = null; // функция переместилась в переменную g
-
-    console.log( g(5) ); // 120, работает!
+    // подвызов через arguments.callee
+    var factorial2 = function(n) {
+        return n == 1 ? 1 : n * arguments.callee(n-1);
+    };
 
     /* arguments.callee.caller */
     // Хранит ссылку на функцию, которая вызвала данную.
