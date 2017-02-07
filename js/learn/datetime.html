@@ -26,37 +26,19 @@ http://learn.javascript.ru/datetime
     var d = new Date(2011, 0, 1, 2, 3, 4, 567);
     console.log(d); // 1.01.2011, 02:03:04.567
 
-    /* Задача */
-    var d2 = new Date(2012, 1, 20, 3, 12); // 20 февраля 2012 года, 3 часа 12 минут
-    console.log(d2);
-
     /* Получение компонентов даты */
     // getFullYear() - получить год (из 4 цифр)
     // getMonth() - получить месяц, от 0 до 11
     // getDate() - получить число месяца, от 1 до 31
     // getHours(), getMinutes(), getSeconds(), getMilliseconds() - получить часы, минуты, секунды и миллисекунды
     // getDay() - получить номер дня в неделе от 0 (воскресенье) до 6 (суббота)
+    // getTime() - получить число миллисекунд, прошедших с 1 января 1970 года (GMT+0)
 
     var date = new Date();
     console.log( date.getHours() ); // час в вашей зоне для даты date
     console.log( date.getUTCHours() ); // час в зоне GMT+0 для даты date
 
     console.log( new Date().getTimezoneOffset() );  // для GMT+4 выведет -240
-
-    /* Задача */
-    function getWeekDay(date) {
-        var weekDays = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
-        return weekDays[date.getDay()];
-    }
-
-    function getLocalDay(date) {
-        var day = date.getDay();
-        return (day == 0 ? 7 : day);
-    }
-
-    var date2 = new Date(2012, 0, 3); // 3 января 2012
-    console.log( getWeekDay(date2) ); // "вт"
-    console.log( getLocalDay(date2) ); // 2
 
     /* Установка компонентов даты */
     // setFullYear(year [, month, date])
@@ -99,23 +81,6 @@ http://learn.javascript.ru/datetime
     d7.setDate(-1);
     console.log(d7); // предпоследнее число предыдущего месяца
 
-    /* Задача */
-    // Какое число месяца было 100 дней назад? Какой день недели?
-    var d8 = new Date();
-    d8.setDate(d8.getDate() - 100);
-    console.log( d8.getDate() );
-    console.log( getWeekDay(d8) );
-
-    /* Задача */
-    // Напишите функцию, которая возвращает последний день месяца
-    function getLastDayInMonth(year, month) {
-        var date = new Date(year, month + 1);
-        date.setDate(0);
-        return date.getDate();
-    }
-
-    console.log( getLastDayInMonth(2012, 12) ); // 29
-
     /* Преобразование к числу, разность дат */
     console.log( +new Date() );
 
@@ -129,16 +94,6 @@ http://learn.javascript.ru/datetime
     var end = new Date(); // конец измерения
 
     console.log("Цикл занял " + (end - start) + " ms");
-
-    /* Задача */
-    (function () {
-        var now = new Date(),
-            today = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
-            tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-
-        console.log( Math.round((now - today) / 1000) );
-        console.log( Math.round((tomorrow - now) / 1000) );
-    })();
 
     /* Бенчмаркинг */
     function floorMath(x) { return Math.floor(x); }
@@ -171,6 +126,65 @@ http://learn.javascript.ru/datetime
 
     var d11 = new Date();
     console.log( d11.toISOString() ); // вывод, похожий на "2011-01-26T13:51:50.417Z"
+
+    /* Разбор строки, Date.parse */
+    var msNoZone = Date.parse("2012-01-26T13:51:50.417"); // без зоны, значит UTC
+    console.log(msNoZone); // 1327585910417 (число миллисекунд)
+
+    var msZ = Date.parse("2012-01-26T13:51:50.417z"); // зона z означает UTC
+    console.log(msZ == msNoZone); // true, если браузер правильный
+
+    var ms = Date.parse("2012-01-26T13:51:50.417-07:00");
+    console.log(ms); // 1327611110417 (число миллисекунд)
+
+    /* Задача */
+    var d2 = new Date(2012, 1, 20, 3, 12); // 20 февраля 2012 года, 3 часа 12 минут
+    console.log(d2);
+
+    /* Задача */
+    // Создайте функцию, которая выводит текущий день недели в коротком формате
+    function getWeekDay(date) {
+        var weekDays = ["вс", "пн", "вт", "ср", "чт", "пт", "сб"];
+        return weekDays[date.getDay()];
+    }
+
+    var date2 = new Date(2012, 0, 3); // 3 января 2012
+    console.log( getWeekDay(date2) ); // "вт"
+    console.log( date2.toLocaleString('ru', {weekday: 'short'}) ); // "вт"
+
+    /* Задача */
+    function getLocalDay(date) {
+        var day = date.getDay();
+        return (day == 0 ? 7 : day);
+    }
+    console.log( getLocalDay(date2) ); // 2
+
+    /* Задача */
+    // Какое число месяца было 100 дней назад? Какой день недели?
+    var d8 = new Date();
+    d8.setDate(d8.getDate() - 100);
+    console.log( d8.getDate() );
+    console.log( getWeekDay(d8) );
+
+    /* Задача */
+    // Напишите функцию, которая возвращает последний день месяца
+    function getLastDayInMonth(year, month) {
+        var date = new Date(year, month + 1);
+        date.setDate(0);
+        return date.getDate();
+    }
+
+    console.log( getLastDayInMonth(2012, 12) ); // 29
+
+    /* Задача */
+    (function () {
+        var now = new Date(),
+            today = new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+            tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
+        console.log( Math.round((now - today) / 1000) );
+        console.log( Math.round((tomorrow - now) / 1000) );
+    })();
 
     /* Задача */
     // Напишите функцию, которая выводит дату date в формате dd.mm.yy
@@ -216,16 +230,6 @@ http://learn.javascript.ru/datetime
     console.log( formatDate2( new Date(new Date - 30 * 1000) ) ); // "30 сек. назад"
     console.log( formatDate2( new Date(new Date - 5 * 60 * 1000) ) ); // "5 мин. назад"
     console.log( formatDate2( new Date(new Date - 86400 * 1000) ) ); // вчерашняя дата в формате "дд.мм.гг чч:мм"
-
-    /* Разбор строки, Date.parse */
-    var msNoZone = Date.parse("2012-01-26T13:51:50.417"); // без зоны, значит UTC
-    console.log(msNoZone); // 1327585910417 (число миллисекунд)
-
-    var msZ = Date.parse("2012-01-26T13:51:50.417z"); // зона z означает UTC
-    console.log(msZ == msNoZone); // true, если браузер правильный
-
-    var ms = Date.parse("2012-01-26T13:51:50.417-07:00");
-    console.log(ms); // 1327611110417 (число миллисекунд)
 </script>
 
 </body>
