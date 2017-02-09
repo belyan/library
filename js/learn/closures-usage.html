@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Хранение данных в замыкании, модули</title>
+    <title>Хранение данных в замыкании</title>
 </head>
 <body>
 
 <!--
-Хранение данных в замыкании, модули
+Хранение данных в замыкании
 http://learn.javascript.ru/closures-usage
 -->
 <script>
@@ -113,28 +113,6 @@ http://learn.javascript.ru/closures-usage
 
     counter4.reset();
     console.log( counter4() ); // 1
-
-    /* Приём проектирования «Модуль» */
-    // 1. Создаётся функция-обёртка, которая выполняется «на месте»
-    // 2. Внутрь этой функции пишутся локальные переменные и функции,
-    //    которые пользователю модуля не нужны, но нужны самому модулю
-    // 3. Те функции, которые нужны пользователю, «экспортируются» во внешнюю область видимости
-
-    var MyLibrary = (function() {
-        var count = 0;
-
-        function helper() {}
-
-        return {
-            createMenu: function() {},
-            createDialog: function() {}
-        };
-
-    })();
-
-    // Использование
-    MyLibrary.createMenu();
-    MyLibrary.createDialog();
 
     /* Задача */
     // Напишите функцию sum, которая работает так: sum(a)(b) = a + b

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Модули через замыкания</title>
+</head>
+<body>
+
+<!--
+Модули через замыкания
+https://learn.javascript.ru/closures-module
+-->
+<script>
+    /* Приём проектирования «Модуль» */
+    // 1. Создаётся функция-обёртка, которая выполняется «на месте»
+    // 2. Внутрь этой функции пишутся локальные переменные и функции,
+    //    которые пользователю модуля не нужны, но нужны самому модулю
+    // 3. Те функции, которые нужны пользователю, «экспортируются» во внешнюю область видимости
+
+    var MyLibrary = (function() {
+        var count = 0;
+
+        function helper() {}
+
+        return {
+            createMenu: function() {},
+            createDialog: function() {}
+        };
+
+    })();
+
+    // Использование
+    MyLibrary.createMenu();
+    MyLibrary.createDialog();
+
+    /* Экспорт значения */
+    ;(function() {
+        // lodash - основная функция для библиотеки
+        function lodash(value) {
+            // ...
+        }
+
+        // вспомогательная переменная
+        var version = '2.4.1';
+        // ... другие вспомогательные переменные и функции
+
+        // код функции size, пока что доступен только внутри
+        function size(collection) {
+            return Object.keys(collection).length;
+        }
+
+        // присвоим в lodash size и другие функции, которые нужно вынести из модуля
+        lodash.size = size;
+        // lodash.defaults = ...
+        // lodash.cloneDeep = ...
+
+        // "экспортировать" lodash наружу из модуля
+        window._ = lodash; // в оригинальном коде здесь сложнее, но смысл тот же
+    })();
+
+    /* Экспорт через return */
+    var lodash = (function() {
+
+        var version = '2.4.1';
+
+        function assignDefaults() { }
+
+        return {
+            defaults: assignDefaults
+        }
+
+    })();
+</script>
+
+</body>
+</html>

@@ -53,6 +53,21 @@ http://learn.javascript.ru/closures
     f2();
     console.log(value); // 0
 
+    /* Всегда текущее значение */
+    // Значение переменной из внешней области берётся всегда текущее.
+
+    var phrase = 'Привет';
+
+    function sayHi1(name) {
+        alert(phrase + ', ' + name);
+    }
+
+    sayHi1('Вася');  // Привет, Вася
+
+    phrase = 'Пока';
+
+    sayHi1('Вася'); // Пока, Вася
+
     /* Задача */
     var b = 5;
 
@@ -100,6 +115,7 @@ http://learn.javascript.ru/closures
         }
     }
 
+    /* Возврат функции */
     // Вложенную функцию можно возвратить
     function sayHi4(person) {
         return function() {
@@ -119,21 +135,28 @@ http://learn.javascript.ru/closures
     var sayHiPete = sayHi4({ name: "Петька", age: 17 });
     var sayHiOther = sayHi4({ name: "Василий Иванович", age: 35 });
 
+    console.log(sayHiPete);
     console.log(sayHiOther);
 
     sayHiOther(); // Здравствуйте, Василий Иванович
 
     // Замыканием функции называется сама эта функция, плюс вся цепочка LexicalEnvironment, которая при этом образуется
-    var add = (function() {
-        var counter = 0;
-        return function() {
-            console.log(counter += 1);
-        }
-    })();
+    function makeCounter() {
+        var currentCount = 1;
 
-    add(); // 1
-    add(); // 2
-    add(); // 3
+        return function() {
+            return currentCount++;
+        };
+    }
+
+    var counter = makeCounter();
+
+    console.log( counter() ); // 1
+    console.log( counter() ); // 2
+    console.log( counter() ); // 3
+
+    var counter2 = makeCounter();
+    console.log( counter2() ); // 1
 
     function makeFunc() {
         var name = "Mozilla";
@@ -145,6 +168,20 @@ http://learn.javascript.ru/closures
 
     var myFunc = makeFunc(); // замыкание, которое содержит и функцию displayName, и строку "Mozilla"
     myFunc(); // Mozilla
+
+    /* Свойства функции */
+    function makeCounter2() {
+        function counter() {
+            return counter.currentCount++;
+        }
+        counter.currentCount = 1;
+
+        return counter;
+    }
+
+    var counter3 = makeCounter2();
+    console.log( counter3() ); // 1
+    console.log( counter3() ); // 2
 
     /* Управление памятью */
     // Объект переменных внешней функции существует в памяти до тех пор,
