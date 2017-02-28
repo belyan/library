@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Функция-конструктор, «new»</title>
+</head>
+<body>
+
+<!--
+Функция-конструктор, «new»
+https://learn.javascript.ru/constructor-new
+-->
+<script>
+    /* Конструктор */
+    // Конструктором становится любая функция, вызванная через new
+    // Названия функций, которые предназначены создавать объекты, как правило, начинают с большой буквы
+    function Animal(name) {
+        this.name = name;
+        this.canWalk = true;
+    }
+
+    // 1. Создаётся новый пустой объект.
+    // 2. Ключевое слово this получает ссылку на этот объект.
+    // 3. Функция выполняется. Как правило, она модифицирует this, добавляет методы, свойства.
+    // 4. Возвращается this.
+
+    var animal = new Animal("ёжик"); // объект (экземпляр) класса Animal
+    console.log(animal);
+
+    /* Правила обработки return */
+    // При вызове return с объектом, будет возвращён он, а не this.
+    // При вызове return с примитивным значением, оно будет отброшено.
+    function BigAnimal() {
+        this.name = "Мышь";
+        return { name: "Годзилла" };  // <-- возвратим объект
+    }
+
+    console.log( new BigAnimal().name );  // "Годзилла", получили объект вместо this
+
+    function BigAnimal2() {
+        this.name = "Мышь";
+        return "Годзилла"; // <-- возвратим примитив
+    }
+
+    console.log( new BigAnimal2().name ); // "Мышь", получили this (а "Годзилла" пропал)
+
+    /* Создание методов в конструкторе */
+    function User(name) {
+        this.name = name;
+
+        this.sayHi = function() {
+            console.log("Моё имя: " + this.name);
+        };
+    }
+
+    var ivan = new User("Иван");
+    console.log(ivan);
+
+    ivan.sayHi(); // "Моё имя: Иван"
+
+    /* Локальные переменные */
+    function User2(firstName, lastName) {
+        // вспомогательная переменная
+        var phrase = "Привет";
+
+        //  вспомогательная вложенная функция
+        function getFullName() {
+            return firstName + " " + lastName;
+        }
+
+        this.sayHi = function() {
+            alert( phrase + ", " + getFullName() ); // использование
+        };
+    }
+
+    var vasya = new User2("Вася", "Петров");
+    vasya.sayHi(); // "Привет, Вася Петров"
+
+    /* Задача */
+    var obj = {};
+    function A() { return obj; }
+    function B() { return obj; }
+
+    var a = new A;
+    var b = new B;
+
+    console.log( a == b ); // true
+
+    /* Задача */
+    // Напишите функцию-конструктор Calculator
+    function Calculator() {
+        this.read = function() {
+            this.a = +prompt('a?', 0);
+            this.b = +prompt('b?', 0);
+        };
+
+        this.sum = function() {
+            return this.a + this.b;
+        };
+
+        this.mul = function() {
+            return this.a * this.b;
+        };
+    }
+
+    var calculator = new Calculator();
+    calculator.read();
+    console.log( "Сумма=" + calculator.sum() );
+    console.log( "Произведение=" + calculator.mul() );
+
+    /* Задача */
+    // Напишите функцию-конструктор Accumulator(startingValue)
+    function Accumulator(startingValue) {
+        this.value = startingValue;
+        this.read = function() {
+            this.value += +prompt("Введите число", "0");
+        };
+        this.showValue = function() {
+            console.log(this.value);
+        }
+    }
+
+    var accumulator = new Accumulator(1); // начальное значение 1
+    accumulator.read(); // прибавит ввод prompt к текущему значению
+    accumulator.read(); // прибавит ввод prompt к текущему значению
+    accumulator.showValue(); // выведет текущее значение
+
+    /* Задача */
+    // Напишите конструктор Calculator, который создаёт расширяемые объекты-калькуляторы.
+    function PowerCalculator() {
+        var operators = {
+            "+": function(a, b) { return a + b; },
+            "-": function(a, b) { return a - b; }
+        };
+
+        function isNumeric(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
+
+        this.calculate = function(str) {
+            var arr = str.split(" "),
+                a = arr[0],
+                b = arr[2],
+                operator = arr[1];
+
+            if (operator in operators && isNumeric(a) && isNumeric(b)) {
+                return operators[operator](+a, +b)
+            } else {
+                return NaN;
+            }
+        };
+
+        this.addMethod = function(name, func) {
+            operators[name] = func;
+        };
+    }
+
+    var calc = new PowerCalculator();
+    console.log(calc.calculate("3 + 7")); // 10
+
+    var powerCalc = new PowerCalculator();
+    powerCalc.addMethod("*", function(a, b) { return a * b; });
+    powerCalc.addMethod("/", function(a, b) { return a / b; });
+    powerCalc.addMethod("**", function(a, b) { return Math.pow(a, b); });
+
+    console.log( powerCalc.calculate("5 * 3") ); // 15
+    console.log( powerCalc.calculate("20 / 5") ); // 4
+    console.log( powerCalc.calculate("2 ** 3") ); // 8
+</script>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Управление памятью в JavaScript</title>
+</head>
+<body>
+
+<!--
+Управление памятью в JavaScript
+https://learn.javascript.ru/memory-management
+-->
+<script>
+    // Значение остаётся в памяти, пока на него есть хотя бы одна ссылка
+    var user = {
+        name: "Вася"
+    };
+    user = null; // освобождение памяти
+
+    var vasya = {};
+    var petya = {};
+    vasya.friend = petya;
+    petya.friend = vasya;
+
+    vasya = petya = null; // освобождение памяти
+
+    /* Алгоритм сборки мусора */
+    function marry(man, woman) {
+        woman.husband = man;
+        man.wife = woman;
+
+        return {
+            father: man,
+            mother: woman
+        }
+    }
+
+    var family = marry({
+        name: "Василий"
+    }, {
+        name: "Мария"
+    });
+
+    delete family.father;
+    delete family.mother.husband; // удаление из памяти family.father
+    window.family = null; // удаление из памяти family.mother
+
+    /* Замыкания */
+    function f1() {
+        var value = 123;
+
+        function g() {} // g видна только изнутри
+    }
+
+    f1();
+
+    function f2() {
+        var value = 123;
+
+        function g() {}
+
+        return g;
+    }
+
+    var g = f2(); // функция g будет жить и сохранит ссылку на объект переменных
+    g = null; // а вот теперь память будет очищена
+
+    function f3() {
+        var value = Math.random();
+
+        return function() {};
+    }
+
+    // 3 функции, каждая ссылается на свой объект переменных,
+    // каждый со своим значением value
+    var arr = [f3(), f3(), f3()];
+    console.log(arr);
+</script>
+
+</body>
+</html>
