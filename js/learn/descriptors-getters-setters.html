@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Дескрипторы, геттеры и сеттеры свойств</title>
+</head>
+<body>
+
+<!--
+Дескрипторы, геттеры и сеттеры свойств
+https://learn.javascript.ru/descriptors-getters-setters
+-->
+<script>
+    /* Дескрипторы */
+    // Дескриптор – объект, который описывает поведение свойства.
+    // В нём могут быть следующие поля:
+    // * value – значение свойства, по умолчанию undefined
+    // * writable – значение свойства можно менять, если true. По умолчанию false.
+    // * configurable – если true, то свойство можно удалять. По умолчанию false.
+    // * enumerable – если true, то свойство просматривается в цикле for..in и методе Object.keys(). По умолчанию false.
+    // * get – функция, которая возвращает значение свойства. По умолчанию undefined.
+    // * set – функция, которая записывает значение свойства. По умолчанию undefined.
+
+    var user = {};
+
+    // 1. простое присваивание
+    user.name = "Вася";
+
+    // 2. указание значения через дескриптор
+    Object.defineProperty(user, "name", { value: "Вася", configurable: true, writable: true, enumerable: true });
+
+    /* Свойство-константа */
+    var user2 = {};
+
+    Object.defineProperty(user2, "name", {
+        value: "Вася",
+        writable: false, // запретить присвоение "user.name="
+        configurable: false // запретить удаление "delete user.name"
+    });
+
+    // Теперь попытаемся изменить это свойство.
+
+    // в strict mode присвоение "user.name=" вызовет ошибку
+    user2.name = "Петя";
+    console.log(user2); // "Вася"
+
+    /* Свойство, скрытое для перечисления */
+    var user3 = {
+        name: "Вася",
+        toString: function() { return this.name; }
+    };
+
+    for(var key in user3) console.log(key);  // name, toString
+
+    Object.defineProperty(user3, "toString", {enumerable: false});
+    for(var key2 in user3) console.log(key2);  // name
+
+    /* Свойство-функция */
+    var user4 = {
+        firstName: "Вася",
+        surname: "Петров"
+    };
+
+    Object.defineProperty(user4, "fullName", {
+        get: function() {
+            return this.firstName + " " + this.surname;
+        },
+        set: function(value) {
+            var split = value.split(' ');
+            this.firstName = split[0];
+            this.surname = split[1];
+        }
+    });
+
+    console.log(user4.fullName); // "Вася Петров" (из геттера)
+
+    user4.fullName = "Петя Иванов";
+    console.log(user4.firstName); // "Петя" (поставил сеттер)
+    console.log(user4.surname); // "Иванов" (поставил сеттер)
+
+    /* Указание get/set в литералах */
+    var user5 = {
+        firstName: "Вася",
+        surname: "Петров",
+
+        get fullName() {
+            return this.firstName + ' ' + this.surname;
+        },
+
+        set fullName(value) {
+            var split = value.split(' ');
+            this.firstName = split[0];
+            this.surname = split[1];
+        }
+    };
+
+    console.log(user5.fullName); // "Вася Петров"
+
+    function User(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    var pete = new User("Петя", 25);
+    console.log(pete.age);
+
+    /* Другие методы работы со свойствами */
+
+    // Object.defineProperties(obj, descriptors)
+    var user6 = {};
+
+    Object.defineProperties(user6, {
+        firstName: {
+            value: "Петя"
+        },
+
+        surname: {
+            value: "Иванов"
+        },
+
+        fullName: {
+            get: function() {
+                return this.firstName + ' ' + this.surname;
+            }
+        }
+    });
+
+    console.log(user6.fullName); // "Петя Иванов"
+
+    // Object.keys(obj)
+    // Object.getOwnPropertyNames(obj)
+    var obj = {
+        a: 1,
+        b: 2,
+        internal: 3
+    };
+
+    Object.defineProperty(obj, "internal", {
+        enumerable: false
+    });
+
+    console.log( Object.keys(obj) ); // a, b
+    console.log( Object.getOwnPropertyNames(obj) ); // a, b, internal
+
+    // Object.getOwnPropertyDescriptor(obj, prop)
+    var obj2 = {
+        test: 5
+    };
+    var descriptor = Object.getOwnPropertyDescriptor(obj2, 'test');
+    console.log(descriptor);
+
+    // заменим value на геттер, для этого...
+    delete descriptor.value; // ..нужно убрать value/writable
+    delete descriptor.writable;
+    descriptor.get = function() { // и поставить get
+        return "Preved :)";
+    };
+
+    // поставим новое свойство вместо старого
+
+    // если не удалить - defineProperty объединит старый дескриптор с новым
+    delete obj2.test;
+
+    Object.defineProperty(obj2, 'test', descriptor);
+
+    console.log(obj2.test); // Preved :)
+
+    /* Задача */
+    function User2(fullName) {
+        this.fullName = fullName;
+
+        Object.defineProperties(this, {
+            firstName: {
+                get: function () {
+                    return this.fullName.split(" ")[0];
+                },
+                set: function (value) {
+                    this.fullName = value + " " + this.lastName;
+                }
+            },
+
+            lastName: {
+                get: function () {
+                    return this.fullName.split(" ")[1];
+                },
+                set: function (value) {
+                    this.fullName = this.firstName + " " + value;
+                }
+            }
+        });
+    }
+
+    var vasya = new User2("Василий Попкин");
+
+    // чтение firstName/lastName
+    console.log( vasya.firstName ); // Василий
+    console.log( vasya.lastName ); // Попкин
+
+    // запись в lastName
+    vasya.lastName = 'Сидоров';
+
+    console.log( vasya.fullName ); // Василий Сидоров
+</script>
+
+</body>
+</html>
