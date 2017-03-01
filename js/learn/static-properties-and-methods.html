@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Статические и фабричные методы</title>
+</head>
+<body>
+
+<!--
+Статические и фабричные методы
+https://learn.javascript.ru/static-properties-and-methods
+-->
+<script>
+    /* Статические свойства */
+    function Article() {
+        Article.count++;
+    }
+
+    Article.count = 0; // статическое свойство-переменная
+    Article.DEFAULT_FORMAT = "html"; // статическое свойство-константа
+
+    /* Статические методы */
+    Article.showCount = function() {
+        console.log(this.count);
+    };
+
+    // Использование
+    new Article();
+    new Article();
+    Article.showCount(); // 2
+
+    // Пример: сравнение объектов
+    function Journal(date) {
+        this.date = date;
+
+        this.formatDate = function(date) {
+            return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+        };
+
+        this.getTitle = function() {
+            return "Выпуск от " + this.formatDate(this.date);
+        };
+    }
+
+    Journal.compare = function(journalA, journalB) {
+        return journalA.date - journalB.date;
+    };
+
+    // Использование:
+    var journals = [
+        new Journal(new Date(2012, 1, 1)),
+        new Journal(new Date(2012, 0, 1)),
+        new Journal(new Date(2011, 11, 1))
+    ];
+
+    function findMin(journals) {
+        var min = 0;
+        for (var i = 0; i < journals.length; i++) {
+            // используем статический метод
+            if (Journal.compare(journals[min], journals[i]) > 0) min = i;
+        }
+        return journals[min];
+    }
+
+    console.log( findMin(journals).getTitle() );
+
+    /* Фабричные методы */
+    // «Фабричный статический метод» – статический метод, который служит для создания новых объектов.
+
+    // Полиморфная функция-конструктор
+    function User(userData) {
+        if (userData) { // если указаны данные -- одна ветка if
+            this.name = userData.name;
+            this.age = userData.age;
+        } else { // если не указаны -- другая
+            this.name = 'Аноним';
+        }
+
+        this.sayHi = function() {
+            console.log(this.name)
+        };
+    }
+
+    // Использование
+    var guest = new User();
+    guest.sayHi(); // Аноним
+
+    var knownUser = new User({
+        name: 'Вася',
+        age: 25
+    });
+    knownUser.sayHi(); // Вася
+
+    // Фабричный метод
+    function User2() {
+        this.sayHi = function() {
+            console.log(this.name)
+        };
+    }
+
+    User2.createAnonymous = function() {
+        var user = new User;
+        user.name = 'Аноним';
+        return user;
+    };
+
+    User2.createFromData = function(userData) {
+        var user = new User;
+        user.name = userData.name;
+        user.age = userData.age;
+        return user;
+    };
+
+    // Использование
+    var guest2 = User2.createAnonymous();
+    guest2.sayHi(); // Аноним
+
+    var knownUser2 = User2.createFromData({
+        name: 'Вася',
+        age: 25
+    });
+    knownUser2.sayHi(); // Вася
+
+    /* Задача */
+    function Article2() {
+        this.created = new Date();
+        Article2.count++;
+        Article2.lastDate = this.created;
+    }
+
+    Article2.count = 0;
+
+    Article2.showStats = function() {
+        console.log("Всего: " + this.count + ", Последняя: " + this.lastDate);
+    };
+
+    new Article2();
+    new Article2();
+
+    Article2.showStats(); // Всего: 2, Последняя: (дата)
+
+    new Article2();
+
+    Article2.showStats(); // Всего: 3, Последняя: (дата)
+</script>
+
+</body>
+</html>
