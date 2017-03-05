@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Привязка контекста и карринг</title>
+</head>
+<body>
+
+<!--
+Привязка контекста и карринг
+https://learn.javascript.ru/bind
+-->
+<script>
+    /* Пример потери контекста */
+    var user = {
+        firstName: "Вася",
+        sayHi: function() {
+            console.log( this.firstName );
+        }
+    };
+
+    user.sayHi(); // "Вася"
+
+    setTimeout(user.sayHi, 500); // undefined (не Вася!)
+
+    // Решение 1: сделать обёртку
+    setTimeout(function() {
+        user.sayHi(); // "Вася"
+    }, 1500);
+
+    // Решение 2: bind для привязки контекста
+    function bind(func, context) {
+        return function() {
+            return func.apply(context, arguments);
+        };
+    }
+
+    setTimeout(bind(user.sayHi, user), 2000); // "Вася"
+
+    // Решение 3: встроенный метод bind
+    setTimeout(user.sayHi.bind(user), 2500); // аналог через встроенный метод
+
+    // Методы call/apply вызывают функцию с заданным контекстом и аргументами.
+    // А bind не вызывает функцию. Он только возвращает «обёртку», которую мы можем вызвать позже,
+    // и которая передаст вызов в исходную функцию, с привязанным контекстом.
+
+    /* Карринг */
+    // Карринг (currying) или каррирование – создание новой функции путём фиксирования аргументов существующей.
+    function mul(a, b) {
+        return a * b;
+    }
+
+    // double умножает только на два
+    var double = mul.bind(null, 2); // контекст фиксируем null, он не используется
+
+    console.log( double(3) ); // = mul(2, 3) = 6
+    console.log( double(4) ); // = mul(2, 4) = 8
+    console.log( double(5) ); // = mul(2, 5) = 10
+
+    // Говорят, что double является «частичной функцией» (partial function) от mul.
+
+    /* Задача */
+    function ask(question, answer, ok, fail) {
+        var result = prompt(question, '');
+        if (result.toLowerCase() == answer.toLowerCase()) ok();
+        else fail();
+    }
+
+    var user2 = {
+        login: 'Василий',
+        password: '12345',
+
+        loginOk: function() {
+            console.log( this.login + ' вошёл в сайт' );
+        },
+
+        loginFail: function() {
+            console.log( this.login + ': ошибка входа' );
+        },
+
+        checkPassword: function() {
+            ask("Ваш пароль?", this.password, this.loginOk.bind(this), this.loginFail.bind(this));
+        }
+    };
+
+    user2.checkPassword();
+
+    /* Задача */
+    var user3 = {
+        login: 'Василий',
+        password: '12345',
+
+        // метод для вызова из ask
+        loginDone: function(result) {
+            console.log( this.login + (result ? ' вошёл в сайт' : ' ошибка входа') );
+        },
+
+        checkPassword: function() {
+            ask("Ваш пароль?", this.password, this.loginDone.bind(this, true), this.loginDone.bind(this, false));
+        }
+    };
+
+    var vasya = user3;
+    user3 = null;
+    vasya.checkPassword();
+</script>
+
+</body>
+</html>

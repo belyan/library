@@ -65,6 +65,7 @@ http://learn.javascript.ru/this
 
     getName.apply(user2, ["firstName", "lastName"]);  // "Василий Петров"
 
+    /* «Одалживание метода» */
     // При помощи call/apply можно легко взять метод одного объекта, в том числе встроенного,
     // и вызвать в контексте другого
     function sayHi() {
@@ -91,6 +92,23 @@ http://learn.javascript.ru/this
     }
 
     sayHi(1, 2); // "1:2"
+
+    /* Метод apply */
+    // showFullName.call(user, 'firstName', 'surname');
+    // showFullName.apply(user, ['firstName', 'surname']);
+    var arr2 = [];
+    arr2.push(1);
+    arr2.push(5);
+    arr2.push(2);
+
+    // Получить максимум из элементов arr
+    console.log( Math.max.apply(Math, arr2) ); // 5
+
+    /* Итого */
+    // При вызове функции как метода this = obj
+    // При обычном вызове this = undefined (ES 5) / window (ES 3)
+    // В конструкторе new this = {}
+    // Явное указание с помощью call/apply this = context
 
     /* Задача */
     function f() {
@@ -125,11 +143,26 @@ http://learn.javascript.ru/this
 
     arr[2]();  // ["a", "b", function]
 
-    /* Итого */
-    // При вызове функции как метода this = obj
-    // При обычном вызове this = window
-    // В конструкторе new this = {}
-    // Явное указание с помощью call/apply this = context
+    /* Задача */
+    // Создайте функцию sumArgs(), которая будет суммировать все свои аргументы
+    function sumArgs() {
+        return [].reduce.call(arguments, function(a, b) {
+            return a + b;
+        });
+    }
+
+    console.log( sumArgs(4, 5, 6) ); // 15
+
+    /* Задача */
+    // Напишите функцию applyAll, которая получает функцию func и произвольное количество аргументов.
+    // Она должна передать в func все аргументы, начиная со второго, и возвратить результат.
+    function applyAll(func) {
+        var args = [].slice.call(arguments, 1);
+        return func.apply(this, args);
+    }
+
+    console.log( applyAll(Math.max, 2, -2, 3) ); // 3
+    console.log( applyAll(Math.min, 2, -2, 3) ); // -2
 </script>
 
 </body>
