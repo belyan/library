@@ -66,7 +66,7 @@ https://learn.javascript.ru/descriptors-getters-setters
             return this.firstName + " " + this.surname;
         },
         set: function(value) {
-            var split = value.split(' ');
+            var split = value.split(" ");
             this.firstName = split[0];
             this.surname = split[1];
         }
@@ -84,11 +84,11 @@ https://learn.javascript.ru/descriptors-getters-setters
         surname: "Петров",
 
         get fullName() {
-            return this.firstName + ' ' + this.surname;
+            return this.firstName + " " + this.surname;
         },
 
         set fullName(value) {
-            var split = value.split(' ');
+            var split = value.split(" ");
             this.firstName = split[0];
             this.surname = split[1];
         }
@@ -120,7 +120,7 @@ https://learn.javascript.ru/descriptors-getters-setters
 
         fullName: {
             get: function() {
-                return this.firstName + ' ' + this.surname;
+                return this.firstName + " " + this.surname;
             }
         }
     });
@@ -146,7 +146,7 @@ https://learn.javascript.ru/descriptors-getters-setters
     var obj2 = {
         test: 5
     };
-    var descriptor = Object.getOwnPropertyDescriptor(obj2, 'test');
+    var descriptor = Object.getOwnPropertyDescriptor(obj2, "test");
     console.log(descriptor);
 
     // заменим value на геттер, для этого...
@@ -161,7 +161,7 @@ https://learn.javascript.ru/descriptors-getters-setters
     // если не удалить - defineProperty объединит старый дескриптор с новым
     delete obj2.test;
 
-    Object.defineProperty(obj2, 'test', descriptor);
+    Object.defineProperty(obj2, "test", descriptor);
 
     console.log(obj2.test); // Preved :)
 
@@ -197,7 +197,7 @@ https://learn.javascript.ru/descriptors-getters-setters
     console.log( vasya.lastName ); // Попкин
 
     // запись в lastName
-    vasya.lastName = 'Сидоров';
+    vasya.lastName = "Сидоров";
 
     console.log( vasya.fullName ); // Василий Сидоров
 </script>

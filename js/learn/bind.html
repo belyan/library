@@ -61,21 +61,21 @@ https://learn.javascript.ru/bind
 
     /* Задача */
     function ask(question, answer, ok, fail) {
-        var result = prompt(question, '');
+        var result = prompt(question, "");
         if (result.toLowerCase() == answer.toLowerCase()) ok();
         else fail();
     }
 
     var user2 = {
-        login: 'Василий',
-        password: '12345',
+        login: "Василий",
+        password: "12345",
 
         loginOk: function() {
-            console.log( this.login + ' вошёл в сайт' );
+            console.log( this.login + " вошёл в сайт" );
         },
 
         loginFail: function() {
-            console.log( this.login + ': ошибка входа' );
+            console.log( this.login + ": ошибка входа" );
         },
 
         checkPassword: function() {
@@ -87,12 +87,12 @@ https://learn.javascript.ru/bind
 
     /* Задача */
     var user3 = {
-        login: 'Василий',
-        password: '12345',
+        login: "Василий",
+        password: "12345",
 
         // метод для вызова из ask
         loginDone: function(result) {
-            console.log( this.login + (result ? ' вошёл в сайт' : ' ошибка входа') );
+            console.log( this.login + (result ? " вошёл в сайт" : " ошибка входа") );
         },
 
         checkPassword: function() {

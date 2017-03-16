@@ -34,7 +34,7 @@ https://learn.javascript.ru/static-properties-and-methods
         this.date = date;
 
         this.formatDate = function(date) {
-            return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+            return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
         };
 
         this.getTitle = function() {
@@ -73,7 +73,7 @@ https://learn.javascript.ru/static-properties-and-methods
             this.name = userData.name;
             this.age = userData.age;
         } else { // если не указаны -- другая
-            this.name = 'Аноним';
+            this.name = "Аноним";
         }
 
         this.sayHi = function() {
@@ -86,7 +86,7 @@ https://learn.javascript.ru/static-properties-and-methods
     guest.sayHi(); // Аноним
 
     var knownUser = new User({
-        name: 'Вася',
+        name: "Вася",
         age: 25
     });
     knownUser.sayHi(); // Вася
@@ -100,7 +100,7 @@ https://learn.javascript.ru/static-properties-and-methods
 
     User2.createAnonymous = function() {
         var user = new User;
-        user.name = 'Аноним';
+        user.name = "Аноним";
         return user;
     };
 
@@ -116,7 +116,7 @@ https://learn.javascript.ru/static-properties-and-methods
     guest2.sayHi(); // Аноним
 
     var knownUser2 = User2.createFromData({
-        name: 'Вася',
+        name: "Вася",
         age: 25
     });
     knownUser2.sayHi(); // Вася

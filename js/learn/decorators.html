@@ -7,31 +7,87 @@
 <body>
 
 <!--
-Приём программирования "Декоратор"
+Функции-обёртки, декораторы
 http://learn.javascript.ru/decorators
 -->
 <script>
-    /* Пример декоратора */
-    function doublingDecorator(f) {
+    // Декоратор – приём программирования, который позволяет взять существующую функцию
+    // и изменить/расширить ее поведение.
+
+    /* bind – привязка контекста */
+    function bind(func, context) {
         return function() {
-            return 2 * f.apply(this, arguments);
+            return func.apply(context, arguments);
         };
     }
 
-    // Использование:
+    /* Декоратор-таймер */
+    var timers = {};
+
+    // прибавит время выполнения f к таймеру timers[timer]
+    function timingDecorator(f, timer) {
+        return function() {
+            var start = performance.now();
+
+            var result = f.apply(this, arguments); // (*)
+
+            if (!timers[timer]) timers[timer] = 0;
+            timers[timer] += performance.now() - start;
+
+            return result;
+        }
+    }
+
+    // функция может быть произвольной, например такой:
+    var fibonacci = function f(n) {
+        return (n > 2) ? f(n - 1) + f(n - 2) : 1;
+    };
+
+    // использование: завернём fibonacci в декоратор
+    fibonacci = timingDecorator(fibonacci, "fibo");
+
+    console.log(fibonacci(10)); // 55
+    console.log(fibonacci(20)); // 6765
+
+    console.log(timers["fibo"] + "мс");
+
+    /* Декоратор для проверки типа */
+    // Декораторы способны упростить рутинные, повторяющиеся задачи, вынести их из кода функции.
+
+    // вспомогательная функция для проверки на число
+    function checkNumber(value) {
+        return typeof value == "number";
+    }
+
+    // декоратор, проверяющий типы для f
+    // второй аргумент checks - массив с функциями для проверки
+    function typeCheck(f, checks) {
+        return function() {
+            for (var i = 0; i < arguments.length; i++) {
+                if (!checks[i](arguments[i])) {
+                    console.log( "Некорректный тип аргумента номер " + i );
+                    return;
+                }
+            }
+            return f.apply(this, arguments);
+        }
+    }
+
     function sum(a, b) {
         return a + b;
     }
 
-    sum = doublingDecorator(sum);
+    // обернём декоратор для проверки
+    sum = typeCheck(sum, [checkNumber, checkNumber]); // оба аргумента - числа
 
-    console.log( sum(1, 2) ); // 6
-    console.log( sum(2, 3) ); // 10
+    // пользуемся функцией как обычно
+    console.log( sum(1, 2) ); // 3, все хорошо
 
-    // Декоратор — приём программирования, который позволяет взять существующую функцию
-    // и изменить/расширить ее поведение
+    // а вот так - будет ошибка
+    sum(true, null); // некорректный аргумент номер 0
+    sum(1, ["array", "in", "sum?!?"]); // некорректный аргумент номер 1
 
-    /* Ещё пример */
+    /* Декоратор проверки доступа */
     function checkPermissionDecorator(f) {
         return function() {
             if ( isAdmin() ) {
@@ -46,6 +102,7 @@ http://learn.javascript.ru/decorators
     save = checkPermissionDecorator(save);
 
     /* Задача */
+    // Логирующий декоратор (1 аргумент)
     function work(a) {
         console.log(a);
     }
@@ -68,13 +125,14 @@ http://learn.javascript.ru/decorators
     }
 
     /* Задача */
+    // Логирующий декоратор (много аргументов)
     function work2(a, b) {
         console.log(a + b);
     }
 
     function makeLogging2(f, log) {
         return function() {
-            log.push(arguments);
+            log.push([].slice.call(arguments));
             return f.apply(this, arguments);
         };
     }
@@ -90,6 +148,7 @@ http://learn.javascript.ru/decorators
     }
 
     /* Задача */
+    // Кеширующий декоратор
     function f(arg) {
         return Math.random() * arg;
     }
