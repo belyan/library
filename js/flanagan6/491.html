@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация обработчиков событий</title>
+</head>
+<body>
+
+<button id="mybutton">Щелкни на мне</button>
+
+<script>
+    var b = document.getElementById('mybutton');
+    b.onclick = function () { console.log('Спасибо, что щелкнули на мне!'); };
+    b.addEventListener("click", function () { console.log('Еще раз спасибо!'); }, false);
+</script>
+
+</body>
+</html>
