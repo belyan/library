@@ -19,24 +19,24 @@ http://learn.javascript.ru/object
 
     /* Операции с объектом */
 
-        // 1. присвоение
-        person.name = "Вася"; // запишем свойство с именем "name" и значением "Вася"
-        person.age = 25; // запишем свойство с именем "age" и значением 25
+    // 1. присвоение
+    person.name = "Вася"; // запишем свойство с именем "name" и значением "Вася"
+    person.age = 25; // запишем свойство с именем "age" и значением 25
 
-        // 2. чтение
-        console.log(person.name + ": " + person.age); // вывести значения
+    // 2. чтение
+    console.log(person.name + ": " + person.age); // вывести значения
 
-        // 3. удаление
-        delete person.name; // удалить значение с именем name
+    // 3. удаление
+    delete person.name; // удалить значение с именем name
 
-        // 4. проверка существования свойства с определенным ключом
-        if ("age" in person) {
-            console.log("Свойство age существует!");
-        }
-        console.log(person.sex); // undefined, нет свойства с ключом sex
+    // 4. проверка существования свойства с определенным ключом
+    if ("age" in person) {
+        console.log("Свойство age существует!");
+    }
+    console.log(person.sex); // undefined, нет свойства с ключом sex
 
-        console.log(person.sex === undefined); // true, свойства нет
-        console.log(person.name === undefined); // false, свойство есть.
+    console.log(person.sex === undefined); // true, свойства нет
+    console.log(person.name === undefined); // false, свойство есть.
 
     /* Доступ через квадратные скобки */
     person["name"] = "Петя"; // то же что и person.name

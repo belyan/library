@@ -17,12 +17,14 @@ http://learn.javascript.ru/type-detection
     console.log(obj); // [object Object]
 
     // Внутренняя реализация toString стандартного объекта Object возвращает [[Class]]
-    var getClass = obj.toString;
+    function getClass(obj) {
+        return {}.toString.call(obj).slice(8, -1);
+    }
 
-    console.log( getClass.call([1, 2]) ); // [object Array]
-    console.log( getClass.call(new Date) ); // [object Date]
-    console.log( getClass.call(123) ); // [object Number]
-    console.log( getClass.call("строка") ); // [object String]
+    console.log( getClass([1, 2]) ); // Array
+    console.log( getClass(new Date) ); // Date
+    console.log( getClass(123) ); // Number
+    console.log( getClass("строка") ); // String
 
     // Этот метод может определить тип только для встроенных объектов.
     // Для пользовательских объектов [[Class]] всегда равен "Object"
@@ -35,30 +37,33 @@ http://learn.javascript.ru/type-detection
 
     console.log(type); // [object Object]
 
-    /* «Утиная» типизация */
-    // Смысл утиной типизации — в проверке методов и свойств, безотносительно типа объекта
-    var a = [1, 2, 3];
+    /* Метод Array.isArray() */
+    // Специальный метод для массивов
+    console.log(Array.isArray([1, 2, 3])); // true
 
-    if (a.splice) {
-        console.log("Массив");
-    }
-
-    var d = new Date();
-
-    if (d.getTime) {
-        console.log("Дата");
-    }
-
-    /* Проверка типа для пользовательских объектов */
-    // Для проверки, кем был создан объект, есть оператор instanceof.
+    /* Оператор instanceof */
+    // Используется для проверки, кем был создан объект,
+    // он не позволяет получить тип в виде строки
     console.log(animal instanceof Animal); // true
-    console.log(d instanceof Date); // true
 
+    // Оператор может использоваться как для пользовательских, так и встроенных объектов
+    var d = new Date();
+    console.log(d instanceof Date); // true
     function f () { }
     console.log(f instanceof Function); // true
 
-    // Оператор instanceof может лишь осуществить проверку, он не позволяет получить тип в виде строки,
-    // но в большинстве случаев этого и не требуется.
+    /* «Утиная» типизация */
+    // Смысл утиной типизации — в проверке методов и свойств, безотносительно типа объекта
+    var something = [1, 2, 3];
+
+    if (something.splice) {
+        console.log("Это утка! То есть, массив!");
+    }
+
+    var x = new Date();
+    if (x.getTime) {
+        console.log("Дата!");
+    }
 
     /* Полиморфизм */
     function sayHi(who) {
@@ -67,14 +72,11 @@ http://learn.javascript.ru/type-detection
             return;
         }
 
-        if ({}.toString.call(who) == "[object Array]") {
-            for (var i = 0; i < who.length; i++) {
-                sayHi( who[i] );
-            }
-            return;
+        if (Array.isArray(who)) {
+            who.forEach(sayHi);
+        } else {
+            console.log("Привет, " + who);
         }
-
-        console.log("Привет, " + who);
     }
 
     // Использование:
@@ -83,16 +85,23 @@ http://learn.javascript.ru/type-detection
     sayHi( ["Саша", "Петя", ["Маша", "Юля"] ] ); // Привет, Саша..Петя..Маша..Юля
 
     /* Задача */
-    function outputDate(date) {
+    function formatDate(date) {
         if (typeof date == "string") {
-            var split = date.split("-");
-            date = new Date(split[0], split[1] - 1, split[2]);
+            date = new Date(date);
         } else if (typeof date == "number") {
             date = new Date(date * 1000);
-        } else if ({}.toString.call(date) == "[object Array]") {
+        } else if (Array.isArray(date)) {
             date = new Date(date[0], date[1], date[2]);
         }
 
+        return date.toLocaleString("ru", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit"
+        });
+
+        // Ручное форматирование, если нужна поддержка старых версий IE 10-
+        /*
         var day = date.getDate(),
             month = date.getMonth() + 1,
             year = date.getFullYear();
@@ -102,12 +111,13 @@ http://learn.javascript.ru/type-detection
         year = (year + "").substring(2);
 
         return day + "." + month + "." + year;
+        */
     }
 
-    console.log( outputDate("2011-10-02") ); // 02.10.11
-    console.log( outputDate(1234567890) ); // 14.02.09
-    console.log( outputDate([2000, 0, 1]) ); // 01.01.00
-    console.log( outputDate(new Date(2000, 0, 1)) ); // 01.01.00
+    console.log( formatDate("2011-10-02") ); // 02.10.11
+    console.log( formatDate(1234567890) ); // 14.02.09
+    console.log( formatDate([2000, 0, 1]) ); // 01.01.00
+    console.log( formatDate(new Date(2000, 0, 1)) ); // 01.01.00
 </script>
 
 </body>
