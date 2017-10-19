@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Формат JSON</title>
+</head>
+<body>
+
+<!--
+Формат JSON
+http://learn.javascript.ru/json
+-->
+<script>
+    /* Формат JSON */
+    // Объекты {}
+    // Массивы []
+    // Строки в двойных кавычках
+    // Числа
+    // Логические значения true/false
+    // null
+
+    /* Метод JSON.parse */
+    var numbers = "[0, 1, 2, 3]";
+    numbers = JSON.parse(numbers);
+    console.log(numbers[1]); // 1
+
+    var user = '{ "name": "Вася", "age": 35, "isAdmin": false, "friends": [0,1,2,3] }';
+    user = JSON.parse(user);
+    console.log(user.friends[1]); // 1
+
+    // Умный разбор строки
+    var str = '{ "title": "Конференция", "date": "2014-11-30T12:00:00.000Z" }';
+    var event = JSON.parse(str);
+    console.log(event);
+
+    var event2 = JSON.parse(str, function(key, value) {
+        if (key == "date") return new Date(value);
+        return value;
+    });
+    console.log(event2);
+    console.log(event2.date.getDate()); // 30
+
+    /* Сериализация, метод JSON.stringify */
+    var event3 = {
+        title: "Конференция",
+        date: "сегодня"
+    };
+    var str2 = JSON.stringify(event3);
+    console.log(str2);
+
+    // Обратное преобразование
+    console.log(JSON.parse(str2));
+
+    // При сериализации объекта вызывается его метод toJSON
+    var room = {
+        number: 23,
+        occupy: function() {
+            console.log(this.number);
+        }
+    };
+
+    var event4 = {
+        title: "Конференция",
+        date: new Date(Date.UTC(2014, 0, 1)),
+        room: room
+    };
+
+    console.log(JSON.stringify(event4));
+
+    // Во втором параметре метода stringify можно указать массив свойств,
+    // которые подлежат сериализации
+    var user2 = {
+        name: "Вася",
+        age: 25,
+        window: window
+    };
+    var str3 = JSON.stringify(user2, ["name", "age"]);
+    console.log(str3); // {"name":"Вася","age":25}
+    var str4 = JSON.stringify(user2, function(key, value) {
+        if (key == "window") return undefined;
+        return value;
+    });
+    console.log(str3 === str4); // true
+
+    // Красивое форматирование
+    var user3 = {
+        name: "Вася",
+        age: 25,
+        roles: {
+            isAdmin: false,
+            isEditor: true
+        }
+    };
+    console.log(JSON.stringify(user3, "", 4));
+
+    /* Задача */
+    var leader = {
+        name: "Василий Иванович"
+    };
+    var soldier = {
+        name: "Петька"
+    };
+    leader.soldier = soldier;
+    soldier.leader = leader;
+    var team = [leader, soldier];
+
+    var teamStr = JSON.stringify(team, ["name"]);
+    console.log(teamStr);
+</script>
+
+</body>
+</html>
