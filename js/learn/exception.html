@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Перехват ошибок</title>
+</head>
+<body>
+
+<!--
+Перехват ошибок
+http://learn.javascript.ru/exception
+-->
+<script>
+    /* Конструкция try...catch */
+    try {
+        lalala;
+    } catch(err) {
+        console.log('Ошибка ' + err.name + ':' + err.message + '\n' + err.stack);
+    }
+
+    // Объект ошибки
+    // * name - тип ошибки
+    // * message - сообщение о деталях ошибки
+
+    // Пример использования
+    var data = 'Has error'; // невалидный JSON
+    try {
+        var user = JSON.parse(data); // ошибка при выполнении
+        console.log(user.name); // не сработает
+    } catch(err) {
+        console.log(err.name);
+        console.log(err.message);
+    }
+
+    /* Генерация своих ошибок */
+    // В качестве конструктора ошибок можно использовать встроенные:
+    // Error, SyntaxError, ReferenceError, RangeError, TypeError и др.
+    var data2 = '{ "age": 30 }';
+    try {
+        var user2 = JSON.parse(data2); // ошибки нет
+        if (!user2.name) {
+            throw new SyntaxError('Данные некорректны');
+        }
+    } catch(err) {
+        console.log('Извините, в данных ошибка');
+    }
+
+    /* Проброс исключения */
+    // Ошибку, о которой catch не знает, он не должен обрабатывать
+    function readData() {
+        var data3 = '{ "name": "Вася", "age": 30 }';
+        try {
+            var user3 = JSON.parse(data3); // ошибки нет
+            if (!user3.name) {
+                throw new SyntaxError('Данные некорректны');
+            }
+
+            blabla(); // ошибка!
+        } catch(err) {
+            if (err.name == 'SyntaxError') {
+                console.log('Извините, в данных ошибка');
+            } else {
+                throw err; // пробрасываем наружу
+            }
+        }
+    }
+
+    try {
+        readData();
+    } catch(err) {
+        console.log('Поймал во внешнем catch: ' + err);
+    }
+
+    /* Оборачивание исключений */
+    function ReadError(message, cause) {
+        this.message = message;
+        this.cause = cause;
+        this.name = 'ReadError';
+        this.stack = cause.stack;
+    }
+
+    function readData2() {
+        var data = '{ bad data }';
+        try {
+            JSON.parse(data);
+        } catch(err) {
+            if (err.name == 'URIError') {
+                throw new ReadError('Ошибка в URI', err);
+            } else if (err.name == 'SyntaxError') {
+                throw new ReadError('Синтаксическая ошибка в данных', err);
+            }  else {
+                throw err; // пробрасываем
+            }
+        }
+    }
+
+    try {
+        readData2();
+    } catch(err) {
+        if (err.name == 'ReadError') {
+            console.log(err.message);
+            console.log(err.cause);
+        } else {
+            throw err;
+        }
+    }
+
+    /* Секция finally */
+    // Секцию finally используют, чтобы завершить начатые операции при любом варианте развития событий
+    function sum(n) {
+        return n ? (n + sum(n - 1)) : 0;
+    }
+
+    var n = 100000; // будет ошибка из-за слишком глубокой рекурсии
+    var start = new Date();
+    try {
+        var result = sum(n);
+    } catch(err) {
+        result = 0;
+    } finally {
+        var diff = new Date() - start;
+    }
+
+    console.log(result ? result : 'была ошибка');
+    console.log('Выполнение заняло ' + diff);
+
+    /* Последняя надежда: window.onerror */
+    window.onerror = function(message, url, lineNumber) {
+        console.log('Поймана ошибка\n' + 'Сообщение: ' + message + '\n(' + url + ':' + lineNumber + ')');
+    }
+
+    /* Задача */
+    function calc() {
+        var expr = prompt('Введите математическое выражение', '');
+        if (expr == null) return false;
+        try {
+            var result = eval(expr);
+            if (typeof result != 'number' || isNaN(result)) {
+                throw new SyntaxError('Результат не число');
+            }
+            console.log(result);
+            return result;
+        } catch(err) {
+            console.log('Ошибка: ' + err.message);
+            calc();
+        }
+    }
+    calc();
+</script>
+
+</body>
+</html>
