@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Функциональное наследование</title>
+</head>
+<body>
+
+<!--
+Функциональное наследование
+http://learn.javascript.ru/functional-inheritance
+-->
+<script>
+    "use strict";
+
+    // Базовый класс
+    function Machine(power) {
+        // защищенные свойства (protected)
+        this._power = power;
+        this._enabled = false;
+
+        this.enable = function () {
+            this._enabled = true;
+        };
+
+        this.disable = function () {
+            this._enabled = false;
+        };
+    }
+
+    // Наследование от Machine
+    function CoffeeMachine(power) {
+        Machine.apply(this, arguments); // отнаследовать
+
+        var waterAmount = 0;
+
+        // Переопределение методов
+        var parentEnable = this.enable; // сохраняем родительский метод
+
+        this.enable = function () {
+            parentEnable.call(this); // передаем контекст
+        };
+
+        console.log(this._enabled);
+        console.log(this._power);
+
+        this.setWaterAmount = function (amount) {
+            waterAmount = amount;
+        };
+
+        this.run = function () {
+            if (!this._enabled) {
+                throw new Error("Ошибка, кофеварка выключена");
+            }
+
+            console.log("Кофе готов!");
+        };
+    }
+
+
+    function Fridge(power) {
+        Machine.apply(this, arguments);
+
+        var food = [];
+        var parentDisable = this.disable();
+
+        this.disable = function () {
+            if (food.length) {
+                throw new Error("ошибка, в холодильнике есть еда");
+            }
+
+            parentDisable.call(this);
+        };
+
+        this.addFood = function () {
+            if (!this._enabled) {
+                throw new Error("Ошибка, холодильник выключен");
+            }
+
+            if (food.length + arguments.length > this._power / 100) {
+                throw new Error("Ошибка, холодильник заполнен");
+            }
+
+            for (var i = 0; i < arguments.length; i++) {
+                food.push(arguments[i]);
+            }
+        };
+
+        this.getFood = function () {
+            return food.slice();
+        };
+
+        this.filterFood = function (func) {
+            return food.filter(func);
+        };
+
+        this.removeFood = function (item) {
+            var index = food.indexOf(item);
+
+            if (index > 0) {
+                food.splice(index, 1);
+            }
+        };
+
+        this.run = function () {
+            console.log("Холодильник работает");
+        };
+    }
+
+    var coffeeMachine = new CoffeeMachine(10000);
+    console.log(coffeeMachine);
+
+    // coffeeMachine.run(); // ошибка
+    coffeeMachine.enable();
+    coffeeMachine.setWaterAmount(100);
+    coffeeMachine.run();
+    coffeeMachine.disable();
+
+    var fridge = new Fridge(500);
+    console.log(fridge);
+
+    try {
+        fridge.addFood("котлета");
+    } catch (e) {
+        console.log(e);
+    }
+    fridge.enable();
+    fridge.addFood("котлета");
+    fridge.addFood("сок", "варенье");
+    try {
+        fridge.addFood("зелень", "пирог", "торт");
+    } catch (e) {
+        console.log(e);
+    }
+
+    var fridgeFood = fridge.getFood();
+    console.log(fridgeFood);
+
+    fridgeFood.push("вилка", "ложка");
+    console.log(fridge.getFood());
+
+    var fridge2 = new Fridge(500);
+    fridge2.enable();
+    fridge2.addFood({title: "котлета", calories: 100});
+    fridge2.addFood({title: "сок", calories: 30});
+    fridge2.addFood({title: "зелень", calories: 10});
+    fridge2.addFood({title: "варенье", calories: 150});
+    console.log(fridge2.getFood());
+
+    fridge2.removeFood("нет такой еды");
+    console.log(fridge2.getFood().length); // 4
+
+    var dietItems = fridge2.filterFood(function (item) {
+        return item.calories < 50;
+    });
+
+    dietItems.forEach(function (item) {
+        console.log(item.title); // сок, зелень
+        fridge2.removeFood(item);
+    });
+    console.log(fridge2.getFood().length); // 2
+    try {
+        fridge2.disable();
+    } catch (e) {
+        console.log(e);
+    }
+</script>
+
+</body>
+</html>
