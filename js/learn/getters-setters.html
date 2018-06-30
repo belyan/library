@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Геттеры и сеттеры</title>
+</head>
+<body>
+
+<!--
+Геттеры и сеттеры
+https://learn.javascript.ru/getters-setters
+-->
+<script>
+    "use strict";
+
+    /* Геттер и сеттер */
+    function CoffeeMachine(power, capacity) {
+        var waterAmount = 0;
+        var WATER_HEAT_CAPACITY = 4200;
+        var running = false;
+
+        function getBoilTime() {
+            return self.waterAmount * WATER_HEAT_CAPACITY * 80 / power;
+        }
+
+        // Сеттер
+        this.setWaterAmount = function(amount) {
+            if (amount < 0) {
+                throw new Error("Значение должно быть положительным");
+            }
+            if (amount > capacity) {
+                throw new Error("Нельзя залить воды больше, чем " + capacity);
+            }
+            waterAmount = amount;
+        };
+
+        // Геттер
+        this.getWaterAmount = function() {
+            return waterAmount;
+        };
+
+        this.getPower = function () {
+            return power;
+        };
+
+        // Единый геттер-сеттер
+        this.waterAmount = function(amount) {
+            if (!arguments.length) return waterAmount;
+
+            if (amount < 0) {
+                throw new Error("Значение должно быть положительным");
+            }
+            if (amount > capacity) {
+                throw new Error("Нельзя залить воды больше, чем " + capacity);
+            }
+            waterAmount = amount;
+        };
+
+        function onReady() {
+            console.log("Кофе готов!");
+        }
+
+        this.setOnReady = function (callback) {
+            onReady = callback;
+        };
+
+        this.run = function () {
+            running = true;
+            setTimeout(function () {
+                running = false;
+                onReady();
+            }, getBoilTime());
+        };
+
+        this.addWater = function (amount) {
+            this.setWaterAmount(waterAmount + amount);
+        };
+
+        this.isRunning = function () {
+            return running;
+        };
+    }
+
+    var coffeeMachine = new CoffeeMachine(1000, 500);
+    // coffeeMachine.setWaterAmount(600); // ошибка
+    coffeeMachine.setWaterAmount(450);
+    console.log(coffeeMachine.isRunning()); // false
+
+    console.log(coffeeMachine.getWaterAmount()); // 450
+    coffeeMachine.waterAmount(500);
+    console.log(coffeeMachine.waterAmount()); // 500
+
+    console.log(coffeeMachine.getPower()); // 1000
+    coffeeMachine.setWaterAmount(200);
+    coffeeMachine.addWater(200);
+    coffeeMachine.addWater(100);
+    console.log(coffeeMachine.getWaterAmount());
+    // coffeeMachine.addWater(300); // ошибка
+
+    coffeeMachine.setOnReady(function () {
+        var amount = coffeeMachine.getWaterAmount();
+        console.log("Готов кофе: " + amount + " мл");
+    });
+    coffeeMachine.run();
+    console.log(coffeeMachine.isRunning()); // true
+    coffeeMachine.setOnReady(function () {
+        console.log(coffeeMachine.isRunning()); // false
+    });
+
+    /* Задача */
+    // Напишите конструктор User для создания объектов
+    function User() {
+        var firstName,
+            surname;
+
+        this.setFirstName = function (name) {
+            firstName = name;
+        };
+
+        this.setSurname = function (name) {
+            surname = name;
+        };
+
+        this.getFullName = function () {
+            return firstName + ' ' + surname;
+        };
+    }
+
+    var user = new User();
+    user.setFirstName("Петя");
+    user.setSurname("Иванов");
+
+    console.log(user.getFullName());
+</script>
+
+</body>
+</html>
