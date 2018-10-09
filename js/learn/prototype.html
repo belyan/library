@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Прототип объекта</title>
+</head>
+<body>
+
+<!--
+Прототип объекта
+http://learn.javascript.ru/prototype
+-->
+<script>
+    "use strict";
+
+    /* Прототип proto */
+    var animal = {
+        eats: true
+    };
+    var rabbit = {
+        jumps: true
+    };
+    rabbit.__proto__ = animal;
+    console.log(rabbit.jumps);
+    console.log(rabbit.eats);
+
+    // Объект, на который указывает ссылка __proto__, называется "прототипом".
+    console.log(rabbit.__proto__);
+
+    /* Метод hasOwnProperty */
+    for (var key in rabbit) {
+        if (!rabbit.hasOwnProperty(key)) continue; // пропустить "не свои" свойства
+        console.log(key + " = " + rabbit[key]);
+    }
+
+    /* Object.create(null) */
+    var data = {};
+    data.text = "Привет";
+    data.age = 35;
+    console.log(data.toString); // native code
+
+    var data2 = Object.create(null);
+    data2.text = "Привет";
+    console.log(data2.toString); // undefined
+
+    /* Методы для работы с прототипом */
+    var duck = {
+        swims: true
+    };
+
+    Object.setPrototypeOf(duck, animal);
+    console.log(Object.getPrototypeOf(duck)); // animal
+
+    var bird = Object.create(animal);
+    bird.flies = true;
+    console.log(Object.getPrototypeOf(bird)); // animal
+
+    /* Задача */
+    // Прототип и this
+    var animal2 = {
+        eat: function() {
+            this.full = true;
+        }
+    };
+    var rabbit2 = {
+        __proto__: animal2
+    };
+    rabbit2.eat();
+    console.log(rabbit2.full); // true
+
+    /* Задача */
+    // Алгоритм для поиска
+    var head = {
+        glasses: 1
+    };
+    var table = {
+        pen: 3
+    };
+    var bed = {
+        sheet: 1,
+        pillow: 2
+    };
+    var pockets = {
+        money: 2000
+    };
+    pockets.__proto__ = bed;
+    bed.__proto__ = table;
+    table.__proto__ = head;
+    console.log(pockets.pen); // 3
+    console.log(bed.glasses); // 1
+    console.log(table.money); // undefined
+</script>
+
+</body>
+</html>
