@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Свойство F.prototype и создание объектов через new</title>
+</head>
+<body>
+
+<!--
+Свойство F.prototype и создание объектов через new
+http://learn.javascript.ru/new-prototype
+-->
+<script>
+    "use strict";
+
+    /* Свойство F.prototype */
+    // При создании объекта через new, в его прототип __proto__ записывается ссылка
+    // из свойства prototype функции-конструктора.
+    var animal = {
+        eats: true
+    };
+
+    function Rabbit(name) {
+        this.name = name;
+    }
+
+    Rabbit.prototype = animal;
+
+    var rabbit = new Rabbit("Кроль");
+    console.log(rabbit.eats); // true
+    console.log(rabbit.__proto__); // animal
+
+    /* Свойство constructor */
+    // У каждой функции по умолчанию уже есть свойство prototype.
+    function Duck() {}
+    console.log(Duck.prototype.constructor); // Duck
+
+    // При перезаписи prototype свойста constructor больше не будет
+    Duck.prototype = {
+        swims: true
+    };
+    console.log(Duck.prototype.constructor); // Object
+    Duck.prototype.constructor = Duck;
+
+    var duck = new Duck("Утка");
+    console.log(duck.swims); // true
+
+    /* Эмуляция Object.create для IE8- */
+    function inherit(proto) {
+        function F() {}
+        F.prototype = proto;
+        return new F();
+    }
+
+    var rabbit2 = inherit(animal);
+    console.log(rabbit2.eats); // true
+
+    /* Задача */
+    // Аргументы по умолчанию
+    var options = { width: 100, height: 200 };
+
+    function Menu(options) {
+        options = Object.create(options);
+        options.width = 300;
+        console.log("width: " + options.width); // 300
+        console.log("height: " + options.height); // 200
+    }
+
+    new Menu(options);
+    console.log("original width: " + options.width); // 100
+    console.log("original height: " + options.height); // 200
+</script>
+
+
+</body>
+</html>
