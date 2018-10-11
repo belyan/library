@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Встроенные "классы" в JavaScript</title>
+</head>
+<body>
+
+<!--
+Встроенные "классы" в JavaScript
+http://learn.javascript.ru/native-prototypes
+-->
+<script>
+    "use strict";
+
+    /* Object.prototype */
+    console.log({}.__proto__.toString); // [native code]
+
+    var obj = {};
+    console.log(obj.toString === Object.prototype.toString); // true
+    console.log(obj.__proto__ === Object.prototype); // true
+
+    /* Встроенные "классы" в JavaScript */
+    // Все объекты наследуют от Object
+    console.log(Array.prototype.__proto__ === Object.prototype); // true
+
+    function showList() {
+        console.log(Array.prototype.join.call(arguments, "-"));
+    }
+    showList(1, 2, 3);
+
+    /* Примитивы */
+    // String, Number, Boolean
+    var user = "Вася";
+    console.log(user.toUpperCase());
+    // был создан временный объект new String
+    // вызван метод из String.prototype
+    // объект уничтожен, результат возвращен
+
+    /* Изменение встроенных прототипов */
+    String.prototype.repeat = function (times) {
+        return new Array(times + 1).join(this);
+    };
+
+    console.log("ля".repeat(3)); // ляляля
+
+    Object.prototype.each = function (f) {
+        for (var prop in this) {
+            if (!this.hasOwnProperty(prop)) continue;
+
+            var value = this[prop];
+            f.call(null, prop, value); // вызовет f(prop, value)
+        }
+    };
+
+    var obj2 = {
+        name: "Вася",
+        age: 25
+    };
+
+    obj2.each(function (prop, value) {
+        console.log(prop + ' = ' + value);
+    });
+
+    // Допустимо изменение прототипа встроенных объектов,
+    // которое добавляет поддержку метода из современных стандартов
+    // в те браузеры, где её пока нет.
+    if (!Object.create) {
+        Object.create = function(proto) {
+            function F() {}
+            F.prototype = proto;
+            return new F();
+        };
+    }
+
+    /* Задача */
+    // Добавить функциям defer
+    Function.prototype.defer = function(ms) {
+        setTimeout(this, ms);
+    };
+
+    function f() {
+        console.log("привет");
+    }
+    f.defer(1000);
+
+    /* Задача */
+    // Добавить функциям defer с аргументами
+    Function.prototype.defer2 = function(ms) {
+        var f = this;
+
+        return function() {
+            var args = arguments;
+
+            setTimeout(function() {
+                f.apply(null, args);
+            }, ms);
+        };
+    };
+    function f2(a, b) {
+        console.log(a + b);
+    }
+    f2.defer2(1000)(1, 2);
+</script>
+
+</body>
+</html>
