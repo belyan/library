@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Свои классы на прототипах</title>
+</head>
+<body>
+
+<!--
+Свои классы на прототипах
+http://learn.javascript.ru/classes
+-->
+<script>
+    "use strict";
+
+    /* Обычный конструктор */
+    function Animal(name) {
+        this.speed = 0;
+        this.name = name;
+
+        this.sayHi = function () {
+            console.log(name);
+        };
+
+        this.run = function (speed) {
+            this.speed += speed;
+            console.log(this.name + " бежит, скорость " + this.speed);
+        };
+
+        this.stop = function () {
+            this.speed = 0;
+            console.log(this.name + " стоит");
+        }
+    }
+
+    var animal = new Animal("Зверь");
+    console.log(animal.speed); // 0
+    animal.sayHi();
+    animal.run(3);
+    animal.run(10);
+    animal.stop();
+
+    /* Класс через прототип */
+    // В объекте будут храниться свойства конкретного экземпляра: name и speed,
+    // а общие методы - в прототипе.
+    function Animal2(name) {
+        this.speed = 0;
+        this.name = name;
+    }
+
+    Animal2.prototype.sayHi = function () {
+        console.log(this.name);
+    };
+
+    Animal2.prototype.run = function (speed) {
+        this.speed += speed;
+        console.log(this.name + " бежит, скорость " + this.speed);
+    };
+
+    Animal2.prototype.stop = function () {
+        this.speed = 0;
+        console.log(this.name + " стоит");
+    };
+
+    var animal2 = new Animal2("Зверь 2");
+    console.log(animal2.speed);
+    animal2.sayHi();
+    animal2.run(5);
+    animal2.run(5);
+    animal2.stop();
+
+    /* Задача */
+    // Перепишите класс в прототипном стиле
+    function CoffeeMachine(power) {
+        this._power = power;
+        this._waterAmount = 0;
+    }
+
+    CoffeeMachine.WATER_HEAT_CAPACITY = 4200;
+
+    CoffeeMachine.prototype._getTimeToBoil = function() {
+        return this._waterAmount * CoffeeMachine.WATER_HEAT_CAPACITY * 80 / this._power;
+    };
+
+    CoffeeMachine.prototype.run = function() {
+        setTimeout(function() {
+            console.log("Кофе готов!");
+        }, this._getTimeToBoil());
+    };
+
+    CoffeeMachine.prototype.setWaterAmount = function(amount) {
+        this._waterAmount = amount;
+    };
+
+    var coffeeMachine = new CoffeeMachine(100000);
+    console.log(coffeeMachine);
+    coffeeMachine.setWaterAmount(50);
+    coffeeMachine.run();
+
+    /* Задача */
+    // Хомяки с __proto__
+    function Hamster() {
+        this.food = [];
+    }
+
+    Hamster.prototype.found = function (something) {
+        this.food.push(something);
+    };
+
+    var speedy = new Hamster();
+    var lazy = new Hamster();
+
+    speedy.found("яблоко");
+    speedy.found("орех");
+
+    console.log(speedy.food.length); // 2
+    console.log(lazy.food.length); // 0
+</script>
+
+</body>
+</html>
