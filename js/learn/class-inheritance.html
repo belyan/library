@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Наследование классов</title>
+</head>
+<body>
+
+<!--
+Наследование классов
+http://learn.javascript.ru/class-inheritance
+-->
+<script>
+    "use strict";
+
+    /* Наследование в наших классах */
+
+    // Класс родитель
+    function Animal(name) {
+        this.name = name;
+        this.speed = 0;
+    }
+
+    // Методы родителя
+    Animal.prototype.run = function(speed) {
+        this.speed += speed;
+        console.log(this.name + " бежит, скорость " + this.speed);
+    };
+
+    Animal.prototype.stop = function() {
+        this.speed = 0;
+        console.log(this.name + " стоит");
+    };
+
+    // Класс потомок
+    function Rabbit(name) {
+        // Вызов конструктора родителя
+        Animal.apply(this, arguments);
+    }
+
+    // Наследование
+    Rabbit.prototype = Object.create(Animal.prototype);
+    Rabbit.prototype.constructor = Rabbit;
+
+    // Методы потомка
+    Rabbit.prototype.jump = function() {
+        this.speed++;
+        console.log(this.name + " прыгает");
+    };
+
+    // Переопределение метода родителя
+    Rabbit.prototype.run = function (speed) {
+        // Вызов метода родителя
+        Animal.prototype.run.apply(this, arguments);
+        this.jump();
+    };
+
+    // Экземпляр класса
+    var rabbit = new Rabbit("Кроль");
+    console.log(rabbit);
+    rabbit.run(5);
+
+    /* Задача */
+    // Класс "часы"
+    function Clock(options) {
+        this._template = options.template;
+    }
+
+    Clock.prototype._render = function () {
+        var date = new Date();
+
+        var hours = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+
+        if (hours < 10) hours = "0" + hours;
+        if (min < 10) min = "0" + min;
+        if (sec < 10) sec = "0" + sec;
+
+        var output = this._template.replace("h", hours).replace("m", min).replace("s", sec);
+        console.log(output);
+    };
+
+    Clock.prototype.start = function () {
+        this._render();
+        this._timer = setInterval(this._render.bind(this), 1000);
+    };
+
+    Clock.prototype.stop = function () {
+        clearInterval(this._timer);
+    };
+
+    var clock = new Clock({template: 'h:m:s'});
+    console.log(clock);
+
+    clock.start();
+    setTimeout(function() {
+        clock.stop();
+    }, 3000);
+
+    /* Задача */
+    // Класс "расширенные часы"
+    function ExtendedClock(options) {
+        Clock.apply(this, arguments);
+        this._precision = options.precision || 1000;
+    }
+
+    ExtendedClock.prototype = Object.create(Clock.prototype);
+    ExtendedClock.prototype.constructor = ExtendedClock;
+
+    ExtendedClock.prototype.start = function () {
+        this._render();
+        this._timer = setInterval(this._render.bind(this), this._precision);
+    };
+
+    var extendedClock = new ExtendedClock({template: 'm:s', precision: 3000});
+    console.log(extendedClock);
+    extendedClock.start();
+    setTimeout(function() {
+        extendedClock.stop();
+    }, 6000);
+
+    /* Задача */
+    // Меню с таймером для анимации
+    function Menu(state) {
+        this._state = state || Menu.STATE_CLOSED;
+    }
+
+    Menu.STATE_OPEN = 1;
+    Menu.STATE_CLOSED = 0;
+
+    Menu.prototype.open = function () {
+        this._state = Menu.STATE_OPEN;
+    };
+
+    Menu.prototype.close = function () {
+        this._state = Menu.STATE_CLOSED;
+    };
+
+    Menu.prototype.showState = function () {
+        console.log(this._stateAsString());
+    };
+
+    Menu.prototype._stateAsString = function () {
+        switch (this._state) {
+            case Menu.STATE_OPEN:
+                return "открыто";
+            case Menu.STATE_CLOSED:
+                return "закрыто";
+        }
+    };
+
+    function AnimatingMenu(state) {
+        Menu.apply(this, arguments);
+    }
+
+    AnimatingMenu.STATE_ANIMATING = 2;
+
+    AnimatingMenu.prototype = Object.create(Menu.prototype);
+    AnimatingMenu.prototype.constructor = AnimatingMenu;
+
+    AnimatingMenu.prototype.open = function () {
+        this._state = AnimatingMenu.STATE_ANIMATING;
+        this._timer = setTimeout(Menu.prototype.open.bind(this), 1000);
+    };
+
+    AnimatingMenu.prototype.close = function () {
+        clearTimeout(this._timer);
+        Menu.prototype.close.apply(this);
+    };
+    
+    AnimatingMenu.prototype._stateAsString = function() {
+        if (this._state === AnimatingMenu.STATE_ANIMATING) {
+            return "анимация";
+        } else {
+            return Menu.prototype._stateAsString.apply(this);
+        }
+    };
+
+    var menu = new AnimatingMenu();
+    console.log(menu);
+
+    menu.close();
+    menu.showState(); // закрыто
+    menu.open();
+    menu.showState(); // анимация
+
+    setTimeout(function () {
+        menu.showState(); // открыто
+        menu.close();
+        menu.showState(); // закрыто
+    }, 6000);
+</script>
+
+</body>
+</html>
