@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Свои ошибки</title>
+</head>
+<body>
+
+<!--
+Свои ошибки
+http://learn.javascript.ru/oop-errors
+-->
+<script>
+    "use strict";
+
+    /* Свой объект ошибки */
+    function PropertyError(property) {
+        Error.call(this, property);
+
+        this.name = "PropertyError";
+        this.message = "Ошибка в свойстве " + property;
+        this.stack = (new Error()).stack;
+    }
+
+    PropertyError.prototype = Object.create(Error.prototype);
+    PropertyError.prototype.constructor = PropertyError;
+
+    /* Дальнейшее наследование */
+    function PropertyRequiredError(property) {
+        PropertyError.call(this, property);
+
+        this.name = "PropertyRequiredError";
+        this.message = "Отсутствует свойство " + property;
+    }
+
+    PropertyRequiredError.prototype = Object.create(PropertyError.prototype);
+    PropertyRequiredError.prototype.constructor = PropertyRequiredError;
+
+    var err = new PropertyRequiredError("age");
+    console.log(err instanceof PropertyError); // true
+
+    // Генерация ошибки
+    function readUser(data) {
+        var user = JSON.parse(data);
+
+        if (user.name === undefined) {
+            throw new PropertyRequiredError("name");
+        }
+
+        if (user.age === undefined) {
+            throw new PropertyRequiredError("age");
+        }
+
+        if (typeof user.name !== "string" || user.name === "") {
+            throw new PropertyError("name");
+        }
+
+        if (typeof user.age !== "number" || user.age <= 0) {
+            throw new PropertyError("age");
+        }
+
+        return user;
+    }
+
+    // Запуск и try...catch
+    function tryReadUser(data) {
+        try {
+            readUser(data);
+        } catch (err) {
+            if (err instanceof PropertyError) {
+                console.warn(err.message);
+            } else if (err instanceof SyntaxError) {
+                console.error("Ошибка в данных: " + err.message);
+            } else {
+                throw err; // неизвестная ошибка, пробросить ее дальше
+            }
+        }
+    }
+
+    tryReadUser('{ "name": "Вася", "age": 30 }'); // ошибок нет
+    tryReadUser('{ "name": "Вася" }'); // PropertyRequiredError
+    tryReadUser('{ "age": 25 }'); // PropertyRequiredError
+    tryReadUser('{ "name": "Вася", "age": 0 }'); // PropertyError
+    tryReadUser('{ age: 30 }'); // SyntaxError
+
+    /* Задача */
+    // Унаследуйте от SyntaxError
+    function FormatError(message) {
+        SyntaxError.call(this, message);
+
+        this.name = "FormatError";
+        this.message = message;
+        this.stack = (new Error()).stack;
+    }
+
+    FormatError.prototype = Object.create(SyntaxError.prototype);
+    FormatError.prototype.constructor = FormatError;
+
+    var err2 = new FormatError("ошибка форматирования");
+    console.log(err2.message);
+    console.log(err2.name);
+    console.log(err2.stack);
+    console.log(err2 instanceof SyntaxError);
+</script>
+
+</body>
+</html>
