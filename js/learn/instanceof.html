@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка класса: "instanceof"</title>
+</head>
+<body>
+
+<!--
+Проверка класса: "instanceof"
+http://learn.javascript.ru/instanceof
+-->
+<script>
+    "use strict";
+
+    /* Алгоритм работы instanceof */
+    function Rabbit() {}
+
+    var rabbit = new Rabbit();
+    console.log(rabbit.__proto__ === Rabbit.prototype); // true
+    console.log(rabbit instanceof Rabbit); // true
+
+    // Оператор instanceof учитывает цепочку __proto__,
+    // поэтому наследование поддерживается
+    var arr = [];
+    console.log(arr instanceof Array); // true
+    console.log(arr instanceof Object); // true
+
+    // Изменение prototype после создания объекта приводит к неправильному результату
+    Rabbit.prototype = {};
+    console.log(rabbit instanceof Rabbit); // false
+
+    /* Задача */
+    function A() {}
+    function B() {}
+
+    A.prototype = B.prototype = {};
+    var a = new A();
+    console.log(a instanceof B); // true
+</script>
+
+</body>
+</html>
