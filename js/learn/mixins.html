@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Примеси</title>
+</head>
+<body>
+
+<!--
+Примеси
+http://learn.javascript.ru/mixins
+-->
+<script>
+    "use strict";
+
+    /* Пример примеси */
+    var sayHiMixin = {
+        sayHi: function () {
+            console.log("Привет, " + this.name);
+        },
+        sayBye: function () {
+            console.log("Пока, " + this.name);
+        }
+    };
+
+    // Использование
+    function User(name) {
+        this.name = name;
+    }
+
+    for (var key in sayHiMixin) {
+        User.prototype[key] = sayHiMixin[key];
+    }
+
+    var user = new User("Вася");
+    user.sayHi();
+    user.sayBye();
+
+    /* Примесь для событий */
+    var eventMixin = {
+        /**
+         * Подписка на событие
+         * @example menu.on("select", handler)
+         */
+        on: function (eventName, handler) {
+            if (!this._eventHandlers) {
+                this._eventHandlers = {};
+            }
+            if (!this._eventHandlers[eventName]) {
+                this._eventHandlers[eventName] = [];
+            }
+            this._eventHandlers[eventName].push(handler);
+        },
+
+        /**
+         * Прекращение подписки
+         * @example menu.off("select", handler)
+         */
+        off: function (eventName, handler) {
+            var handlers = this._eventHandlers && this._eventHandlers[eventName];
+            if (!handlers) return;
+
+            for (var i = 0; i < handlers.length; i++) {
+                if (handlers[i] === handler) {
+                    handlers.splice(i--, 1);
+                }
+            }
+        },
+
+        /**
+         * Генерация события
+         * @example menu.trigger("select", item)
+         */
+        trigger: function (eventName) {
+            var handlers = this._eventHandlers && this._eventHandlers[eventName];
+            if (!handlers) return;
+
+            for (var i = 0; i < handlers.length; i++) {
+                handlers[i].apply(this, [].slice.call(arguments, 1));
+            }
+        }
+    };
+
+    // Класс Menu с примесью eventMixin
+    function Menu() { }
+
+    for (var key2 in eventMixin) {
+        Menu.prototype[key2] = eventMixin[key2];
+    }
+
+    // Генерируем событие select при выборе значения
+    Menu.prototype.choose = function (value) {
+        this.trigger("select", value);
+    };
+
+    // Создадим меню
+    var menu = new Menu();
+    console.log(menu);
+
+    var handler = function (value) {
+        console.log("Выбрано значение " + value);
+    };
+
+    // Подписка на событие "select"
+    menu.on("select", handler);
+    menu.choose("item 1");
+
+    // Прекращение подписки
+    menu.off("select", handler);
+    menu.choose("item 2");
+    menu.choose("item 3");
+</script>
+
+</body>
+</html>
