@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Переменные: let и const</title>
+</head>
+<body>
+
+<!--
+Переменные: let и const
+http://learn.javascript.ru/let-const
+-->
+<script>
+    "use strict";
+
+    /* let */
+    // 1. Область видимости переменной let - блок {...}
+    var apples = 5;
+
+    if (true) {
+        var apples = 10;
+        console.log(apples); // 10
+    }
+
+    console.log(apples); // 10
+
+    let apples2 = 5;
+
+    if (true) {
+        let apples2 = 10;
+        console.log(apples2); // 10
+    }
+
+    console.log(apples2); // 5
+
+    // 2. Переменная let видна только после объявления
+    console.log(a); // undefined
+    var a = 5;
+
+    try { console.log(b); } catch (err) {
+        console.log(err); // Reference Error: b is not defined
+    }
+    let b = 5;
+
+    // 3. При использовании в цикле для каждой итерации создается своя переменная
+    for (var i = 0; i < 10; i++) {}
+    console.log(i); // 10
+
+    function makeArmy() {
+        let shooters = [];
+
+        for (let i = 0; i < 10; i++) {
+            shooters.push(function () {
+                console.log(i); // выводит свой номер
+            });
+        }
+
+        return shooters;
+    }
+
+    var army = makeArmy();
+
+    army[0](); // 0
+    army[5](); // 5
+
+    /* const */
+    // Объявление const задает переменную, которую нельзя изменять
+    const apple = 5;
+    try { apple = 10; } catch (err) {
+        console.log(err); // Type Error: Assignment to constant variable
+    }
+
+    const user = {
+        name: "Вася"
+    };
+
+    user.name = "Петя";
+    console.log(user);
+
+    try { user = 5; } catch (err) {
+        console.log(err); // Type Error: Assignment to constant variable
+    }
+</script>
+
+</body>
+</html>
