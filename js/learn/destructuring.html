@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Деструктуризация</title>
+</head>
+<body>
+
+<!--
+Деструктуризация
+http://learn.javascript.ru/destructuring
+-->
+<script>
+    "use strict";
+
+    // Деструктуризация (destructuring assignment) – это особый синтаксис присваивания
+
+    /* Массив */
+    let [firstName, lastName] = ["Илья", "Кантор"];
+    console.log(firstName); // Илья
+    console.log(lastName); // Кантор
+
+    let [, , name] = "Юлий Цезарь Император Рима".split(" ");
+    console.log(name); // Император
+
+    // Оператор "spread"
+    let [firstName2, lastName2, ...rest] = "Юлий Цезарь Император Рима".split(" ");
+    console.log(firstName2); // Юлий
+    console.log(lastName2); // Цезарь
+    console.log(rest); // ["Император", "Рима"]
+
+    // Значения по умолчанию
+    let [firstName3] = [];
+    console.log(firstName3); // undefined
+
+    let [firstName4 = "Гость", lastName4 = "Анонимный"] = [];
+    console.log(firstName4); // Гость
+    console.log(lastName4); // Анонимный
+
+    function defaultLastName() {
+        return Date.now() + "-visitor";
+    }
+
+    let [firstName5, lastName5 = defaultLastName()] = ["Вася"];
+    console.log(firstName5); // Вася
+    console.log(lastName5); // 1540509893680-visitor
+
+    /* Деструктуризация объекта */
+    let options = {
+        title: "Меню",
+        width: 100,
+        height: 200
+    };
+
+    let {title, width, height} = options;
+
+    console.log(title); // Меню
+    console.log(width); // 100
+    console.log(height); // 200
+
+    let {width: w, height: h} = options;
+
+    console.log(w); // 100
+    console.log(h); // 200
+
+    let options2 = {
+        title2: "Меню"
+    };
+
+    let {width2 = 100, height2 = 200, title2} = options2;
+
+    console.log(title2); // Меню
+    console.log(width2); // 100
+    console.log(height2); // 200
+
+    let {width2: w2 = 100, height2: h2 = 200} = options2;
+
+    console.log(w2); // 100
+    console.log(h2); // 200
+
+    let options3 = {
+        title3: "Меню",
+        width3: 100,
+        height3: 200
+    };
+
+    let {title3, ...size} = options3;
+
+    console.log(title3); // Меню
+    console.log(size); // {width3: 100, height3: 200}
+
+    /* Вложенные деструктуризации */
+    let options4 = {
+        size2: {
+            width4: 100,
+            height4: 200
+        },
+        items: ["Пончик", "Пирожное"]
+    };
+
+    let { title4 = "Меню", size2: {width4, height4}, items: [item1, item2] } = options4;
+    console.log(title4); // Меню
+    console.log(width4); // 100
+    console.log(height4); // 200
+    console.log(item1); // Пончик
+    console.log(item2); // Пирожное
+</script>
+
+</body>
+</html>
