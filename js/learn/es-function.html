@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Функции</title>
+</head>
+<body>
+
+<!--
+Функции
+http://learn.javascript.ru/es-function
+-->
+<script>
+    "use strict";
+
+    /* Параметры по умолчанию */
+    function showMenu(title = "Без заголовка", width = 100, height = 200) {
+        console.log(title + " " + width + " " + height);
+    }
+
+    showMenu("Меню"); // Меню 100 200
+
+    // Параметрами по умолчанию могут быть не только значениями, но и выражениями
+    function sayHi(who = getCurrentUser().toUpperCase()) {
+        console.log("Привет, " + who);
+    }
+    
+    function getCurrentUser() {
+        return "Вася";
+    }
+
+    sayHi(); // Привет, ВАСЯ
+
+    /* Оператор spread вместо arguments */
+    function showName(firstName, lastName, ...rest) {
+        console.log(firstName + " " + lastName + " - " + rest);
+    }
+
+    showName("Юлий", "Цезарь", "Император", "Рима");
+
+    let numbers = [2, 3, 15];
+
+    // Эти два вызова делают одно и то же
+    console.log(Math.max(...numbers)); // 15
+    console.log(Math.max.apply(Math, numbers)); // 15
+
+    /* Деструктуризация в параметрах */
+    let options = {
+        title: "Меню",
+        width: 100,
+        height: 200
+    };
+
+    function showMenu2({title, width, height}) {
+        console.log(title + " " + width + " " + height);
+    }
+
+    showMenu2(options); // Меню 100 200
+
+    let options2 = {
+        title: "Меню"
+    };
+    
+    function showMenu3({title = "Заголовок", width:w = 100, height:h = 200}) {
+        console.log(title + " " + w + " " + h);
+    }
+
+    showMenu3(options2); // Меню 100 200
+
+    function showMenu4({title = "Заголовок", width:w = 100, height:h = 200} = {}) {
+        console.log(title + " " + w + " " + h);
+    }
+
+    showMenu4(); // Заголовок 100 200
+
+    /* Имя "name" */
+    // В свойстве name у функции находится ее имя
+    function f() {} // f.name == "f"
+    let g = function () {}; // g.name == "g"
+    console.log(f.name + " " + g.name); // f g
+
+    let user = {
+        sayHi: function () {}
+    };
+    console.log(user.sayHi.name); // sayHi
+
+    /* Функции в блоке */
+    // Объявление Function Declaration, сделанное в блоке, видно только в этом блоке
+    if (user) {
+        sayHi2();
+
+        function sayHi2() {
+            console.log("Привет!");
+        }
+    }
+    
+    try { sayHi2(); } catch (e) {
+        console.log(e); // Reference Error
+    }
+
+    /* Стрелочные функции */
+    let inc = x => x + 1; // let inc = function (x) { return x + 1; };
+    console.log(inc(1)); // 2
+
+    let sum = (a, b) => a + b; // let sum = function(a, b) { return a + b; }
+    console.log(sum(1, 2)); // 3
+
+    let getTime = () => {
+        let date = new Date();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+
+        return hours + ":" + minutes;
+    };
+    console.log(getTime()); // текущее время
+
+    // Стрелочные функции удобно использовать в качестве коллбеков
+    let arr = [5, 8, 3];
+    let sorted = arr.sort((a, b) => a - b);
+    console.log(sorted); // 3, 5, 8
+
+    // Внутри стрелочных функций тот же this, что и снаружи
+    let group = {
+        title: "Наш курс",
+        students: ["Вася", "Петя", "Даша"],
+        showList: function () {
+            this.students.forEach(student => console.log(this.title + ": " + student))
+        }
+    };
+
+    group.showList();
+
+    // Стрелочные функции не имеют своего arguments
+    function f2() {
+        let showArgs = () => console.log(arguments);
+        showArgs(3);
+    }
+    f2(1, 2); // 1, 2
+
+    // Сохранение внешнего this и arguments удобно использовать для создания декораторов
+    function defer(f, ms) {
+        return function () {
+            setTimeout(() => f.apply(this, arguments), ms);
+        };
+    }
+
+    function sayHi3(who) {
+        console.log("Привет, " + who);
+    }
+
+    let sayHiDeferred = defer(sayHi3, 2000);
+    sayHiDeferred("Вася"); // Привет, Вася (через 2 секунды)
+</script>
+
+</body>
+</html>
