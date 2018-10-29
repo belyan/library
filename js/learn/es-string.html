@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Строки</title>
+</head>
+<body>
+
+<!--
+Строки
+http://learn.javascript.ru/es-string
+-->
+<script>
+    "use strict";
+
+    /* Строки-шаблоны */
+    let str = `обратные кавычки`;
+    console.log(typeof str); // string
+
+    // В них разрешен перевод строки
+    console.log(`моя
+        многострочная
+        строка`);
+
+    // Можно вставлять выражения при помощи ${}
+    let apples = 2;
+    let oranges = 3;
+    console.log(`${apples} + ${oranges} = ${apples + oranges}`); // 2 + 3 = 5
+
+    /* Функции шаблонизации */
+    let str2 = f`Sum of ${apples} + ${oranges} =\n ${apples + oranges}!`;
+
+    // Можно использовать свою функции шаблонизации для строк
+    function f(strings, ...values) {
+        console.log(JSON.stringify(strings)); // ["Sum of ", " + ", " =\n ", "!"]
+        console.log(JSON.stringify(strings.raw)); // ["Sum of ", " + ", " =\\n ", "!"]
+        console.log(JSON.stringify(values)); // [2, 3, 5]
+    }
+
+    // Восстановление строки
+    function merge(strings, ...values) {
+        let str = "";
+
+        for (let i = 0; i < values.length; i++) {
+            str += strings[i];
+            str += values[i];
+        }
+
+        str += strings[strings.length - 1];
+
+        return str;
+    }
+
+    let str3 = merge`Sum of ${apples} + ${oranges} = ${apples + oranges}!`;
+    console.log(str3); // Sum of 2 + 3 = 5!
+
+    // Интернационализация
+    let messages = {
+        "Hello, {0}!": "Привет, {0}!"
+    };
+
+    function i18n(strings, ...values) {
+        let pattern = "";
+
+        for (let i = 0; i < values.length; i++) {
+            pattern += strings[i] + "{" + i + "}";
+        }
+
+        pattern += strings[strings.length - 1]; // "Hello, {0}!"
+
+        let translated = messages[pattern]; // "Привет, {0}!"
+
+        return translated.replace(/\{(\d)\}/g, (s, num) => values[num]);
+    }
+
+    let name = "Вася";
+    console.log(i18n`Hello, ${name}!`); // Привет, Вася!
+
+    /* Улучшена поддержка юникода */
+    // Кодировка строк в JavaScript – это UTF-16, то есть один символ занимает два байта
+    console.log("我".length); // 1
+    console.log("𩷶".length); // 2
+
+    // Методы корректно работающие с "длинными" символами (4 байта)
+    console.log("𝒳".length); // 2
+    console.log("𝒳".codePointAt(0)); // 119987
+    console.log(String.fromCodePoint(119987)); // 𝒳
+
+    // \u{длинный код}
+    console.log((119987).toString(16)); // 1d4b3
+    console.log("\u{1d4b3}"); // 𝒳
+
+    // Unicode-нормализация
+    console.log("S\u0307\u0323"); // Ṩ
+    console.log("S\u0323\u0307"); // Ṩ
+    console.log("S\u0307\u0323" === "S\u0323\u0307"); // false
+    console.log("S\u0307\u0323".normalize() === "S\u0323\u0307".normalize()); // true
+    console.log("S\u0307\u0323".normalize().length); // 1
+
+    /* Полезные методы */
+    // str.includes(s) – возвращает true, если строка str в себя s
+    // str.endsWith(s) – возвращает true, если строка str заканчивается подстрокой s
+    // str.startsWith(s) – возвращает true, если строка str начинается со строки s
+    // str.repeat(times) – повторяет строку str times раз
+
+    console.log("javascript".includes("java")); // true
+    console.log("javascript".endsWith("script")); // true
+    console.log("javascript".startsWith("java")); // true
+    console.log("ля".repeat(3)); // ляляля
+</script>
+
+</body>
+</html>
