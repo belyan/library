@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Объекты и прототипы</title>
+</head>
+<body>
+
+<!--
+Объекты и прототипы
+http://learn.javascript.ru/es-object
+-->
+<script>
+    "use strict";
+
+    /* Короткое свойство */
+    let name = "Вася";
+    let isAdmin = true;
+
+    let user = {
+        name,
+        isAdmin
+    };
+    console.log(user); // {name: "Вася", isAdmin: true}
+
+    /* Вычисляемые свойства */
+    let propName = "firstName";
+    let user2 = {
+        [propName]: "Вася"
+    };
+    console.log(user2.firstName); // Вася
+
+    let a = "Мой ";
+    let b = "Зеленый ";
+    let c = "Крокодил";
+
+    let user3 = {
+        [(a + b + c).toLowerCase()]: "Гена"
+    };
+    console.log(user3["мой зеленый крокодил"]); // Гена
+
+    /* Object.assign */
+    // Функция получает список объектов и копирует в первый свойства из остальных
+    let user4 = { name: "Вася" };
+    let visitor = { isAdmin: false, visits: true };
+    let admin = { isAdmin: true };
+
+    // user <- visitor <- admin
+    Object.assign(user4, visitor, admin);
+    console.log(user4); // {name: "Вася", isAdmin: true, visits: true}
+
+    // Клонирование объекта
+    let user5 = { name: "Вася", isAdmin: false };
+    let clone = Object.assign({}, user5);
+    console.log(clone);
+
+    /* Object.is */
+    // Функция проверяет равенства значений
+    console.log(Object.is(+0, -0)); // false
+    console.log(+0 === -0); // true
+
+    console.log(Object.is(NaN, NaN)); // true
+    console.log(NaN === NaN); // false
+
+    /* Методы объекта */
+    let user6 = {
+        name: "Вася",
+        // вместо "sayHi: function() {...}" пишем "sayHi() {...}"
+        sayHi() {
+            console.log(this.name);
+        }
+    };
+    user6.sayHi(); // Вася
+
+    let user7 = {
+        name: "Вася",
+        surname: "Петров",
+        get fullName() {
+            return `${this.name} ${this.surname}`;
+        }
+    };
+    console.log(user7.fullName); // Вася Петров
+
+    let methodName = "getFirstName";
+    let user8 = {
+        [methodName]() {
+            return "Петя";
+        }
+    };
+    console.log(user8.getFirstName()); // Петя
+
+    /* super */
+    // Rлючевое слово super предназначено только для использования в методах объекта
+    let animal = {
+        walk() {
+            console.log("I am walking");
+        },
+        run() {
+            console.log("I am running");
+        }
+    };
+
+    let rabbit = {
+        walk() {
+            super.walk();
+        },
+        run() {
+            setTimeout(() => super.run(), 1000);
+        }
+    };
+
+    Object.setPrototypeOf(rabbit, animal);
+
+    rabbit.walk(); // I am walking
+    rabbit.run(); // I am running
+</script>
+
+</body>
+</html>
