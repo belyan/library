@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Классы</title>
+</head>
+<body>
+
+<!--
+Классы
+http://learn.javascript.ru/es-class
+-->
+<script>
+    "use strict";
+
+    /* Class */
+    class User {
+        constructor(name) {
+            this.name = name;
+        }
+
+        sayHi() {
+            console.log(this.name);
+        }
+    }
+
+    let user = new User("Вася");
+    console.log(user);
+    user.sayHi();
+
+    // Это объявление примерно аналогично такому:
+    /*
+        function User(name) {
+          this.name = name;
+        }
+
+        User.prototype.sayHi = function() {
+          console.log(this.name);
+        };
+    */
+
+    /* Class Expression */
+    let User2 = class {
+        constructor(name) {
+            this.name = name;
+        }
+
+        sayHi() {
+            console.log(`Привет, ${this.name}!`);
+        }
+    };
+
+    new User2("Петя").sayHi();
+
+    // Создание класса прямо при вызове функции
+    let allModels = {};
+
+    function createModel(Model, ...args) {
+        let model = new Model(...args);
+
+        model._id = Math.random().toString(36).slice(2);
+        allModels[model._id] = model;
+
+        return model;
+    }
+
+    let user2 = createModel(class User {
+        constructor(name) {
+            this.name = name;
+        }
+
+        sayHi() {
+            console.log(this.name);
+        }
+    }, "Вася");
+
+    user2.sayHi(); // Вася
+    console.log(allModels[user2._id].name); // Вася
+
+    /* Геттеры, сеттеры и вычисляемые свойства */
+    class User3 {
+        constructor(firstName, lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        // геттер
+        get fullName() {
+            return `${this.firstName} ${this.lastName}`;
+        }
+
+        // сеттер
+        set fullName(newValue) {
+            [this.firstName, this.lastName] = newValue.split(" ");
+        }
+
+        // вычисляемое название метода
+        ["TEST".toLowerCase()]() {
+            console.log("PASSED");
+        }
+    }
+
+    let user3 = new User3("Вася", "Пупкин");
+    console.log(user3.fullName); // Вася Пупкин
+    user3.fullName = "Иван Петров";
+    console.log(user3.firstName, user3.lastName); // Иван Петров
+    user3.test(); // PASSED
+
+    /* Статические методы */
+    class User4 {
+        constructor(firstName, lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        // статический метод
+        static createGuest() {
+            return new User4("Гость", "Сайта");
+        }
+    }
+
+    let user4 = User4.createGuest();
+    console.log(user4.firstName); // Гость
+
+    /* Наследование */
+    class Animal {
+        constructor(name) {
+            this.name = name;
+        }
+
+        run() {
+            console.log(this.name + " бежит");
+        }
+    }
+
+    class Rabbit extends Animal {
+        // Конструктор родителя наследуется автоматически,
+        // если же у потомка свой constructor,
+        // то в нём необходимо вызвать конструктор родителя – super()
+
+        run() {
+            super.run(); // вызов метода родителя
+            this.jump();
+        }
+
+        jump() {
+            console.log(this.name + " прыгает");
+        }
+    }
+
+    let rabbit = new Rabbit("Кроль");
+    rabbit.run(); // Кроль бежит // Кроль прыгает
+    console.log(Rabbit.prototype.__proto__ === Animal.prototype); // true
+</script>
+
+</body>
+</html>
