@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск DOM-элементов</title>
+</head>
+<body>
+
+<div id="content-holder">
+    <div id="content">Элемент</div>
+</div>
+
+<table id="age-table">
+    <tr>
+        <td>Ваш возраст:</td>
+        <td>
+            <label><input type="radio" name="age" value="young" checked> младше 18</label>
+            <label><input type="radio" name="age" value="mature"> от 18 до 50</label>
+            <label><input type="radio" name="age" value="senior"> старше 60</label>
+        </td>
+    </tr>
+</table>
+
+<div class="article">Статья</div>
+<div class="long article">Длинная статья</div>
+
+<ul class="test">
+    <li>Этот</li>
+    <li>тест</li>
+</ul>
+<ul class="test">
+    <li>полностью</li>
+    <li>пройден</li>
+</ul>
+
+<a href="http://example.com/file.zip">Ссылка на архив</a>
+<a href="http://ya.ru">Ссылка</a>
+
+<ol>
+    <li class="chapter">Глава I
+        <ol>
+            <li class="subchapter">Глава <span class="num">1.1</span></li>
+            <li class="subchapter">Глава <span class="num">1.2</span></li>
+        </ol>
+    </li>
+</ol>
+
+<ul id="tree">
+    <li>Животные
+        <ul>
+            <li>Млекопитающие
+                <ul>
+                    <li>Коровы</li>
+                    <li>Ослы</li>
+                    <li>Собаки</li>
+                    <li>Тигры</li>
+                </ul>
+            </li>
+            <li>Другие
+                <ul>
+                    <li>Змеи</li>
+                    <li>Птицы</li>
+                    <li>Ящерицы</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Рыбы
+        <ul>
+            <li>Аквариумные
+                <ul>
+                    <li>Гуппи</li>
+                    <li>Скалярии</li>
+                </ul>
+
+            </li>
+            <li>Морские
+                <ul>
+                    <li>Морская форель</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<!--
+Поиск DOM-элементов
+http://learn.javascript.ru/searching-elements-dom
+-->
+<script>
+    "use strict";
+
+    /* getElementById или просто id */
+    console.log(window.content);
+    console.log(window["content-holder"]);
+
+    // Более правильным способом доступа к элементу является метод getElementById("идентификатор")
+    var elem = document.getElementById("content");
+    console.log(elem === window.content); // true
+
+    /* getElementsByTagName */
+    var elements = document.getElementsByTagName("div");
+    console.log(elements); // HTMLCollection [div#content-holder, div#content]
+
+    // В отличие от getElementById, метод getElementsByTagName может искать внутри любого элемента
+    var table = document.getElementById("age-table");
+    var tableInputs = table.getElementsByTagName("input");
+
+    for (var i = 0; i < tableInputs.length; i++) {
+        var input = tableInputs[i];
+        console.log(input.value + ": " + input.checked);
+    }
+
+    // Можно получить всех потомков элемента, передав "*" вместо тега
+    console.log(table.getElementsByTagName("*")); // HTMLCollection [tbody, tr, td, td, ...]
+
+    /* getElementsByName */
+    var inputs = document.getElementsByName("age");
+    console.log(inputs); // NodeList [input, input, input]
+
+    /* getElementsByClassName */
+    var articles = document.getElementsByClassName("article");
+    console.log(articles.length); // 2
+
+    /* querySelectorAll */
+    var items = document.querySelectorAll("ul.test > li:last-child");
+
+    for (i = 0; i < items.length; i++) {
+        console.log(items[i].innerHTML); // тест пройден
+    }
+
+    /* querySelector */
+    // Возвращает не все, а только первый эелемент, соотвествующий CSS-селектору
+    var item = document.querySelector("ul.test > li:last-child");
+    console.log(item.innerHTML); // тест
+
+    /* matches */
+    // Метод elem.matches(css) проверяет, удовлетворяет ли elem селектору css
+    var links = document.getElementsByTagName("a");
+    for (i = 0; i < links.length; i++) {
+        if (links[i].matches("a[href$=zip]")) {
+            console.log(links[i].innerHTML + ": " + links[i].href);
+        }
+    }
+
+    /* closest */
+    // Метод elem.closest(css) ищет ближайший элемент выше по DOM-дереву, подходящий под CSS-селектор
+    var numberSpan = document.querySelector(".num");
+    console.log(numberSpan.closest("li").className); // subchapter
+    console.log(numberSpan.closest(".chapter").tagName); // LI
+    console.log(numberSpan.closest("span") === numberSpan); // true
+
+    /* Задача */
+    (function () {
+        var items = document.getElementById("tree").getElementsByTagName("li");
+
+        for (var i = 0; i < items.length; i++) {
+            var text = items[i].firstChild.nodeValue;
+            var childCount = items[i].getElementsByTagName("li").length;
+
+            console.log(text.trim() + ": " + childCount);
+        }
+    })();
+</script>
+
+</body>
+</html>
