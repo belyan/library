@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Дерево DOM</title>
+</head>
+<body>
+
+<!--
+Дерево DOM
+http://learn.javascript.ru/dom-nodes
+-->
+<script>
+    "use strict";
+
+    // DOM - это представление документа в виде дерева объектов,
+    // доступных для изменения через JavaScript
+
+    /* Пример DOM */
+    // Проболы ⎵ и переводы строк ↩ – это тоже полноправные символы, которые учитываются в DOM
+    /*
+        <!DOCTYPE html>                     ▾ HTML
+        <html>                                  ▾ HEAD
+        <head>                                      #text ↩⎵⎵
+            <title>О лосях</title>                  ▾ TITLE
+        </head>                                         #text О лосях
+        <body>                                      #text ↩
+            Правда о лосях                      #text ↩
+        </body>                                 ▾ BODY
+        </html>                                     #text Правда о лосях
+    */
+
+    /* Автоисправление */
+    // При генерации DOM, браузер самостоятельно обрабатывает ошибки в документе:
+    // закрывает теги, добавляет обязательные узлы (html, head, body, tbody) и так далее
+    /*
+        <p>Привет                           ▾ HTML
+                                                ▾ HEAD
+                                                ▾ BODY
+                                                    ▾ P
+                                                        #text Привет
+    */
+
+    /* Типы узлов */
+    /* Всего различают 12 типов узлов, но на практике широко используются четыре из них:
+        - Document Node
+        - Element Node
+        - Text Node
+        - Comment Node
+    */
+</script>
+
+</body>
+</html>
