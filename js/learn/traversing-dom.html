@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Навигация по DOM-элементам</title>
+</head>
+<body>
+
+<div>Начало</div>
+<ul>
+    <li>Информация</li>
+</ul>
+<div>Конец</div>
+
+<table>
+    <tr>
+        <td>один</td>
+        <td>два</td>
+    </tr>
+    <tr>
+        <td>три</td>
+        <td>четыре</td>
+    </tr>
+</table>
+
+<!--
+Навигация по DOM-элементам
+http://learn.javascript.ru/traversing-dom
+-->
+<script>
+    "use strict";
+
+    /* Сверху documentElement и body */
+
+    // <html> = document.documentElement
+    // <head> = document.head (кроме IE8-)
+    // <body> = document.body
+    console.log(document.documentElement);
+    console.log(document.head);
+    console.log(document.body);
+
+    /* Дети: childNodes, firstChild, lastChild */
+    // Дочерние элементы (или дети) – элементы, которые находятся непосредственно внутри данного.
+    // Потомки – все элементы, которые находятся внутри данного, вместе с их детьми, детьми детей и так далее.
+
+    // childNodes - все дочерние узлы (включая текстовые)
+    // firstChild, lastChild - первый и последний дочерний узел
+    console.log(document.body.childNodes); // NodeList [#text, ..., script]
+    console.log(document.body.firstChild); // #text
+    console.log(document.body.lastChild); // script
+
+    /* Коллекции - не массивы */
+
+    // DOM-коллекции, такие как childNodes, не являются JavaScript-массивами.
+    var elems = document.documentElement.childNodes;
+
+    [].forEach.call(elems, function(elem) {
+        console.log(elem); // head, #text, body
+    });
+
+    elems = Array.prototype.slice.call(elems);
+    console.log(Array.isArray(elems)); // true
+
+    /* Соседи и родитель */
+
+    // parentNode - родительский узел
+    // previousSibling, nextSibling - предыдущий и следующий узел
+    console.log(document.body.parentNode); // html
+    console.log(document.body.previousSibling); // #text
+    console.log(document.head.nextSibling); // #text
+
+    /* Навигация только по элементам */
+
+    // children - только дочерний элементы
+    // firstElementChild, lastElementChild - соотвественно, первый и последний дочерние элементы
+    // parentElement - родитель-элемент
+    // previousElementSibling, nextElementSibling - соседи-элементы
+    console.log(document.body.children); // HTMLCollection [div, ul, div, table, script]
+    console.log(document.body.firstElementChild); // div
+    console.log(document.body.lastElementChild); // script
+    console.log(document.body.parentElement); // html
+    console.log(document.body.previousElementSibling); // head
+    console.log(document.head.nextElementSibling); // body
+
+    /* Особые ссылки для таблиц */
+
+    // table.rows – коллекция строк <tr> таблицы
+    // table.caption/tHead/tFoot - ссылки на элементы таблицы <caption>, <thead>, <tfoot>
+    // table.tBodies - коллекция элементов таблицы <tbody>
+    var table = document.body.children[3];
+    console.log(table.rows); // HTMLCollection [tr, tr]
+    console.log(table.tBodies); // HTMLCollection [tbody]
+
+    // thead/tbody/tfoot.rows - коллекция строк <tr> секции <thead>, <tbody>, <tfoot>
+    var tbody = table.tBodies[0];
+    console.log(tbody.rows); // HTMLCollection [tr, tr]
+
+    // tr.cells - коллекция ячеек <td>/<th>
+    // tr.sectionRowIndex - номер строки в текущей секции <thead>/<tbody>
+    // tr.rowIndex - номер строки в таблице
+    var tr = table.rows[0];
+    console.log(tr.cells); // HTMLCollection [td, td]
+    console.log(tr.rowIndex); // 0
+
+    // td/th.cellIndex - номер ячейки в строке
+    var td = tr.cells[1];
+    console.log(td.cellIndex); // 1
+
+    /* Задача */
+    // Выделите ячейки по диагонали
+    for (var i = 0; i < table.rows.length; i++) {
+        var cell = table.rows[i].cells[i];
+
+        if (!cell) continue;
+        cell.style.backgroundColor = "red";
+    }
+</script>
+
+</body>
+</html>
