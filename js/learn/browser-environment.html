@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DOM, BOM и JS</title>
+</head>
+<body>
+
+<!--
+DOM, BOM и JS
+http://learn.javascript.ru/browser-environment
+-->
+<script>
+    "use strict";
+
+    /* Объектная модель документа (DOM) */
+    // Глобальный объект document дает возможность взаимодействовать с содержимым страницы.
+
+    document.body.style.background = "red";
+    setTimeout(function () {
+        document.body.style.background = "";
+    }, 1000);
+
+    /* Объектная модель браузера (BOM) */
+    // BOM - это объекты для работы с чем угодно, кроме документа.
+
+    console.log(navigator.userAgent);
+    console.log(navigator.platform);
+    console.log(location.href);
+</script>
+
+</body>
+</html>
