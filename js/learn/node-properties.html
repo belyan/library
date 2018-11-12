@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Свойства узлов: тип, тег и содержимое</title>
+</head>
+<body><!--Комментарий-->
+
+<div>Читатели:</div>
+<ul>
+    <li>Вася</li>
+    <li>Петя</li>
+</ul>
+
+<p><b>Винни-пух</b></p>
+
+<div hidden>Текст c атрибутом hidden</div>
+<div>Текст со свойством hidden</div>
+
+<input type="text" id="elem" value="значение" title="">
+
+<!--
+Свойства узлов
+http://learn.javascript.ru/basic-dom-node-properties
+-->
+<script>
+    "use strict";
+
+    /* Классы, иерархия DOM */
+    // Node -> Element -> HTMLElement -> HTMLBodyElement
+    console.log(document.body.toString()); // [object HTMLBodyElement]
+
+    console.log(document.body instanceof HTMLBodyElement); // true
+    console.log(document.body instanceof HTMLElement); // true
+    console.log(document.body instanceof Element); // true
+    console.log(document.body instanceof Node); // true
+
+    console.log(Node.prototype);
+    console.log(Element.prototype);
+
+    /* Тип: nodeType */
+    // ELEMENT_NODE = 1
+    // ATTRIBUTE_NODE = 2
+    // TEXT_NODE = 3
+    // CDATA_SECTION_NODE = 4
+    // ENTITY_REFERENCE_NODE = 5
+    // ENTITY_NODE = 6
+    // PROCESSING_INSTRUCTION_NODE = 7
+    // COMMENT_NODE = 8
+    // DOCUMENT_NODE = 9
+    // DOCUMENT_TYPE_NODE = 10
+    // DOCUMENT_FRAGMENT_NODE = 11
+    // NOTATION_NODE = 12
+
+    var childNodes = document.body.childNodes;
+    for (var i = 0; i < childNodes.length; i++) {
+        if (childNodes[i].nodeType !== 1) continue;
+        console.log(childNodes[i]); // div, ul, p, div, div, script
+    }
+
+    /* Тег: nodeName и tagName */
+    // Название HTML-тега всегда находится в верхнем регистре.
+    console.log(document.body.nodeName); // BODY
+    console.log(document.documentElement.tagName); // HTML
+
+    // Свойство tagName есть только у элементов Element
+    console.log(document.tagName); // undefined
+
+    // Свойство nodeName определено для любых узлов
+    console.log(document.body.firstChild.nodeName); // #comment
+    console.log(document.nodeName); // #document
+
+    /* innerHTML: содержимое элемента */
+    // Свойство innerHTML позволяет получить HTML-содержимое элемента в виде строки
+    console.log(document.querySelector("ul").innerHTML);
+
+    // Тонкости innerHTML:
+    // 1. Для таблиц innerHTML только для чтения в IE9-
+    // 2. Добавление innerHTML+= осуществляет перезапись всего содержимого
+    // 3. Скрипты не выполняются
+    // 4. IE8- обрезает style и script в начале innerHTML
+
+    /* outerHTML: HTML элемента целиком */
+    console.log(document.querySelector("ul").outerHTML);
+
+    // Изменить outerHTML элемента невозможно: элемент не меняется, а заменяется на новый
+    var div = document.body.children[0];
+    div.outerHTML = "<div>Новый элемент!</div>";
+    console.log(div.outerHTML); // <div>Читатели:</div>
+    console.log(document.body.children[0].outerHTML); // <div>Новый элемент!</div>
+
+    /* nodeValue/data: содержимое текстового узла */
+    console.log(document.body.firstChild.nodeValue); // Комментарий
+
+    /* textContent */
+    // Свойство textContent содержит только текст внутри элемента, за вычетом всех тегов
+    console.log(document.querySelector("p").innerHTML); // <b>Винни-пух</b>
+    console.log(document.querySelector("p").textContent); // Винни-пух
+
+    /* Свойство hidden */
+    var lastDiv = document.querySelectorAll("div")[2];
+    lastDiv.hidden = true;
+
+    /* Исследование элементов */
+    var input = document.querySelector("input");
+    console.dir(input);
+
+    console.log(input.type); // text
+    console.log(input.id); // elem
+    console.log(input.value); // значение
+</script>
+
+
+</body>
+</html>
