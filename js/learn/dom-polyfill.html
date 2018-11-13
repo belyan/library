@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Современный DOM: полифиллы</title>
+</head>
+<body>
+
+<input type="radio">
+<input type="no-such-type">
+
+<!--
+Современный DOM: полифиллы
+http://learn.javascript.ru/dom-polyfill
+-->
+<script>
+    "use strict";
+
+    /* Полифиллы */
+    // Полифилл (англ. polyfill) – это библиотека, которая добавляет в старые браузеры
+    // поддержку возможностей, которые в современных браузерах являются встроенными
+
+    /* Что делает полифилл */
+    // 1. Проверка, есть ли встроенная возможность.
+    // 2. Эмуляция, если ее нет.
+    if (document.documentElement.firstElementChild === undefined) {
+        Object.defineProperty(Element.prototype, "firstElementChild", {
+            get: function () {
+                var el = this.firstChild;
+                do {
+                    if (el.nodeType === 1) {
+                        return el;
+                    }
+                    el = el.nextSibling;
+                } while (el);
+
+                return null;
+            }
+        });
+    }
+
+    /* Проверка встроенного свойства */
+    console.log(document.head.previousSibling); // null, поддержка есть
+    console.log(document.head.blabla); // undefined, поддержки нет
+
+    // Элемент, который мы тестируем, должен по стандарту поддерживать такое свойство.
+    var div = document.createElement("div");
+    var input = document.createElement("input");
+
+    console.log(input.value); // пустая строка, поддержка есть
+    console.log(div.value); // undefined, поддержки нет
+
+    console.log(document.body.children[0].type); // radio, поддерживается
+    console.log(document.body.children[1].type); // text, не поддерживается
+
+    /* Добавляем поддержку свойства */
+    // Для добавления нужной возможности берется правильный класс и модифицируется его prototype
+    Element.prototype.sayHi = function () {
+        console.log("Привет от " + this);
+    };
+    document.body.sayHi(); // Привет от [object HTMLBodyElement]
+
+    Object.defineProperty(Element.prototype, "lowerTag", {
+        get: function () {
+            return this.tagName.toLowerCase();
+        }
+    });
+    console.log(document.body.lowerTag); // body
+
+    /* Задача */
+    // Полифилл для matches
+    (function () {
+        if (Element.prototype.matches === undefined) {
+            Element.prototype.matches = Element.prototype.matchesSelector ||
+                    Element.prototype.webkitMatchesSelector ||
+                    Element.prototype.mozMatchesSelector ||
+                    Element.prototype.msMatchesSelector;
+        }
+    })();
+
+    /* Задача */
+    // Полифилл для closest
+    (function () {
+        if (Element.prototype.closest === undefined) {
+            Element.prototype.closest = function (css) {
+                var elem = this;
+
+                do {
+                    if (elem.matches(css)) {
+                        return elem;
+                    }
+                    elem = elem.parentElement;
+                } while (elem);
+
+                return null;
+            };
+        }
+    })();
+
+    /* Полифилл для textContent */
+    (function () {
+        if (document.documentElement.textContent === undefined) {
+            Object.defineProperty(Element.prototype, "textContent", {
+                get: function () {
+                    return this.innerText;
+                },
+                set: function (v) {
+                    this.innerText = v;
+                }
+            });
+        }
+    })();
+</script>
+
+</body>
+</html>
