@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Атрибуты и DOM-свойства</title>
+    <style>
+        [hidden] { display: none; }
+        .external { background-color: yellow; }
+    </style>
+</head>
+<body>
+
+<div id="elem" about="Elephant"></div>
+<a href="#" id="a"></a>
+<input type="checkbox" id="input" value="markup" checked>
+
+<img id="img" href="test">
+<a id="test" alt="test"></a>
+
+<div id="elem2" data-about="Elephant" data-user-location="street">
+    По улице прошелся слон. Весьма красив и толст был он.
+</div>
+
+<div>Текст</div>
+<div hidden>С атрибутом hidden</div>
+<div id="last">Со свойством hidden</div>
+
+<div id="widget" data-widget-name="menu">Выберите жанр</div>
+
+<ul>
+    <li><a href="http://google.com">http://google.com</a></li>
+    <li><a href="/tutorial">/tutorial.html</a></li>
+    <li><a href="local/path">local/path</a></li>
+    <li><a href="ftp://ftp.com/my.zip">ftp://ftp.com/my.zip</a></li>
+    <li><a href="http://nodejs.org">http://nodejs.org</a></li>
+    <li><a href="http://internal.com/test">http://internal.com/test</a></li>
+</ul>
+
+<!--
+Атрибуты и DOM-свойства
+http://learn.javascript.ru/attributes-and-custom-properties
+-->
+<script>
+    "use strict";
+
+    /* Свои DOM-свойства */
+    // Узел DOM - это объект, поэтому, как и любой объект в JavaScript, он может
+    // содержать пользовательские свойства и методы
+    document.body.myData = {
+        name: "Петр",
+        familyName: "Петрович"
+    };
+    console.log(document.body.myData.name); // Петр
+
+    document.body.sayHi = function () {
+        console.log(this.nodeName);
+    };
+    document.body.sayHi(); // BODY
+
+    /* Атрибуты */
+    // elem.hasAttribute(name) - проверяет наличие атрибута
+    // elem.getAttribute(name) - получает значение атрибута
+    // elem.setAttribute(name, value) - устанавливает атрибут
+    // elem.removeAttribute(name) - удаляет атрибут
+    console.log(elem.getAttribute("about")); // Elephant
+    elem.setAttribute("Test", 123);
+    console.log(elem);
+
+    var attrs = elem.attributes;
+    for (var i = 0; i < attrs.length; i++) {
+        console.log(attrs[i].name + " = " + attrs[i].value);
+    }
+
+    /* Когда полезен доступ к атрибутам? */
+    // 1. Когда нужно кросс-браузерно получить нестандартный HTML-атрибут
+    // 2. Когда нужно получить "оригинальное" значение стандартного HTML-атрибута
+    // 3. Когда нужно получить список всех атрибутов, включая пользовательские
+
+    console.log(a.getAttribute("href")); // #
+    console.log(a.href); // полный URL
+    console.log(input.getAttribute("checked")); // пустая строка
+    console.log(input.checked); // true
+
+    /* Классы в виде строки: className */
+    document.body.className = "main page";
+    console.log(document.body.className); // main page
+
+    /* Классы в виде объекта: classList */
+    // elem.classList.contains(class) - проверяет наличие класса у элемента
+    // elem.classList.add/remove(class) - добавляет/удаляет класс
+    // elem.classList.contains(class) - если класса нет, то добавляет его, если есть - удаляет
+    var classList = document.body.classList;
+    classList.remove("page");
+    classList.add("post");
+
+    console.log(classList);
+    console.log(classList.contains("post")); // true
+    console.log(document.body.className); // main post
+
+    /* Нестандартные атрибуты */
+    // Для нестандартных атрибутов DOM-свойство не создается
+    console.log(elem.id); // elem
+    console.log(elem.about); // undefined
+    console.log(img.href); // undefined
+    console.log(test.alt); // undefined
+
+    /* Свойство dataset, data-атрибуты */
+    console.log(elem2.getAttribute("data-about")); // Elephant
+    console.log(elem2.getAttribute("data-user-location")); // street
+    console.log(elem2.dataset);
+    console.log(elem2.dataset.userLocation); // street
+
+    /* Полифилл для атрибута hidden */
+    if (document.documentElement.hidden === undefined) {
+        Object.defineProperty(Element.prototype, "hidden", {
+            get: function () {
+                return this.getAttribute("hidden");
+            },
+            set: function (value) {
+                this.setAttribute("hidden", value);
+            }
+        });
+    }
+
+    last.hidden = true;
+
+    /* Задача */
+    var widget = document.getElementById("widget");
+    console.log(widget.getAttribute("data-widget-name")); // menu
+    console.log(widget.dataset.widgetName); // menu
+
+    /* Задача */
+    var links = document.querySelectorAll("ul li a");
+
+    for (i = 0; i < links.length; i++) {
+        var link = links[i],
+            ref = link.getAttribute("href");
+
+        if (ref && ~ref.indexOf("://") && !~ref.indexOf("http://internal.com")) {
+            link.classList.add("external");
+            console.log(link.textContent);
+        }
+    }
+</script>
+
+</body>
+</html>
