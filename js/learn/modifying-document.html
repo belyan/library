@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление и удаление узлов</title>
+    <style>
+        .alert {
+            padding: 15px;
+            border: 1px solid #d6e9c6;
+            border-radius: 4px;
+            color: #3c763d;
+            background-color: #dff0d8;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            border: 1px solid black;
+            padding: 3px;
+            text-align: center;
+        }
+
+        th {
+            font-weight: bold;
+            background-color: #E6E6E6;
+        }
+
+        #clock .hh { color: red; }
+        #clock .mm { color: green; }
+        #clock .ss { color: blue; }
+    </style>
+</head>
+<body>
+
+<h3>Моя страница</h3>
+
+<ol id="list">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+</ol>
+
+<table id="table">
+    <tr>
+        <td>Это</td>
+        <td>Все</td>
+        <td>Элементы DOM</td>
+    </tr>
+</table>
+
+<div id="container"></div>
+
+<ul id="tree">
+    <li>Животные
+        <ul>
+            <li>Млекопитающие
+                <ul>
+                    <li>Коровы</li>
+                    <li>Ослы</li>
+                    <li>Собаки</li>
+                    <li>Тигры</li>
+                </ul>
+            </li>
+            <li>Другие
+                <ul>
+                    <li>Змеи</li>
+                    <li>Птицы</li>
+                    <li>Ящерицы</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>Рыбы
+        <ul>
+            <li>Аквариумные
+                <ul>
+                    <li>Гуппи</li>
+                    <li>Скалярии</li>
+                </ul>
+            </li>
+            <li>Морские
+                <ul>
+                    <li>Морская форель</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<div id="calendar"></div>
+
+<div id="clock">
+    <span class="hh">hh</span>:<span class="mm">mm</span>:<span class="ss">ss</span>
+</div>
+
+<input type="button" onclick="startClock()" value="Start">
+<input type="button" onclick="stopClock()" value="Stop">
+
+<!--
+Добавление и удаление узлов
+http://learn.javascript.ru/modifying-document
+-->
+<script>
+    "use strict";
+
+    /* Создание элемента */
+    // document.createElement(tag) - создает новый элемент с указанным тегом
+    // document.createTextNode(text) - создает новый текстовый узел с данным текстом
+    var div = document.createElement("div");
+    var text = document.createTextNode("Тут был я");
+
+    console.log(div);
+    console.log(text);
+
+    div.className = "alert alert-success";
+    div.innerHTML = "<strong>Ура!</strong> Вы прочитали это важное сообщение.";
+
+    /* Добавление элемента: appendChild, insertBefore */
+    // parentElem.appendChild(elem) - добавляет elem в конец дочерних элементов parentElem
+    // parentElem.insertBefore(elem, nextSibling) - вставляет elem в коллекцию детей, перед элементом nextSibling
+    document.body.appendChild(div);
+    document.body.insertBefore(div, list);
+
+    var newLi = document.createElement("li");
+    newLi.innerHTML = "Привет, мир!";
+
+    list.appendChild(newLi);
+    list.insertBefore(newLi, list.firstChild);
+
+    // Все методы вставки автоматически удаляют вставляемый элемент со старого места
+
+    /* Клонирование узлов: cloneNode */
+    // elem.cloneNode(true) - создает "глубокую" копию элемента
+    var div2 = div.cloneNode(true);
+    div2.querySelector("strong").innerHTML = "Супер!";
+    div.parentNode.insertBefore(div2, div.nextSibling);
+
+    /* Удаление узлов: removeChild */
+    // parentElem.removeChild(elem) - удаляет elem из списка детей parentElem
+    // parentElem.replaceChild(newElem, elem) - среди детей parentElem удаляет elem и вставляет на его место newElem
+    setTimeout(function () {
+        div.parentNode.removeChild(div);
+    }, 1000);
+
+    /* Текстовые узлы для вставки текста */
+    var text2 = document.createTextNode(" Жили были <a> и <b>!");
+    div2.appendChild(text2);
+
+    /* Задача */
+    // Полифилл для метода remove
+    (function () {
+        if (document.documentElement.remove === undefined) {
+            Element.prototype.remove = function () {
+                if (this.parentNode) {
+                    this.parentNode.removeChild(this);
+                }
+            }
+        }
+    })();
+
+    /* Задача */
+    // Напишите функцию insertAfter(elem, refElem)
+    function insertAfter(elem, refElem) {
+        if (refElem.parentNode) {
+            return refElem.parentNode.insertBefore(elem, refElem.nextSibling);
+        }
+    }
+
+    var elem = document.createElement("div");
+    elem.innerHTML = "<b>Новый элемент</b>";
+
+    insertAfter(elem, document.body.firstChild);
+    insertAfter(elem, document.body.lastChild);
+
+    /* Задача */
+    // Напишите функцию removeChildren, которая удаляет всех потомков элемента
+    function removeChildren(elem) {
+        while (elem.lastChild) {
+            elem.removeChild(elem.lastChild);
+        }
+    }
+
+    removeChildren(table);
+
+    /* Задача */
+    // Создать список
+    var ul = document.createElement("ul");
+    document.body.appendChild(ul);
+
+    do {
+        var message = prompt("Введите содержимое пункта");
+        if (!message) continue;
+
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(message));
+        ul.appendChild(li);
+    } while (message);
+
+    /* Задача */
+    // Создайте дерево из объекта
+    var data = {
+        "Рыбы": {
+            "Форель": {},
+            "Щука": {}
+        },
+        "Деревья": {
+            "Хвойные": {
+                "Лиственница": {},
+                "Ель": {}
+            },
+            "Цветковые": {
+                "Берёза": {},
+                "Тополь": {}
+            }
+        }
+    };
+
+    var container = document.getElementById("container");
+    createTree(container, data);
+
+    function createTree(container, obj) {
+        var keys = Object.keys(obj);
+        if (!keys.length) return;
+
+        var ul = document.createElement("ul");
+
+        for (var key in obj) {
+            var li = document.createElement("li");
+            li.textContent = key;
+
+            createTree(li, obj[key]);
+
+            ul.appendChild(li);
+        }
+
+        container.appendChild(ul);
+    }
+
+    /* Задача */
+    // Дерево
+    var tree = document.getElementById("tree");
+    var items = tree.getElementsByTagName("li");
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var count = item.getElementsByTagName("li").length;
+
+        if (!count) continue;
+
+        item.firstChild.textContent += " [" + count + "]";
+    }
+
+    /* Задача */
+    // Создать календарь в виде таблицы
+    function createCalendar(id, year, month) {
+        var elem = document.getElementById(id);
+        var daysOfWeek = ["пн", "вт", "ср", "чт", "пт", "сб", "вс"];
+
+        var firstDay = new Date(year, month - 1, 1);
+        var lastDay = new Date(year, month, 0);
+        var outputDay = new Date(year, month - 1, 1 - getDay(firstDay));
+
+        var days = lastDay.getDate();
+        var weeks = Math.ceil((days + getDay(firstDay)) / 7);
+
+        var table = document.createElement("table");
+
+        for (var n = -1; n < weeks; n++) {
+            var tr = document.createElement("tr");
+
+            for (var i = 0; i < daysOfWeek.length; i++) {
+                if (n < 0) {
+                    var th = document.createElement("th");
+                    th.textContent = daysOfWeek[i];
+                    tr.appendChild(th);
+                    continue;
+                }
+
+                var td = document.createElement("td");
+                if (outputDay.getMonth() === month - 1) {
+                    td.textContent = outputDay.getDate().toString();
+                }
+                tr.appendChild(td);
+                outputDay.setDate(outputDay.getDate() + 1);
+            }
+
+            table.appendChild(tr);
+        }
+
+        elem.appendChild(table);
+
+        function getDay(date) {
+            var day = date.getDay();
+            day = day === 0 ? 6 : day - 1;
+
+            return day;
+        }
+    }
+
+    createCalendar("calendar", 2012, 9);
+
+    /* Задача */
+    // Создайте цветные часы
+    var clock = document.getElementById("clock");
+    var clockId;
+
+    function updateClock() {
+        var date = new Date();
+
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+
+        clock.children[0].textContent = ("0" + hours).slice(-2);
+        clock.children[1].textContent = ("0" + minutes).slice(-2);
+        clock.children[2].textContent = ("0" + seconds).slice(-2);
+    }
+
+    function startClock() {
+        updateClock(); // чтобы не ждать до первого выполнения setInterval
+        clockId = setInterval(updateClock, 1000);
+    }
+
+    function stopClock() {
+        clearInterval(clockId);
+        clockId = null;
+    }
+</script>
+
+</body>
+</html>
