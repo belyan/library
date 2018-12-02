@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мультивставка</title>
+    <style type="text/css">
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #eee;
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 3px solid #ccc;
+        }
+
+        td {
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <thead>
+    <tr>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Отчество</th>
+        <th>Возраст</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><b>Вася</b></td>
+        <td>Петров</td>
+        <td>Александрович</td>
+        <td>10</td>
+    </tr>
+    <tr>
+        <td>Петя</td>
+        <td>Иванов</td>
+        <td>Петрович</td>
+        <td>15</td>
+    </tr>
+    <tr>
+        <td>Владимир</td>
+        <td>Ленин</td>
+        <td>Ильич</td>
+        <td>9</td>
+    </tr>
+    </tbody>
+</table>
+<button onclick="sortTable()">Отсортировать</button>
+
+<!--
+Мультивставка: insertAdjacentHTML и DocumentFragment
+http://learn.javascript.ru/multi-insert
+-->
+<script>
+    "use strict";
+
+    /* Оптимизация вставки в документ */
+    var ul = document.createElement("ul");
+
+    // Полностью создать список "вне DOM", а потом вставить в документ:
+    for (var i = 0; i < 2; i++) {
+        var li = document.createElement("li");
+        li.textContent = "item " + (i + 1);
+        ul.appendChild(li);
+    }
+    document.body.appendChild(ul);
+
+    /* Добавление множества узлов */
+    // Метод insertAdjacentHTML(where, html) - позволяет вставлять произвольный HTML в любое место документа, в том числе между узлами!
+    // beforeBegin - перед elem
+    // afterBegin - внутрь elem, в самое начало
+    // beforeEnd - внутрь elem, в конец
+    // afterEnd - после elem
+    var li5 = document.createElement("li");
+    li5.textContent = "item 5";
+    ul.appendChild(li5);
+
+    li5.insertAdjacentHTML("beforeBegin", "<li>item 3</li><li>item 4</li>");
+
+    // Метод insertAdjacentElement(where, newElem) - вставляет в произвольное место не строку HTML, а элемент newElem.
+    var li6 = document.createElement("li");
+    li5.insertAdjacentElement("afterEnd", li6);
+
+    // Метод insertAdjacentText(where, text) - создает текстовый узел из строки text и вставляет его в указанное место.
+    li6.insertAdjacentText("afterBegin", "item 6");
+
+    // DocumentFragment
+    // Когда DocumentFragment вставляется в DOM - то он исчезает, а вместо него вставляется его дети.
+    var fragment = document.createDocumentFragment();
+
+    for (i = 7; i < 9; i++) {
+        var item = document.createElement("li");
+        item.textContent = "item " + i;
+        fragment.appendChild(item);
+    }
+
+    console.log(fragment);
+    console.log(fragment.children.length); // 2
+    ul.appendChild(fragment);
+
+    /* Современные методы */
+    // append/prepend – вставка в конец/начало
+    // before/after – вставка перед/после
+    // replaceWith – замена
+
+    var p = document.createElement("p");
+    document.body.appendChild(p);
+
+    var em = document.createElement("em");
+    em.append("Мир!");
+    p.append("Привет, ", em);
+    p.after(document.createElement("hr"));
+
+    /* Задача */
+    // Вставить элементы в конец списка
+    var list = document.getElementsByTagName("ul")[0];
+    list.insertAdjacentHTML("beforeEnd", "<li>item 9</li><li>item 10</li>");
+
+    /* Задача */
+    // Отсортировать таблицу
+    function sortTable() {
+        var table = document.querySelector("table");
+        var tbody = table.tBodies[0];
+        var rows = Array.prototype.slice.call(tbody.rows);
+
+        rows.sort(function (rowA, rowB) {
+            var ageA = rowA.lastElementChild.textContent;
+            var ageB = rowB.lastElementChild.textContent;
+
+            return ageA - ageB;
+        });
+
+        rows.forEach(function (row) {
+            table.appendChild(row);
+        });
+    }
+</script>
+
+</body>
+</html>
