@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Метод document.write</title>
+</head>
+<body>
+
+<table>
+    <tr>
+        <script>
+            document.write('<td>')
+        </script>
+        Текст внутри TD.
+        <script>
+            document.write('</td>')
+        </script>
+    </tr>
+</table>
+
+<!--
+Метод document.write
+http://learn.javascript.ru/document-write
+-->
+<script>
+    "use strict";
+
+    /* Как работает document.write */
+    // Метод document.write(str) работает только пока HTML-страница находится в процессе загрузки.
+
+    // Нет никаких ограничений на содержимое document.write
+    document.write("<style> td { color: #F40 } </style>");
+
+    var url = "https://dummyimage.com/" + screen.width + "x" + screen.height;
+    document.write('<img src="' + url + '"/>');
+</script>
+
+</body>
+</html>
