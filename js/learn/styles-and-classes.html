@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Стили элемента</title>
+    <style type="text/css">
+        div {
+            color: white;
+            padding: 8px 1em;
+        }
+
+        .notification {
+            position: fixed;
+            z-index: 1000;
+            padding: 5px;
+            border: 1px solid black;
+            font: normal 20px serif;
+            background: white;
+            text-align: center;
+        }
+
+        .welcome {
+            background: red;
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+
+<div>Button</div>
+
+<!--
+Стили элемента
+http://learn.javascript.ru/styles-and-classes
+-->
+<script>
+    "use strict";
+
+    /* Свойство style */
+    // background-color  => elem.style.backgroundColor
+    // z-index           => elem.style.zIndex
+    // border-left-width => elem.style.borderLeftWidth
+    document.body.style.backgroundColor = "yellow";
+
+    setTimeout(function() {
+        document.body.style.backgroundColor = "";
+    }, 1000);
+
+    document.body.style.margin = "20px";
+    document.body.style.color = "#abc";
+    console.log(document.body.style.marginTop); // 20px
+    console.log(document.body.style.color); // rgb(170, 187, 204)
+
+    // Свойство style.cssText позволяет задать стиль в виде строки
+    var div = document.body.children[0];
+    div.style.cssText = "\
+        background-color: gray;\
+        width: 100px;\
+        text-align: center;\
+        bla-bla: 5;\
+    ";
+
+    // Свойство style содержит лишь тот стиль, который указан в атрибуте элемента, без учёта каскада CSS
+    console.log(div.style.color); // ?
+    console.log(div.style.paddingTop); // ?
+
+    /* Полный стиль из getComputedStyle */
+    // getComputedStyle(element[, pseudo])
+    var computedStyle = getComputedStyle(div);
+    console.log(computedStyle.color); // rgb(255, 255, 255)
+    console.log(computedStyle.paddingTop); // 8px
+    console.log(computedStyle.paddingLeft); // 16px (все размеры приводятся к пикселям)
+
+    /* Задача */
+    var button = document.createElement("a");
+    button.className = "button";
+    button.href = "/";
+    button.textContent = "Нажми меня";
+
+    var buttonStyles = {
+        border: "2px groove green",
+        borderRadius: "8px",
+        color: "red",
+        display: "block",
+        fontWeight: "bold",
+        height: "30px",
+        lineHeight: "30px",
+        marginTop: "10px",
+        textAlign: "center",
+        textDecoration: "none",
+        width: "100px"
+    };
+
+    Object.keys(buttonStyles).forEach(function (prop) {
+        button.style[prop] = buttonStyles[prop];
+    });
+
+    document.body.appendChild(button);
+
+    /* Задача */
+    // Создать уведомление
+
+    /**
+     * Показывает уведомление
+     * @param options.top {number} вертикальный отступ, в px
+     * @param options.right {number} правый отступ, в px
+     * @param options.cssText {string} строка стиля
+     * @param options.className {string} CSS-класс
+     * @param options.html {string} HTML-текст для показа
+     */
+    function showNotification(options) {
+        var notification = document.createElement("div");
+
+        notification.className = "notification";
+        notification.style.top = (options.top || 0) + "px";
+        notification.style.right = (options.right || 0) + "px";
+
+        if (options.cssText) {
+            notification.style.cssText = options.cssText;
+        }
+
+        if (options.className) {
+            notification.classList.add(options.className);
+        }
+
+        notification.innerHTML = options.html;
+        document.body.appendChild(notification);
+
+        setTimeout(function () {
+            document.body.removeChild(notification);
+        }, 1500);
+    }
+
+    showNotification({
+        top: 10,
+        right: 10,
+        html: "Привет",
+        className: "welcome"
+    });
+</script>
+
+</body>
+</html>
