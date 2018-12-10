@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Размеры и прокрутка элементов</title>
+    <style type="text/css">
+        #example {
+            position: absolute;
+            top: 60px;
+            left: 120px;
+            width: 300px;
+            height: 200px;
+            margin: 10px;
+            padding: 20px;
+            overflow: auto;
+            border: 25px solid #E8C48F;
+        }
+
+        #moving-div {
+            border: 5px groove green;
+            background-color: yellow;
+            padding: 5px;
+            margin: 10px;
+        }
+
+        #field {
+            width: 200px;
+            height: 140px;
+            border: 10px groove black;
+            background-color: #00FF00;
+            position: relative;
+            margin-top: 300px;
+        }
+
+        #ball {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+<main style="position: relative">
+    <form>
+        <div id="example">
+            <h3>Introduction</h3>
+            <p>This Ecma Standard is based on several originating technologies, the most well known being JavaScript (Netscape) and JScript (Microsoft). The language was invented by Brendan Eich at Netscape and first appeared in that company's Navigator 2.0 browser. It has appeared in all subsequent browsers from Netscape and in all browsers from Microsoft starting with Internet Explorer 3.0. The development of this Standard started in November 1996. The first edition of this Ecma Standard was adopted by the Ecma General Assembly of June 1997.</p>
+
+            <p>That Ecma Standard was submitted to ISO/IEC JTC 1 for adoption under the fast-track procedure, and approved as international standard ISO/IEC 16262, in April 1998. The Ecma General Assembly of June 1998 approved the second edition of ECMA-262 to keep it fully aligned with ISO/IEC 16262. Changes between the first and the second edition are editorial in nature.</p>
+
+            <p>The third edition of the Standard introduced powerful regular expressions, better string handling, new control statements, try/catch exception handling, tighter definition of errors, formatting for numeric output and minor changes in anticipation of forthcoming internationalisation facilities and future language growth. The third edition of the ECMAScript standard was adopted by the Ecma General Assembly of December 1999 and published as ISO/IEC 16262:2002 in June 2002.</p>
+        </div>
+    </form>
+</main>
+
+Before Before Before
+
+<div id="moving-div">
+    Text Text Text
+    <br> Text Text Text
+    <br>
+</div>
+
+After After After
+
+<div id="field">
+    <img src="https://js.cx/clipart/ball.svg" width="40" height="40" id="ball">
+</div>
+
+<!--
+Размеры и прокрутка элементов
+http://learn.javascript.ru/metrics
+-->
+<script>
+    "use strict";
+
+    var example = document.getElementById("example");
+
+    /* offsetParent */
+    // Ссылка на ближайший позиционированный элемент (у которого position не равно static) или body
+    console.log(example.parentNode); // form
+    console.log(example.offsetParent); // main
+
+    /* offsetTop/Left */
+    // Смещение сверху/слева относительно offsetParent
+    console.log(example.offsetTop); // 70 (60 + 10)
+    console.log(example.offsetLeft); // 130 (120 + 10)
+
+    /* offsetWidth/Height */
+    // Ширина/высота элемента, включая рамки и отступы
+    console.log(example.offsetWidth); // 390 (300 + 25 * 2 + 20 * 2)
+    console.log(example.offsetHeight); // 290 (200 + 25 * 2 + 20 * 2)
+
+    /* clientTop/Left */
+    // Ширина верхней/левой рамки элемента
+    console.log(example.clientTop); // 25
+    console.log(example.clientLeft); // 25
+
+    /* clientWidth/Height */
+    // Ширина/высота элемента, включая отступы
+    console.log(example.clientWidth); // 340 (300 + 20 * 2)
+    console.log(example.clientHeight); // 240 (200 + 20 * 2)
+
+    /* scrollWidth/Height */
+    // Ширина/высота элемента, включая отступы и прокручиваемую область
+    console.log(example.scrollWidth); // 340
+    console.log(example.scrollHeight); // 759
+
+    /* scrollTop/scrollLeft */
+    // Ширина/высота прокрученной области элемента
+    example.scrollTop += 100;
+    console.log(example.scrollTop); // 100
+    console.log(example.scrollLeft); // 0
+
+    /* Задача */
+    // Найти размер прокрутки снизу
+    Object.defineProperty(Element.prototype, "scrollBottom", {
+        get: function () {
+            return this.scrollHeight - this.clientHeight - this.scrollTop;
+        }
+    });
+    console.log(example.scrollBottom); // 419 (759 - 240 - 100)
+
+    /* Задача */
+    // Узнать ширину полосы прокрутки
+    var div = document.createElement("div");
+    div.style.width = "100px";
+    div.style.height = "100px";
+    div.style.overflow = "scroll";
+    div.style.visibility = "hidden";
+    document.body.appendChild(div);
+
+    var scrollbarWidth = div.offsetWidth - div.clientWidth;
+    console.log(scrollbarWidth); // 16 (0 on Mac OS)
+
+    document.body.removeChild(div);
+
+    /* Задача */
+    // Подменить div на другой с таким же размером
+    var movingDiv = document.getElementById("moving-div");
+    movingDiv.style.position = "absolute";
+    movingDiv.style.right = movingDiv.style.top = "0";
+
+    var placeHolder = document.createElement("div");
+    placeHolder.style.width = movingDiv.offsetWidth + "px";
+    placeHolder.style.height = movingDiv.offsetHeight + "px";
+    placeHolder.style.margin = getComputedStyle(movingDiv).margin;
+
+    movingDiv.parentNode.insertBefore(placeHolder, movingDiv);
+
+    /* Задача */
+    // Поместите мяч в центр поля
+    var field = document.getElementById("field");
+    var ball = document.getElementById("ball");
+
+    ball.style.left = field.clientWidth / 2 - ball.offsetWidth / 2 + "px";
+    ball.style.top = field.clientHeight / 2 - ball.offsetHeight / 2 + "px";
+</script>
+
+</body>
+</html>
