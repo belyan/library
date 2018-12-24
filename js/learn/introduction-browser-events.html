@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Введение в браузерные события</title>
+    <style type="text/css">
+        body {
+            margin: 10px auto;
+            width: 470px;
+        }
+
+        #button {
+            transition: width 1s;
+            width: 100px;
+        }
+
+        #button.wide {
+            width: 300px;
+        }
+
+        #menu .title {
+            cursor: pointer;
+        }
+
+        #menu .title:before {
+            display: inline-block;
+            margin-right: 5px;
+            content: "▶";
+            font-size: 80%;
+            color: green;
+        }
+
+        #menu.open .title:before {
+            transform: rotate(90deg);
+            transform-origin: center;
+        }
+
+        #menu ul {
+            display: none;
+            list-style: none;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        #menu.open ul {
+            display: block;
+        }
+
+        .pane {
+            background: #edf5e1;
+            padding: 10px 20px 10px;
+            border-top: solid 2px #c4df9b;
+        }
+
+        .pane h3 {
+            margin: 0;
+            padding-bottom: .3em;
+            font-size: 1.1em;
+        }
+
+        .pane p {
+            margin: 0;
+            padding: 0 0 .5em;
+        }
+
+        .remove-button {
+            float: right;
+            font-size: 110%;
+            color: darkred;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+        }
+
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            padding: 10px 40px;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            border-radius: 15px;
+        }
+
+        .carousel .gallery {
+            width: 390px;
+            overflow: hidden;
+        }
+
+        .carousel .arrow {
+            position: absolute;
+            top: 50%;
+            margin-top: -12px;
+            padding: 0;
+            background: #ddd;
+            border-radius: 15px;
+            border: 1px solid gray;
+            font-size: 24px;
+            line-height: 24px;
+            color: #444;
+            display: block;
+        }
+
+        .carousel .arrow.left {
+            left: 10px;
+        }
+
+        .carousel .arrow.right {
+            right: 10px;
+        }
+
+        .carousel .arrow:focus {
+            outline: none;
+        }
+
+        .carousel .arrow:hover {
+            background: #ccc;
+            cursor: pointer;
+        }
+
+        .carousel ul {
+            height: 130px;
+            width: 9999px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0;
+            transition: margin-left 250ms;
+        }
+
+        .carousel ul li {
+            display: inline-block;
+        }
+
+        .carousel ul img {
+            width: 130px;
+            height: 130px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<input type="button" onclick="console.log('Клик!')" value="Нажми меня">
+<input type="button" onclick="countRabbits()" value="Считать кроликов!">
+<input id="elem" type="button" value="Скажи спасибо">
+<input id="elem2" type="button" onclick="console.log('До')" value="До и после">
+<button onclick="console.log(this.innerHTML)">Нажми меня</button>
+<input id="elem3" type="button" value="Спасибо один раз">
+<input id="elem4" type="button" value="Несколько обработчиков">
+<button id="button" onclick="this.classList.toggle('wide');">Кнопка с анимацией</button>
+
+<input type="button" id="hider" value="Нажмите, чтобы спрятать текст" />
+<button onclick="this.hidden = true">Нажми, чтобы меня спрятать</button>
+<div id="text">Текст</div>
+
+<div id="menu">
+    <span class="title">Сладости (нажми меня)!</span>
+    <ul>
+        <li>Торт</li>
+        <li>Пончик</li>
+        <li>Пирожное</li>
+    </ul>
+</div>
+
+<div class="pane">
+    <button class="remove-button">[x]</button>
+    <h3>Лошадь</h3>
+    <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошади, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
+</div>
+<div class="pane">
+    <button class="remove-button">[x]</button>
+    <h3>Осёл</h3>
+    <p>Домашний осёл или ишак — одомашненный подвид дикого осла, сыгравший важную историческую роль в развитии хозяйства и культуры человека. Все одомашненные ослы относятся к африканским ослам.</p>
+</div>
+<div class="pane">
+    <button class="remove-button">[x]</button>
+    <h3>Корова, а также пара слов о диком быке, о волах и о тёлках. </h3>
+    <p>Коро́ва — самка домашнего быка, одомашненного подвида дикого быка, парнокопытного жвачного животного семейства полорогих. Самцы вида называются быками, молодняк — телятами, кастрированные самцы — волами. Молодых (до первой стельности) самок называют
+        тёлками.
+    </p>
+</div>
+
+<div class="carousel">
+    <button class="arrow left">⇦</button>
+    <div class="gallery">
+        <ul>
+            <li><img src="https://js.cx/carousel/1.png"></li>
+            <li><img src="https://js.cx/carousel/2.png"></li>
+            <li><img src="https://js.cx/carousel/3.png"></li>
+            <li><img src="https://js.cx/carousel/4.png"></li>
+            <li><img src="https://js.cx/carousel/5.png"></li>
+            <li><img src="https://js.cx/carousel/6.png"></li>
+            <li><img src="https://js.cx/carousel/7.png"></li>
+            <li><img src="https://js.cx/carousel/8.png"></li>
+            <li><img src="https://js.cx/carousel/9.png"></li>
+            <li><img src="https://js.cx/carousel/10.png"></li>
+        </ul>
+    </div>
+    <button class="arrow right">⇨</button>
+</div>
+
+<!--
+Введение в браузерные события
+http://learn.javascript.ru/introduction-browser-events
+-->
+<script>
+    "use strict";
+
+    // Событие – это сигнал от браузера о том, что что-то произошло.
+
+    /* Назначение обработчиков событий */
+    // Обработчик события - функция, которая сработает, как только событие произошло.
+
+    // Использование атрибута HTML
+    function countRabbits() {
+        for (var i = 1; i <= 3; i++) {
+            console.log("Кролик номер " + i);
+        }
+    }
+
+    // Использование свойства DOM-объекта
+    function sayThanks() {
+        console.log("Спасибо!");
+    }
+
+    // Функция должна быть присвоена как sayThanks, а не sayThanks()
+    elem.onclick = sayThanks;
+
+    // Так как DOM-свойство onclick, в итоге, одно, то назначить более одного обработчика так нельзя.
+    elem2.onclick = function () {
+        console.log("После");
+    };
+
+    /* Доступ к элементу через this */
+    // Внутри обработчика события this ссылается на текущий элемент, то есть на тот, на котором он сработал.
+
+    /* Недостаток назначения через свойство */
+    // Невозможность повесить несколько обработчиков на одно событие.
+
+    /* addEventListener и removeEventListener */
+    // element.addEventListener(event, handler[, phase]);
+    // element.removeEventListener(event, handler[, phase]);
+    elem3.addEventListener("click", handler);
+
+    function handler() {
+        console.log("Спасибо!");
+        // Удаление требует именно ту же функцию
+        elem3.removeEventListener("click", handler);
+    }
+
+    // Несколько обработчиков на одно событие одного элемента
+    function handler1() {
+        console.log("Спасибо!");
+    }
+
+    function handler2() {
+        console.log("Спасибо ещё раз!");
+    }
+
+    elem4.onclick = function() { console.log("Привет"); };
+    elem4.addEventListener("click", handler1); // Спасибо!
+    elem4.addEventListener("click", handler2); // Спасибо ещё раз!
+
+    // Некоторые события нельзя назначить через DOM-свойство
+    var button = document.getElementById("button");
+    button.ontransitionend = function() {
+        console.log("ontransitionend"); // не сработает
+    };
+
+    button.addEventListener("transitionend", function () {
+        console.log("ontransitionend"); // сработает по окончании анимации
+    });
+
+    /* Задача */
+    // Спрятать при клике
+    document.getElementById("hider").addEventListener("click", function () {
+        document.getElementById("text").hidden = true;
+    });
+
+    /* Задача */
+    // Раскрывающееся меню
+    var menu = document.getElementById("menu");
+    var menuTitle = menu.querySelector(".title");
+
+    menuTitle.addEventListener("click", function () {
+        menu.classList.toggle("open");
+    });
+
+    /* Задача */
+    // Спрятать сообщение
+    var buttons = document.querySelectorAll(".remove-button");
+    buttons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            button.parentElement.hidden = true;
+        });
+    });
+
+    /* Задача */
+    // Карусель
+    var carousel = document.querySelector(".carousel");
+    var list = carousel.querySelector("ul");
+    var images = carousel.querySelectorAll("img");
+
+    var imageWidth = 130;
+    var position = 0;
+    var imagesWidth = imageWidth * images.length;
+    var slideWidth = imageWidth * 3;
+
+    carousel.querySelector(".arrow.left").addEventListener("click", function () {
+        position = Math.min(position + slideWidth, 0);
+        list.style.marginLeft = position + "px";
+    });
+
+    carousel.querySelector(".arrow.right").addEventListener("click", function () {
+        position = Math.max(position - slideWidth, slideWidth - imagesWidth);
+        list.style.marginLeft = position + "px";
+    });
+</script>
+
+</body>
+</html>
