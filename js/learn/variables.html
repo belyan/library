@@ -11,36 +11,43 @@
 http://learn.javascript.ru/variables
 -->
 <script>
-    /*
-    Имя может состоять из: букв, цифр, символов $ и _
-    Первый символ не должен быть цифрой.
-    */
+    /* Переменная */
+    // Для создания переменной в JavaScript используйте ключевое слово let.
+    let message;
+    message = "Hello";
+    console.log(message); // "Hello"
 
-    var $ = 5;  // объявили переменную с именем '$'
-    var _ = 15; // переменная с именем '_'
+    /* Имена переменных */
+    // Имя может состоять из: букв, цифр, символов $ и _
+    // Первый символ не должен быть цифрой.
+    let $ = 1;  // объявили переменную с именем "$"
+    let _ = 2; // переменная с именем "_"
+    console.log($ + _); // 3
 
-    alert($);
+    /* Константы */
+    // Переменные, объявленные с помощью const нельзя изменить.
+    const myBirthday = "18.04.1982";
+    console.log(myBirthday);
+
+    /* Константы в верхнем регистре */
+    // Используются только как псевдонимы для трудно запоминаемых значений
+    const COLOR_BLUE = "#00F";
+    const COLOR_RED = "#0F0";
+    const COLOR_GREEN = "#F00";
+    const COLOR_ORANGE = "#FF7F00";
+
+    let color = COLOR_ORANGE;
+    console.log(color); // #FF7F00
 
     /* Задача */
-    var admin, name;
-    name = "Василий"; // две переменных через запятую
+    let admin, name; // две переменных через запятую
+    name = "Джон";
     admin = name;
-    alert(admin); // "Василий"
-
-    /*
-    Константа — это переменная, которая никогда не меняется.
-    Как правило, их называют большими буквами, через подчёркивание.
-    */
-    var COLOR_BLUE = "#00F";
-    var COLOR_RED = "#0F0";
-    var COLOR_GREEN = "#F00";
-    var COLOR_ORANGE = "#FF7F00";
-
-    alert(COLOR_RED); // #0F0
+    console.log(admin); // "Джон"
 
     /* Задача */
-    var planetName = "Земля";
-    var userName = "Петя";
+    let planetName = "Земля";
+    let userName = "Петя";
 </script>
 
 </body>
