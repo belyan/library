@@ -7,44 +7,64 @@
 <body>
 
 <!--
-Введение в типы данных
-http://learn.javascript.ru/types-intro
+Типы данных
+http://learn.javascript.ru/types
 -->
 <script>
-    /* Есть 5 «примитивных» типов: number, string, boolean, null, undefined
-       и объекты object. */
+    // В JavaScript есть 8 основных типов:
+    // number, bigint, string, boolean, null, undefined, object, symbol
 
-    /* Число number */
-    var n = 123;
+    /* Число */
+    let n = 123;
     n = 12.345;
 
-    alert(1 / 0); // Infinity
-    alert("нечисло" * 2); // NaN, ошибка
+    console.log(1 / 0); // Infinity
+    console.log("не число" / 2); // NaN, ошибка
 
-    /* Строка string */
-    var str = "Мама мыла раму";
-    str = 'Одинарные кавычки тоже подойдут';
+    /* BigInt */
+    // В данный момент BigInt поддерживается только в браузерах Firefox и Chrome,
+    // но не поддерживается в Safari/IE/Edge.
+    const bigInt = 1234567890123456789012345678901234567890n;
+    console.log(typeof(bigInt)); // bigint
 
-    /* Булевый (логический) тип boolean */
-    var checked = true; // поле формы помечено галочкой
-    checked = false;    // поле формы не содержит галочки
+    /* Строка */
+    let str = "Привет";
+    let str2 = 'Одинарные кавычки тоже подойдут';
+    let phrase = `Обратные кавычки позволяют встраивать переменные ${str}`;
 
-    /* null */
-    var age = null;
+    let name = "Иван";
+    console.log(`Привет, ${name}!`); // Привет, Иван!
+    console.log(`результат: ${1 + 2}`); // результат: 3
 
-    /* undefined */
-    var u;
-    alert(u); // выведет "undefined"
+    /* Булевый (логический) тип */
+    let checked = true; // да, поле отмечено
+    checked = false;    // нет, поле не отмечено
+
+    let isGreater = 4 > 1;
+    console.log(isGreater); // true
+
+    /* Значение «null» */
+    let age = null;
+
+    /* Значение «undefined» */
+    let x;
+    console.log(x); // undefined
+
+    /* Объекты и символы */
+    let obj = {};
+    let id = Symbol("id");
 
     /* Оператор typeof */
-    console.log(typeof undefined); // "undefined"
-    console.log(typeof null); // "object" - официально признанная ошибка в языке, которая сохраняется для совместимости
-    console.log(typeof 0); // "number"
-    console.log(typeof true); // "boolean"
-    console.log(typeof "foo"); // "string"
-    console.log(typeof {}); // "object"
-    console.log(typeof []); // "object"
-    console.log(typeof function(){}); // "function"
+    console.log(typeof(0)); // "number"
+    console.log(typeof(10n)); // "bigint"
+    console.log(typeof("foo")); // "string"
+    console.log(typeof(true)); // "boolean"
+    console.log(typeof(null)); // "object" - официально признанная ошибка в языке, сохранённая для совместимости
+    console.log(typeof(undefined)); // "undefined"
+    console.log(typeof({})); // "object"
+    console.log(typeof([])); // "object"
+    console.log(typeof(Symbol())); // "symbol"
+    console.log(typeof(alert)); // "function"
 </script>
 
 </body>
