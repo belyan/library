@@ -2,46 +2,57 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Операторы сравнения и логические значения</title>
+    <title>Операторы сравнения</title>
 </head>
 <body>
 
 <!--
-Операторы сравнения и логические значения
+Операторы сравнения
 http://learn.javascript.ru/comparison
 -->
 <script>
-    /* Логические значения */
-    alert(2 > 1); // true, верно
-    alert(2 == 1); // false, неверно
-    alert(2 != 1); // true
+    /* Результат сравнения имеет логический тип */
+    console.log(2 > 1);  // true (верно)
+    console.log(2 == 1); // false (неверно)
+    console.log(2 != 1); // true (верно)
 
-    var a = true; // присвоили явно
-    var b = 3 > 4; // false
-    alert(b); // false
-    alert(a == b); // (true == false) неверно, результат false
+    let a = true; // присвоили явно
+    let b = 3 > 4; // false
+    console.log(b); // false
+    console.log(a == b); // (true == false) неверно, результат false
 
+    /* Сравнение строк */
     // Строки сравниваются посимвольно
-    alert("2" > "14"); // true
-    alert(+"2" > +"14"); // false
+    console.log("Я" > "А"); // true
+    console.log("Кот" > "Код"); // true
+    console.log("Сонный" > "Сон"); // true
 
+    /* Сравнение разных типов */
     // При сравнении значения преобразуются к числам
-    alert("2" > 1); // true
-    alert("01" == 1); //true
-    alert(false == 0); // true, false становится 0, а true 1
+    console.log("2" > 1); // true
+    console.log("01" == 1); //true
 
-    /* Строгое равенство */
-    alert(0 == false); // true, т.к. false преобразуется к 0
-    alert(0 === false); // false, т.к. типы различны
+    /* Строгое сравнение */
+    // Оператор строгого равенства === проверяет равенство без приведения типов.
+    console.log(0 == false); // true, так как false преобразуется к 0
+    console.log(0 === false); // false, так как сравниваются разные типы
 
     /* Сравнение с null и undefined */
-    // Значения null и undefined равны == друг другу и не равны чему бы то ни было ещё
-    // При преобразовании в число null становится 0, а undefined становится NaN
-    var undef;
-    alert(null == undef); // true
-    alert(null === undef); // false
-    alert(+null); // 0
-    alert(+undef); // NaN
+    // При нестрогом равенстве эти значения равны друг другу и не равны никаким другим значениям.
+    // При преобразовании к числам null становится 0, а undefined – NaN.
+    console.log(null == undefined); // true
+    console.log(null === undefined); // false
+    console.log(+null); // 0
+    console.log(+undefined); // NaN
+
+    /* Задача */
+    console.log(5 > 4); // true
+    console.log("ананас" > "яблоко"); // false
+    console.log("2" > "12"); // true
+    console.log(undefined == null); // true
+    console.log(undefined === null); // false
+    console.log(null == "\n0\n"); // false
+    console.log(null === +"\n0\n"); // false
 </script>
 
 </body>
