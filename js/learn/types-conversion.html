@@ -24,30 +24,29 @@ http://learn.javascript.ru/types-conversion
 
     /* Численное преобразование */
     console.log(typeof Number(str)); // number
-    console.log(typeof +str); // number
     console.log(Number("123z")); // NaN (ошибка преобразования)
 
     // Специальные значения
-    console.log(+undefined); // NaN
-    console.log(+null); // 0
-    console.log(+true); // 1
-    console.log(+false); // 0
+    console.log(Number(undefined)); // NaN
+    console.log(Number(null)); // 0
+    console.log(Number(true)); // 1
+    console.log(Number(false)); // 0
 
     /* Логическое преобразование */
     console.log(typeof Boolean(obj)); // boolean
-    console.log(typeof !!arr); // boolean
+    console.log(typeof Boolean(arr)); // boolean
 
     // Все значения, которые интуитивно «пусты», становятся false.
     // Их несколько: 0, пустая строка, null, undefined и NaN.
-    console.log(!!0); // false
-    console.log(!!""); // false
-    console.log(!!null); // false
-    console.log(!!undefined); // false
-    console.log(!!NaN); // false
+    console.log(Boolean(0)); // false
+    console.log(Boolean("")); // false
+    console.log(Boolean(null)); // false
+    console.log(Boolean(undefined)); // false
+    console.log(Boolean(NaN)); // false
 
     // Непустая строка приводится к true
-    console.log(!!"0"); // true
-    console.log(!!" "); // true
+    console.log(Boolean("0")); // true
+    console.log(Boolean(" ")); // true
 
     // Два значения могут быть равны, но одно из них в логическом контексте true, другое — false.
     console.log(0 == "\n0\n");  // true
