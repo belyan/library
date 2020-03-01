@@ -11,7 +11,7 @@
 http://learn.javascript.ru/types-conversion
 -->
 <script>
-    var num = 123,
+    let num = 123,
         str = "123",
         obj = {},
         arr = [];
@@ -25,6 +25,7 @@ http://learn.javascript.ru/types-conversion
     /* Численное преобразование */
     console.log(typeof Number(str)); // number
     console.log(typeof +str); // number
+    console.log(Number("123z")); // NaN (ошибка преобразования)
 
     // Специальные значения
     console.log(+undefined); // NaN
@@ -63,15 +64,11 @@ http://learn.javascript.ru/types-conversion
     console.log("4" - 2); // 2
     console.log("4px" - 2); // NaN
     console.log(7 / 0); // Infinity
-    console.log( parseInt("09") ); // 9
-    console.log("  -9\n" + 5); // "  -9\n5"
-    console.log("  -9\n" - 5); // -14
-    console.log(5 && 2); // 2
-    console.log(2 && 5); // 5
-    console.log(5 || 0); // 5
-    console.log(0 || 5); // 5
+    console.log(" -9  " + 5); // " -9  5"
+    console.log(" -9  " - 5); // -14
     console.log(null + 1); // 1
     console.log(undefined + 1); // NaN
+    console.log(" \t \n" - 2); // -2
 </script>
 
 </body>
