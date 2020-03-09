@@ -8,63 +8,73 @@
 
 <!--
 Логические операторы
-http://learn.javascript.ru/logical-ops
+http://learn.javascript.ru/logical-operators
 -->
 <script>
     /* || (ИЛИ) */
-    var hour = 12, isWeekend = true;
+    let hour = 12;
+    let isWeekend = true;
     if (hour < 10 || hour > 18 || isWeekend) {
-        alert("Офис до 10 или после 18 или в выходной закрыт");
+        console.log("Офис закрыт");
     }
 
-    // Оператор ИЛИ возвращает то значение, на котором остановились вычисления
-    var undef; // переменная не присвоена, т.е. равна undefined
-    var zero = 0;
-    var emptyStr = "";
-    var msg = "Привет!";
-    var result = undef || zero || emptyStr || msg || 0;
-    alert(result); // выведет "Привет!" - первое значение, которое является true
+    // Оператор ИЛИ возвращает первое истинное значение или последнее, если ничего не найдено.
+    console.log(1 || 0); // 1
+    console.log(true || "не важно"); // true
+    console.log(null || 1); // 1 (первое истинное значение)
+    console.log(null || 0 || 1); // 1 (первое истинное значение)
+    console.log(undefined || null || 0); // 0 (поскольку все ложно, возвращается последнее значение)
 
-    /* Задача */
-    alert( alert(1) || 2 || alert(3) ); // сначала 1, затем 2
+    // Получение первого истинного значения из списка переменных или выражений.
+    let currentUser = null;
+    let defaultUser = "John";
+    let name = currentUser || defaultUser || "unnamed";
+    console.log(name); // "John" – первое истинное значение
+
+    // Сокращённое вычисление.
+    let x;
+    true || (x = 1);
+    console.log(x); // undefined, потому что (x = 1) не вычисляется
 
     /* && (И) */
-    var hour = 12, minute = 30;
-    if (hour == 12 && minute == 30) {
-        alert("Время 12:30");
+    let hour2 = 12;
+    let minute = 30;
+    if (hour2 == 12 && minute == 30) {
+        console.log("Время 12:30");
     }
 
-    // Если левый аргумент — false, оператор И возвращает его и заканчивает вычисления
-    // Первый аргумент - true, поэтому возвращается второй аргумент
-    alert(1 && 0);  // 0
-    alert(1 && 5);  // 5
-
-    // Первый аргумент - false, он и возвращается, а второй аргумент игнорируется
-    alert(null && 5);  // null
-    alert(0 && "не важно"); // 0
-
-    /* Задача */
-    alert( alert(1) && alert(2) ); // сначала 1, затем undefined
+    // Оператор И возвращает первое ложное значение или последнее, если ничего не найдено.
+    console.log(1 && 0); // 0
+    console.log(1 && 5); // 5
+    console.log(null && 5); // null
+    console.log(0 && "не важно"); // 0
 
     /* ! (НЕ) */
-    alert(!true); // false
-    alert(!0);  // true
+    console.log(!true); // false
+    console.log(!0); // true
 
     // Двойное НЕ используются для преобразования значений к логическому типу
-    alert(!!"0")  // true
-    alert(!!null); // false
+    console.log(!!"0"); // true
+    console.log(!!null); // false
 
     /* Задача */
+    console.log( console.log(1) || 2 || console.log(3) ); // сначала 1, затем 2
+
+    /* Задача */
+    console.log( console.log(1) && console.log(2) ); // сначала 1, затем undefined
+
+    /* Задача */
+    let age = 40;
     if (age >= 14 && age <= 90) {}
 
     /* Задача */
     if ( !(age >= 14 && age <= 90) ) {}
-    if (age < 14 && age > 90) {}
+    if (age < 14 || age > 90) {}
 
     /* Задача */
-    if (-1 || 0) alert('первое'); // -1, true
-    if (-1 && 0) alert('второе'); // 0, false
-    if (null || -1 && 1) alert('третье'); // 1, true
+    if (-1 || 0) console.log("first"); // -1, true
+    if (-1 && 0) console.log("second"); // 0, false
+    if (null || -1 && 1) console.log("third"); // 1, true
 </script>
 
 </body>
