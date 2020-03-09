@@ -2,28 +2,28 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Взаимодействие с пользователем</title>
+    <title>Взаимодействие: alert, prompt, confirm</title>
 </head>
 <body>
 
 <!--
 Взаимодействие с пользователем
-http://learn.javascript.ru/uibasic
+http://learn.javascript.ru/alert-prompt-confirm
 -->
 <script>
     /* alert */
     // Приостанавливает выполнение скрипта, является модальным окном
-    alert("Привет");
+    alert("Hello");
 
     /* prompt */
     // Если пользователь нажал "Отмена", то возвращается null
-    var years = prompt("Сколько вам лет?", 100);
+    let age = prompt("Сколько вам лет?", "100");
 
-    alert("Вам " + years + " лет!");
+    alert("Вам " + age + " лет!");
 
     /* confirm */
     // Результатом будет true или false
-    var isAdmin = confirm("Вы - администратор?");
+    let isAdmin = confirm("Вы - администратор?");
 
     alert(isAdmin);
 </script>
