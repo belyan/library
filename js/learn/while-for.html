@@ -2,66 +2,107 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Циклы while, for</title>
+    <title>Циклы while и for</title>
 </head>
 <body>
 
 <!--
-Циклы while, for
+Циклы while и for
 http://learn.javascript.ru/while-for
 -->
 <script>
     /* Цикл while */
     // Пока условие верно — выполняется код из тела цикла
-    var i = 0;
+    let i = 0;
     while (i < 3) {
-        alert(i);
+        console.log(i);
         i++;
     }
 
     /* Цикл do..while */
     // Сначала выполняется тело, а затем проверяется условие
-    var i = 0;
+    let i2 = 0;
     do {
-        alert(i);
-        i++;
-    } while (i < 3);
-
-    /* Задача */
-    // Какое последнее значение выведет этот код?
-    var i = 3;
-    while(i) {
-        alert(i--); // 3, 2, 1
-    }
+        console.log(i2);
+        i2++;
+    } while (i2 < 3);
 
     /* Цикл for */
     // Условие проверяется перед каждой итерацией
     // Шаг i++ выполняется после каждой итерации, но перед проверкой условия
-    for (var i = 0; i < 3; i++) {
-        alert(i);
+    for (let i = 0; i < 3; i++) {
+        console.log(i);
+    }
+
+    /* Прерывание цикла: «break» */
+    let sum = 0;
+    while (true) {
+        let value = +prompt("Введите число", "");
+        if (!value) break;
+        sum += value;
+    }
+    console.log("Сумма: " + sum);
+
+    /* Переход к следующей итерации: continue */
+    for (let i = 0; i < 10; i++) {
+        if (i % 2 == 0) continue; // если true, пропустить оставшуюся часть тела цикла
+        console.log(i); // 1, затем 3, 5, 7, 9
+    }
+
+    /* Метки для break/continue */
+    outer: for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            let input = prompt(`Значение на координатах (${i},${j})`, "");
+            if (!input) break outer; // если пустая строка или Отмена, то выйти из обоих циклов
+        }
+    }
+    console.log("Готово!");
+
+    /* Задача */
+    // Какое последнее значение выведет этот код?
+    let i3 = 3;
+    while (i3) {
+        console.log(i3--); // 3, 2, 1
     }
 
     /* Задача */
-    var i = 0;
-    while (++i < 5) alert(i); // 1, 2, 3, 4
-    while (i++ < 5) alert(i); // 1, 2, 3, 4, 5
+    let i4 = 0;
+    while (++i4 < 5) console.log(i4); // 1, 2, 3, 4
+    let i5 = 0;
+    while (i5++ < 5) console.log(i5); // 1, 2, 3, 4, 5
 
     /* Задача */
-    for (var i = 0; i < 5; i++) alert(i); // 0, 1, 2, 3, 4
-    for (var i = 0; i < 5; ++i) alert(i); // 0, 1, 2, 3, 4
+    for (let i = 0; i < 5; i++) console.log(i); // 0, 1, 2, 3, 4
+    for (let i = 0; i < 5; ++i) console.log(i); // 0, 1, 2, 3, 4
 
     /* Задача */
-    var i = 0;
-    while (i < 3) {
-        alert("number " + i + "!");
-        i++;
+    // Выведите чётные числа от 2 до 10
+    for (let i = 2; i <= 10; i += 2) {
+        console.log(i);
     }
 
     /* Задача */
-    var number;
+    let i6 = 0;
+    while (i6 < 3) {
+        console.log(`number ${i6}!`);
+        i6++;
+    }
+
+    /* Задача */
+    let number;
     do {
         number = prompt("Введите число, большее 100", "");
-    } while (number <= 100 && number != null);
+    } while (number && number <= 100);
+
+    /* Задача */
+    // Создайте код, который выводит все простые числа из интервала от 2 до n
+    let n = 10;
+    prime: for (let i = 2; i <= n; i++) {
+        for (let j = 2; j < i; j++) {
+            if (i % j == 0) continue prime;
+        }
+        console.log(i); // 2, 3, 5, 7
+    }
 </script>
 
 </body>
