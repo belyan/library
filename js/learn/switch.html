@@ -12,42 +12,59 @@ http://learn.javascript.ru/switch
 -->
 <script>
     /* Синтаксис */
-    var a = 2 + 2;
+    // Если break нет, то выполнение пойдёт ниже по следующим case, при этом остальные проверки игнорируются.
+    let a = 2 + 2;
     switch (a) {
         case 3:
-            alert("Маловато");
+            console.log("Маловато");
             break;
         case 4:
-            alert("В точку!");
+            console.log("В точку!");
             break;
         case 5:
-            alert("Перебор");
+            console.log("Перебор");
             break;
         default:
-            alert("Я таких значений не знаю");
+            console.log("Нет таких значений");
+    }
+
+    /* Группировка case */
+    let b = 2 + 2;
+    switch (b) {
+        case 4:
+            console.log("Правильно!");
+            break;
+        case 3: // группируем оба case
+        case 5:
+            console.log("Неправильно!");
+            console.log("Может вам посетить урок математики?");
+            break;
+        default:
+            console.log("Результат выглядит странновато. Честно.");
     }
 
     /* Задача */
-    if (browser == "IE") {
-        alert("О, да у вас IE!");
+    const browser = "Chrome";
+    if (browser == "Edge") {
+        console.log("О, да у вас Edge!");
     } else if (browser == "Chrome" || browser == "Firefox" || browser == "Safari" || browser == "Opera") {
-        alert("Да, и эти браузеры мы поддерживаем");
+        console.log("Да, и эти браузеры мы поддерживаем");
     } else {
-        alert("Мы надеемся, что и в вашем браузере все ок!");
+        console.log("Мы надеемся, что и в вашем браузере все ок!");
     }
 
     /* Задача */
-    var a = +prompt("a?", "");
-    switch (a) {
+    const number = +prompt("Введите число между 0 и 3", "");
+    switch (number) {
         case 0:
-            alert(0);
+            console.log("Вы ввели число 0");
             break;
         case 1:
-            alert(1);
+            console.log("Вы ввели число 1");
             break;
         case 2:
         case 3:
-            alert("2,3");
+            console.log("Вы ввели число 2, а может и 3");
             break;
     }
 </script>
