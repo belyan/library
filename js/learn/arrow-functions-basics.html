@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Стрелочные функции</title>
+</head>
+<body>
+
+<!--
+Стрелочные функции
+https://learn.javascript.ru/arrow-functions-basics
+-->
+<script>
+    // let sum = function(a, b) { return a + b; };
+    let sum = (a, b) => a + b;
+    console.log(sum(1, 2)); // 3
+
+    // let double = function(n) { return n * 2; };
+    let double = n => n * 2;
+    console.log(double(3)); // 6
+
+    let age = prompt("Сколько Вам лет?", "18");
+    let welcome = (age < 18) ?
+        () => console.log("Привет") :
+        () => console.log("Здравствуйте!");
+    welcome();
+
+    /* Многострочные стрелочные функции */
+    let sum2 = (a, b) => {
+        let result = a + b;
+        return result;
+    };
+    console.log(sum2(1, 2)); // 3
+</script>
+
+</body>
+</html>
