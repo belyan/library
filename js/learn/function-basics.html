@@ -12,47 +12,66 @@ http://learn.javascript.ru/function-basics
 -->
 <script>
     /* Объявление */
-    function showMessage1() {
-        console.log("Привет всем присутствующим!");
+    function showMessage() {
+        console.log("Всем привет!");
     }
-    showMessage1();
+    showMessage();
 
     /* Локальные переменные */
     function showMessage2() {
-        var message = "Привет, я - Вася!"; // локальная переменная
+        let message = "Привет, я JavaScript!"; // локальная переменная
         console.log(message);
     }
-    showMessage2(); // Привет, я - Вася!
-    console.log(message); // <-- будет ошибка, т.к. переменная видна только внутри
+    showMessage2(); // Привет, я JavaScript!
+    try {
+        console.log(message); // <-- будет ошибка, т.к. переменная видна только внутри
+    } catch (e) {
+        console.error(e); // ReferenceError: message is not defined
+    }
 
     /* Внешние переменные */
-    var userName = "Вася";
+    let userName = "Вася";
     function showMessage3() {
-        var message = "Привет, я " + userName;
+        let message = "Привет, " + userName;
         console.log(message);
     }
-    showMessage3(); // Привет, я Вася
+    showMessage3(); // Привет, Вася
+
+    function showMessage4() {
+        userName = "Петя"; // (1) изменяем значение внешней переменной
+        let message = "Привет, " + userName;
+        console.log(message);
+    }
+    console.log(userName); // Вася (перед вызовом функции)
+    showMessage4();
+    console.log(userName); // Петя (значение внешней переменной было изменено функцией)
 
     /* Параметры */
-    function showMessage4(from, text) { // параметры from, text
-        from = "** " + from + " **"; // здесь может быть сложный код оформления
-        console.log(from + "\n\n" + text);
-    }
-    showMessage4("Маша", "Привет!");
-
-    /* Аргументы по умолчанию */
-    function showMessage5(from, text) {
-        text = text || "текст не передан";
+    function showMessage5(from, text) { // параметры from, text
         console.log(from + ": " + text);
     }
-    showMessage5("Маша"); // Маша: текст не передан
+    showMessage5("Аня", "Привет!"); // Аня: Привет!
+    showMessage5("Аня", "Как дела?"); // Аня: Как дела?
+
+    /* Параметры по умолчанию */
+    function showMessage6(from, text = "текст не добавлен") {
+        console.log(from + ": " + text);
+    }
+    showMessage6("Маша"); // Маша: текст не передан
 
     /* Возврат значения */
-    function calcD(a, b, c) {
-        return b*b - 4*a*c;
+    function sum(a, b) {
+        return a + b;
     }
-    var test = calcD(-4, 2, 1);
-    console.log(test); // 20
+    let result = sum(1, 2);
+    console.log(result); // 3
+
+    /* Выбор имени функции */
+    // showMessage();     показывает сообщение
+    // getAge();          возвращает возраст
+    // calcSum();         вычисляет сумму и возвращает результат
+    // createForm();      создаёт форму (и обычно возвращает её)
+    // checkPermission(); проверяет доступ, возвращая true/false
 
     /* Задача */
     function checkAge(age) {
@@ -62,30 +81,23 @@ http://learn.javascript.ru/function-basics
         return (age > 18) || confirm("Родители разрешили?");
     }
 
-    /* Выбор имени */
-    showMessage();     // префикс show, "показать" сообщение
-    getAge();          // get, "получает" возраст
-    calcD();           // calc, "вычисляет" дискриминант
-    createForm();      // create, "создает" форму
-    checkPermission(); // check, "проверяет" разрешение, возвращает true/false
-
     /* Задача */
     function min(a, b) {
         return a < b ? a : b;
     }
+    console.log(min(2, 5)); // 2
 
-    /*
-    Задача
-    Напишите функцию pow(x,n), которая возвращает x в степени n
-    */
+    /* Задача */
+    // Напишите функцию pow(x,n), которая возвращает x в степени n
     function pow(x, n) {
-        var result = x;
+        let result = x;
         while (n > 1) {
             result = result * x; // или можно так: result *= x;
             n--;
         }
         return result;
     }
+    console.log(pow(3, 3)); // 27
 </script>
 
 </body>
