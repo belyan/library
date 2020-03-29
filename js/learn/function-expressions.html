@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Функциональные выражения</title>
+</head>
+<body>
+
+<!--
+Функциональные выражения
+http://learn.javascript.ru/function-expressions
+-->
+<script>
+    // Function Declaration
+    function sayHi() {
+        console.log("Привет");
+    }
+
+    // Function Expression
+    let sayHi2 = function () {
+        console.log("Привет");
+    };
+    console.log(sayHi2); // выведет код функции
+
+    /* Копирование функций */
+    let func = sayHi;
+    func(); // "Привет"
+
+    /* Функции обратного вызова (callback) */
+    function ask(question, yes, no) {
+        if (confirm(question)) {
+            yes();
+        } else {
+            no();
+        }
+    }
+    function showOk() { console.log("Вы согласны."); }
+    function showCancel() { console.log("Вы отменили выполнение."); }
+
+    ask("Вы согласны?", showOk, showCancel);
+    ask("Вы согласны?", function () {
+        console.log("Вы согласны.");
+    }, function () {
+        console.log("Вы отменили выполнение.");
+    });
+
+    /* Function Expression в сравнении с Function Declaration */
+    // Объявления Function Declaration создают функции до выполнения кода (на стадии инициализации)
+    sayHi3("Вася"); // Привет, Вася
+    function sayHi3(name) {
+        console.log(`Привет, ${name}`);
+    }
+
+    // Объявления Function Expression создают функцию, когда до них доходит выполнение
+    try {
+        sayHi4("Вася"); // ReferenceError: Cannot access sayHi4 before initialization
+    } catch (e) {
+        console.error(e);
+    }
+    let sayHi4 = function (name) {
+        console.log(`Привет, ${name}`);
+    };
+
+    // Функция – это значение, представляющее «действие»
+    let age = prompt("Сколько вам лет?", "18");
+    let sayHi5;
+
+    if (age >= 18) {
+        sayHi5 = function () { console.log("Вход разрешен"); }
+    } else {
+        sayHi5 = function () { console.log("Извините, вы слишком молоды"); }
+    }
+    sayHi5(); // запустит ту функцию, которая присвоена в if
+</script>
+
+</body>
+</html>
