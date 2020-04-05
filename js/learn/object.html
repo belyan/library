@@ -2,193 +2,230 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Объекты как ассоциативные массивы</title>
+    <title>Объекты</title>
 </head>
 <body>
 
 <!--
-Объекты как ассоциативные массивы
+Объекты
 http://learn.javascript.ru/object
 -->
 <script>
     /* Создание объектов */
-    var obj1 = new Object();
-    var obj2 = {}; // пустые фигурные скобки
+    let obj = new Object(); // синтаксис "конструктор объекта"
+    let obj2 = {}; // синтаксис "литерал объекта"
 
-    var person = {}; // пока пустой
+    /* Литералы и свойства */
+    let user = {
+        name: "John",
+        age: 30
+    };
+    console.log(user.name); // John
+    console.log(user.age); // 30
 
-    /* Операции с объектом */
+    // Добавление свойств
+    user.isAdmin = true;
 
-    // 1. присвоение
-    person.name = "Вася"; // запишем свойство с именем "name" и значением "Вася"
-    person.age = 25; // запишем свойство с именем "age" и значением 25
+    // Удаление свойств
+    delete user.age;
 
-    // 2. чтение
-    console.log(person.name + ": " + person.age); // вывести значения
+    /* Квадратные скобки */
+    let user2 = {
+        name: "John",
+        age: 30,
+        "likes birds": true  // имя свойства из нескольких слов должно быть в кавычках
+    };
+    console.log(user2["likes birds"]); // true
 
-    // 3. удаление
-    delete person.name; // удалить значение с именем name
+    let key = "likes birds";
+    console.log(user2[key]); // true
 
-    // 4. проверка существования свойства с определенным ключом
-    if ("age" in person) {
-        console.log("Свойство age существует!");
+    /* Вычисляемые свойства */
+    let fruit = 'apple';
+    let bag = {
+        [fruit + 'Computers']: 5
+    };
+    console.log(bag.appleComputers); // 5
+
+    /* Свойство из переменной */
+    function makeUser(name, age) {
+        return {
+            name, // то же самое, что и name: name
+            age // то же самое, что и age: age
+        };
     }
-    console.log(person.sex); // undefined, нет свойства с ключом sex
 
-    console.log(person.sex === undefined); // true, свойства нет
-    console.log(person.name === undefined); // false, свойство есть.
+    let user3 = makeUser("John", 30);
+    console.log(user3.name); // John
 
-    /* Доступ через квадратные скобки */
-    person["name"] = "Петя"; // то же что и person.name
-    console.log(person["name"]);
-
-    delete person["name"];
-
-    var key = "age";
-    console.log(person[key]); // возвратит person["age"]
-
-    /* Объявление со свойствами */
-    var menuSetup1 = {
-        width: 300,
-        height: 200,
-        title: "Menu"
+    /* Ограничения на имена свойств */
+    let obj3 = {
+        0: "Тест" // то же самое что и "0": "Тест"
     };
+    console.log(obj3["0"]); // Тест
 
-    // то же самое, что:
-    var menuSetup2 = {};
-    menuSetup2.width = 300;
-    menuSetup2.height = 200;
-    menuSetup2.title = "Menu";
-
-    /* Задача */
-    var user = {};
-    user.name = "Вася";
-    user.surname = "Петров";
-    user.name = "Сергей";
-    delete user.name;
-
-    // Вложенные объекты в объявлении
-    var user2 = {
-        name:  "Таня",
-        age: 25,
-        size: {
-            top: 90,
-            middle: 60,
-            bottom: 90
-        }
+    // Зарезервированные слова разрешено использовать как имена свойств.
+    let obj4 = {
+        for: 1,
+        let: 2,
+        return: 3
     };
+    console.log(obj4.for + obj4.let + obj4.return); // 6
 
-    console.log(user2.name); // "Таня"
-    console.log(user2.size.top); // 90
+    /* Проверка существования свойства */
+    let user4 = { name: "John", age: 30 };
+    console.log("age" in user4); // true
+    console.log("blabla" in user4); // false
+
+    let obj5 = {
+        test: undefined
+    };
+    console.log(obj5.test); // undefined, значит свойство не существует?
+    console.log("test" in obj5); // true, свойство существует!
 
     /* Перебор свойств и значений */
-    var menu = {
+    let menu = {
         width: 300,
         height: 200,
         title: "Menu"
     };
 
-    for (var key in menu) {
-        // этот код будет вызван для каждого свойства объекта
-        // и выведет имя свойства и его значение
-        console.log("Ключ: " + key + "\nЗначение: " + menu[key]);
+    for (let key in menu) {
+        console.log(key + ": " + menu[key]);
     }
 
-    /* Количество свойств в объекте */
-    function getKeysCount(obj) {
-        var counter = 0;
-        for (var key in obj) {
-            counter++;
-        }
-        return counter;
-    }
-
-    function isEmpty(obj) {
-        for (var key in obj) {
-            return false; // если цикл хоть раз сработал, то объект не пустой => false
-        }
-        // дошли до этой строки - значит цикл не нашёл ни одного свойства => true
-        return true;
-    }
-
-    /* Порядок перебора свойств */
-    var user3 = {
-        name: "Вася",
-        surname: "Петров"
-    };
-    user3.age = 25;
-
-    for (var prop in user) {
-        console.log(prop); // name, surname, age
-    }
-
-    var codes1 = {
+    /* Упорядочение свойств объекта */
+    let codes = {
         "7": "Россия",
         "38": "Украина",
         "1": "США"
     };
-
-    for (var key in codes1) {
-        console.log(key + ": " + codes1[key]); // 1, 7, 38  в IE9+, Chrome, Opera
+    for (let key in codes) {
+        console.log(key); // 1, 7, 38
     }
 
-    var codes2 = {
-        "+7": "Россия", // передаём 7 в виде строки, чтобы браузер сохранил порядок
+    // Свойства с целочисленными ключами сортируются по возрастанию, остальные располагаются в порядке создания
+    let codes2 = {
+        "+7": "Россия",
         "+38": "Украина",
         "+1": "США"
     };
-
-    for (var key in codes2) {
-        var value = codes2[key];
-        var id = +key; // если нам нужно именно число, преобразуем: "+7" -> 7
-        console.log(id + ": " + value); // 7, 38, 1 во всех браузерах
+    for (let key in codes2) {
+        console.log(+key); // 7, 38, 1
     }
 
-    /* Передача по ссылке */
-    var user = { name: "Вася" }; // в переменной - ссылка
-    var admin = user; // скопировали ссылку
+    /* Копирование по ссылке */
+    // Объекты хранятся и копируются «по ссылке»
+    let user5 = {
+        name: "John"
+    };
+    let admin = user5; // копируется ссылка
+    admin.name = "Pete"; // изменено по ссылке из переменной "admin"
+    console.log(user5.name); // "Pete"
 
-    admin.name = "Петя"; // поменяли данные через admin
-    console.log(user.name); // "Петя", изменения видны в user
+    // Два объекта равны только в том случае, если это один и тот же объект.
+    let a = {};
+    let b = {};
+    let c = a;
+    console.log(a == b); // false
+    console.log(a == c); // true
 
-    // «Настоящее» копирование объекта
-    function clone(obj) {
-        var obj2 = {};
-        // если свойства могут быть объектами, то нужно перебирать и их
-        for (var key in obj) obj2[key] = obj[key];
-        return obj2;
+    // Объекты-константы
+    const user6 = {
+        name: "John"
+    };
+    user6.age = 25;
+    console.log(user6.age); // 25
+
+    /* Клонирование и объединение объектов */
+    let user7 = {
+        name: "John",
+        age: 30
+    };
+    let clone = {};
+    for (let key in user7) {
+        clone[key] = user7[key];
+    }
+    console.log(clone); // {name: "John", age: 30}
+    clone.name = "Pete";
+    console.log(user7.name); // John
+
+    let clone2 = Object.assign({}, user7);
+
+    let user8 = { name: "John" };
+    let permissions1 = { canView: true };
+    let permissions2 = { canEdit: true };
+
+    Object.assign(user8, permissions1, permissions2);
+    console.log(user8); // {name: "John", canView: true, canEdit: true}
+
+    // Глубокое клонирование
+    // https://lodash.com/docs#cloneDeep
+    let user9 = {
+        name: "John",
+        sizes: {
+            height: 182,
+            width: 50
+        }
+    };
+    let clone3 = Object.assign({}, user9);
+    console.log(user9.sizes === clone3.sizes); // true, один и тот же объект
+    user9.sizes.width++; // меняем свойство в одном объекте
+    console.log(clone3.sizes.width); // 51, видим результат в другом объекте
+
+    /* Задача */
+    let user10 = {};
+    user10.name = "John";
+    user10.surname = "Smith";
+    user10.name = "Pete";
+    delete user10.name;
+
+    /* Задача */
+    function isEmpty(obj) {
+        for (let key in obj) {
+            return false; // если цикл хоть раз сработал, то объект не пустой
+        }
+        return true;
     }
 
-    var user = { name: "Вася" }; // user - ссылка на объект
-    var admin = clone(user);
+    let schedule = {};
+    console.log(isEmpty(schedule)); // true
+    schedule["8:30"] = "get up";
+    console.log(isEmpty(schedule)); // false
 
-    admin.name = "Петя"; // поменяли данные в admin
-    console.log(user.name); // "Вася"
+    /* Задача */
+    let salaries = {
+        John: 100,
+        Ann: 160,
+        Pete: 130
+    };
+    let sum = 0;
+
+    for (let key in salaries) {
+        sum += salaries[key];
+    }
+    console.log(sum); // 390
 
     /* Задача
        Создайте функцию multiplyNumeric, которая получает объект
        и умножает все численные свойства на 2 */
-    var menu = {
+    let menu2 = {
         width: 200,
         height: 300,
-        title: "Menu"
+        title: "My menu"
     };
 
     function multiplyNumeric(obj) {
-        for (var key in obj) {
-            if (isNumeric(obj[key])) {
+        for (let key in obj) {
+            if (typeof (obj[key]) === "number") {
                 obj[key] *= 2;
             }
         }
         return obj;
     }
 
-    function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
-
-    multiplyNumeric(menu);
-    console.log("menu width=" + menu.width + " height=" + menu.height + " title=" + menu.title);
+    multiplyNumeric(menu2);
+    console.log(menu2); // {width: 400, height: 600, title: "My menu"}
 </script>
 
 </body>
